@@ -9,7 +9,7 @@
             <uiComponent name="subscription_edit" />
             <block name="braintree_virtual_script"
                    template="PayPal_Subscription::subscription/edit/payment-script.phtml"
-                   class="Magento\Braintree\Block\Adminhtml\Virtual\Script" />
+                   class="PayPal\Braintree\Block\Adminhtml\Virtual\Script" />
         </referenceContainer>
     </body>
 </page>

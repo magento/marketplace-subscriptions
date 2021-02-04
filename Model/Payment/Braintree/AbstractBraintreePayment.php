@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PayPal\Subscription\Model\Payment\Braintree;
 
-use Magento\Braintree\Model\Adapter\BraintreeAdapter;
+use PayPal\Braintree\Model\Adapter\BraintreeAdapter;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Model\Quote\Payment;

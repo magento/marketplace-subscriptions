@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PayPal\Subscription\Block\Customer;
 
-use Magento\Braintree\Gateway\Config\Config as BraintreeConfig;
+use PayPal\Braintree\Gateway\Config\Config as BraintreeConfig;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
@@ -20,7 +20,6 @@ class Payment extends Template
      * @var CustomerTokenManagement
      */
     private $customerTokenManagement;
-
     /**
      * @var BraintreeConfig
      */

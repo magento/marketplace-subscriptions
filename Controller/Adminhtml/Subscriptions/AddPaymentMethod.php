@@ -68,7 +68,7 @@ class AddPaymentMethod extends Action
                 $subscription->getCustomerId(),
                 $subscription->getId(),
                 $this->getRequest()->getParam('payment_method_nonce'),
-                \Magento\Braintree\Model\Ui\ConfigProvider::CODE
+                \PayPal\Braintree\Model\Ui\ConfigProvider::CODE
             );
             return $this->_redirect('*/*/edit', ['id' => $id]);
         } catch (LocalizedException $e) {

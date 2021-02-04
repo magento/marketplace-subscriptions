@@ -30,7 +30,7 @@
     <!-- Release Consumer -->
     <preference for="PayPal\Subscription\Api\ReleaseConsumerInterface" type="PayPal\Subscription\Model\ReleaseConsumer"/>
     <!-- BT Channel Override -->
-    <preference for="Magento\Braintree\Gateway\Request\ChannelDataBuilder" type="PayPal\Subscription\Gateway\Request\ChannelDataBuilder"/>
+    <preference for="PayPal\Braintree\Gateway\Request\ChannelDataBuilder" type="PayPal\Subscription\Gateway\Request\ChannelDataBuilder"/>
     <!-- Grids -->
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>

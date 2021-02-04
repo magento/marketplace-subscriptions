@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace PayPal\Subscription\Model;
 
 use Braintree\PaymentMethod;
-use Magento\Braintree\Gateway\Config\Config as BraintreeConfig;
-use Magento\Braintree\Model\Adapter\BraintreeAdapter;
-use Magento\Braintree\Model\Adminhtml\Source\Environment;
-use Magento\Braintree\Model\Ui\ConfigProvider;
+use PayPal\Braintree\Gateway\Config\Config as BraintreeConfig;
+use PayPal\Braintree\Model\Adapter\BraintreeAdapter;
+use PayPal\Braintree\Model\Adminhtml\Source\Environment;
+use PayPal\Braintree\Model\Ui\ConfigProvider;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
