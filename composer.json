@@ -2,6 +2,7 @@
   "name": "paypal/module-subscription",
   "description": "Enable products to be purchased as a subscription.",
   "type": "magento2-module",
+  "minimum-stability":"stable",
   "license": "proprietary",
   "version": "1.0.0",
   "authors": [
