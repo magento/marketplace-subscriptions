@@ -1,0 +1,13 @@
+<!--@subject {{trans "%store_name Subscription Update" store_name=$store.frontend_name}} @-->
+<!--@vars {
+"var customer_name":"Customer Name",
+"var update.action":"Update Action",
+"var update.description":"Update Description"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{var customer_name}}</p>
+<p>{{var update.action}}</p>
+<p>{{var update.description}}</p>
+
+{{template config_path="design/email/footer_template"}}

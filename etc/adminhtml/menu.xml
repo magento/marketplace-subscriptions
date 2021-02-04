@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- PayPal Subscription -->
+        <add id="PayPal_Subscription::subscription"
+             module="PayPal_Subscription"
+             resource="PayPal_Subscription::subscription"
+             sortOrder="16"
+             title="Subscriptions"
+             translate="title"/>
+        <add action="paypal_subscription/subscriptions"
+             id="PayPal_Subscription::subscription_subscriptions"
+             module="PayPal_Subscription"
+             parent="PayPal_Subscription::subscription"
+             resource="PayPal_Subscription::subscription"
+             sortOrder="10"
+             title="Subscriptions"
+             translate="title"/>
+        <add action="paypal_subscription/profiles"
+             id="PayPal_Subscription::subscription_frequency_profiles"
+             module="PayPal_Subscription"
+             parent="PayPal_Subscription::subscription"
+             resource="PayPal_Subscription::subscription_frequency_profiles"
+             sortOrder="20"
+             title="Frequency Profiles"
+             translate="title"/>
+        <!-- Reports -->
+        <add action="paypal_subscription/report_sales/report"
+             id="PayPal_Subscription::subscription_report"
+             module="PayPal_Subscription"
+             parent="Magento_Reports::report_salesroot"
+             resource="PayPal_Subscription::subscription_report"
+             sortOrder="100"
+             title="Subscriptions"
+             translate="title"/>
+    </menu>
+</config>

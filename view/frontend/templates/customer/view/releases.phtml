@@ -1,0 +1,61 @@
+<?php
+/**
+ * PayPal Subscriptions
+ * @var PayPal\Subscription\Block\Customer\View\Releases $block
+ * @var PayPal\Subscription\Model\Subscription $subscription
+ * @todo Tidy up this file
+ */
+
+$subscription = $block->getSubscription();
+$releases = $block->getSubscriptionReleases($subscription->getId());
+?>
+
+<section class="block ps-customer-releases">
+
+    <h3 class="block-title ps-customer-releases__title">
+        <span><?= $block->escapeHtml(__('Past Deliveries')) ?></span>
+    </h3>
+
+    <div class="block-content">
+        <?php if ($releases && count($releases)): ?>
+            <p><?= $block->escapeHtml(__('Your previous subscription deliveries')) ?></p>
+
+            <table class="data table ps-customer-releases-table">
+                <thead>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Subscription Date')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($releases as $release): ?>
+                        <?php $orderId = $release->getOrderId(); ?>
+                        <tr>
+                            <?php if ($date = $release->getCreatedAt()): ?>
+                                <td class="col ps-customer-releases-table__date">
+                                    <?= $block->escapeHtml($block->formatDate($date)) ?>
+                                </td>
+                            <?php endif; ?>
+                            <?php if ($orderId = $orderId): ?>
+                                <td class="col ps-customer-releases-table__action">
+                                    <a href="<?= $block->escapeHtml($block->getOrderViewUrl($orderId)) ?>">
+                                        <?= $block->escapeHtml(__('View Order')) ?>
+                                    </a>
+                                </td>
+                            <?php endif; ?>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <?php if ($block->getPagerHtml()): ?>
+                <div class="toolbar bottom">
+                    <?= $block->getPagerHtml() ?>
+                </div>
+            <?php endif ?>
+
+        <?php else: ?>
+            <p class="message info empty">
+                <?= $block->escapeHtml(__('No releases.')) ?>
+            </p>
+        <?php endif; ?>
+</section>

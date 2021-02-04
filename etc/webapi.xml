@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- Guest Cart -->
+    <route url="/V1/subscription/carts/frequency/:quoteItemId/:frequency" method="PUT">
+        <service class="PayPal\Subscription\Api\GuestQuoteManagementInterface" method="changeFrequency" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+    <!-- Customer Cart -->
+    <route url="/V1/subscription/carts/mine/frequency/:quoteItemId/:frequency" method="PUT">
+        <service class="PayPal\Subscription\Api\QuoteManagementInterface" method="changeFrequency"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+    <!-- Update Subscription Frequency -->
+    <route url="/V1/subscription/mine/frequency/:subscriptionId/:frequency" method="PUT">
+        <service class="PayPal\Subscription\Api\SubscriptionManagementInterface" method="changeFrequency"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <!-- Update Subscription Status -->
+    <route url="/V1/subscription/mine/status/:subscriptionId/:status" method="PUT">
+        <service class="PayPal\Subscription\Api\SubscriptionManagementInterface" method="changeStatus"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <!-- Update Shipping Address -->
+    <route url="/V1/subscription/mine/shipping/:subscriptionId/:addressId" method="PUT">
+        <service class="PayPal\Subscription\Api\SubscriptionManagementInterface" method="changeAddressExisting" />
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+            <parameter name="addressType">shipping</parameter>
+        </data>
+    </route>
+    <!-- Update Billing Address -->
+    <route url="/V1/subscription/mine/billing/:subscriptionId/:addressId" method="PUT">
+        <service class="PayPal\Subscription\Api\SubscriptionManagementInterface" method="changeAddressExisting" />
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+            <parameter name="addressType">billing</parameter>
+        </data>
+    </route>
+    <!-- Add New Shipping Address -->
+    <route url="/V1/subscription/mine/shipping/new/:subscriptionId" method="PUT">
+        <service class="PayPal\Subscription\Api\SubscriptionManagementInterface" method="changeAddressNew"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+            <parameter name="addressType">shipping</parameter>
+        </data>
+    </route>
+    <!-- Add New Billing Address -->
+    <route url="/V1/subscription/mine/billing/new/:subscriptionId" method="PUT">
+        <service class="PayPal\Subscription\Api\SubscriptionManagementInterface" method="changeAddressNew"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+            <parameter name="addressType">billing</parameter>
+        </data>
+    </route>
+    <!-- Update Payment Method -->
+    <route url="/V1/subscription/mine/payment/:subscriptionId/:paymentPublicHash" method="PUT">
+        <service class="PayPal\Subscription\Api\SubscriptionManagementInterface" method="changePaymentMethod"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <!-- New Credit Card -->
+    <route url="/V1/subscription/mine/payment/creditcard/:subscriptionId" method="PUT">
+        <service class="PayPal\Subscription\Api\BraintreePaymentInterface" method="changePaymentMethodNew"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+            <parameter name="paymentType">braintree</parameter>
+        </data>
+    </route>
+    <!-- New PayPal -->
+    <route url="/V1/subscription/mine/payment/paypal/:subscriptionId" method="PUT">
+        <service class="PayPal\Subscription\Api\BraintreePaymentInterface" method="changePaymentMethodNew"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+            <parameter name="paymentType">braintree_paypal</parameter>
+        </data>
+    </route>
+    <!-- Braintree -->
+    <route url="/V1/subscription/braintree/token/client" method="GET">
+        <service class="PayPal\Subscription\Api\BraintreeInterface" method="getClientToken"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

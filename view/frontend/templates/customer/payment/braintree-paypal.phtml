@@ -1,0 +1,47 @@
+<?php
+/**
+ * PayPal Subscriptions
+ * @var PayPal\Subscription\Block\Customer\Payment $block
+ * @var Magento\Vault\Api\Data\PaymentTokenInterface $paymentMethod
+ */
+
+$clientTokenUrl = $block->getClientToken();
+$updatePaymentUrlPayPal = $block->getUpdatePaymentUrl();
+
+?>
+
+<div data-bind="scope: 'addBraintreePayPal'">
+    <h4 class="box-title">
+        <span><?= $block->escapeHtml(__('Add a new PayPal account')) ?></span>
+    </h4>
+
+    <!-- ko if: message -->
+        <span class="message error empty" data-bind="i18n: message"></span>
+    <!-- /ko -->
+
+    <form class="form"
+          data-bind="attr: {action: updatePaymentUrl}"
+          method="post"
+          novalidate="novalidate">
+        <div id="paypal_container"></div>
+    </form>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "addBraintreePayPal": {
+                    "component": "PayPal_Subscription/js/view/customer/payment/add-braintree-paypal",
+                    "clientTokenUrl" : "<?= $block->escapeUrl($clientTokenUrl) ?>",
+                    "subscriptionId": "<?= $block->escapeHtml($block->getSubscriptionId()) ?>",
+                    "updatePaymentUrl" : "<?= $block->escapeUrl($updatePaymentUrlPayPal) ?>",
+                    "disabledFunding" : "",
+                    "environment" : "<?= $block->escapeHtml($block->getEnvironment()) ?>"
+                }
+            }
+        }
+    }
+}
+</script>

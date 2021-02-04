@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * PayPal Subscriptions
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">View History</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="PayPal\Subscription\Block\Customer\History"
+                   name="paypal.subscription.customer.history"
+                   template="PayPal_Subscription::customer/history.phtml"
+                   cacheable="false">
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,54 @@
+<!--
+*
+* PayPal Subscriptions
+*
+-->
+
+<!-- if: methods -->
+    <ul class="ps-payment-list">
+
+        <!-- ko foreach: { data: methods, as: 'method' } -->
+        <li class="ps-payment-list-item">
+
+            <article>
+                <h3 class="ps-payment-list-item__title">
+                    <span data-bind="i18n: 'Existing ' + method.paymentType"></span>
+                </h3>
+                <ul class="ps-payment-list-item-info">
+
+                    <!-- ko if: method.masked -->
+                        <li class="ps-payment-list-item-info__item">
+                            <span data-bind="i18n: 'Ending in ' + method.masked"></span>
+                        </li>
+                    <!-- /ko -->
+
+                    <!-- ko if: method.expires -->
+                        <li class="ps-payment-list-item-info__item">
+                            <span class="ps-address-list-item__address"
+                                  data-bind="i18n: 'Expires: ' + method.expires"></span>
+                        </li>
+                    <!-- /ko -->
+                </ul>
+
+                <!-- ko ifnot: $parent.getCurrentMethod(method.id) -->
+                    <button type="button"
+                            class="action primary ps-address-list-item__action"
+                            data-bind="click: function(data, event) { $parent.updatePaymentMethod(method.publicHash, method.id) }">
+                        <span data-bind="i18n: 'Use as payment method'"></span>
+                    </button>
+                <!-- /ko -->
+
+                <!-- ko if: $parent.getCurrentMethod(method.id) -->
+                <button type="button"
+                        disabled
+                        class="action primary ps-address-list-item__action">
+                    <span data-bind="i18n: 'Selected'"></span>
+                </button>
+                <!-- /ko -->
+
+            </article>
+        </li>
+        <!--/ko-->
+
+    </ul>
+<!--/ko-->

@@ -1,0 +1,50 @@
+//
+//  PayPal Subscriptions View Releases
+//  Copyright © Gene, Inc. All rights reserved.
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+
+  //
+  //   Product
+  //  ---------------------------------------------
+
+  .ps-customer-releases {
+
+    //
+    //   Releases Table
+    //  ---------------------------------------------
+
+    &-table {
+      &__action {
+        .lib-css(text-align, @ps-account-view-releases-action__text-align);
+      }
+    }
+
+    //
+    //   Pager
+    //  ---------------------------------------------
+
+    .pager {
+      .lib-vendor-prefix-display(flex);
+      .lib-vendor-prefix-flex-direction(column);
+      .lib-vendor-box-align(center);
+      .lib-css(justify-content, @ps-account-view-releases-pager__justify);
+      .lib-css(margin, @ps-account-view-releases-pager__margin);
+    }
+  }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__s) {
+
+  .ps-customer-releases {
+
+    //
+    //  Pager
+    //  ---------------------------------------------
+
+    .pager {
+      .lib-vendor-prefix-flex-direction(row);
+    }
+  }
+}

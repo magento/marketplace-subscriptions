@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="PayPal_Subscription::subscription" title="Subscriptions" translate="title" sortOrder="100">
+                    <resource id="PayPal_Subscription::subscription_frequency_profiles" title="Manage Frequency Profiles" translate="title">
+                        <resource id="PayPal_Subscription::subscription_frequency_profiles_add" title="Add Profiles" translate="title" />
+                        <resource id="PayPal_Subscription::subscription_frequency_profiles_edit" title="Edit Profiles" translate="title" />
+                        <resource id="PayPal_Subscription::subscription_frequency_profiles_delete" title="Delete Profiles" translate="title" />
+                    </resource>
+                    <resource id="PayPal_Subscription::subscriptions" title="Manage Subscriptions" translate="title">
+                        <resource id="PayPal_Subscription::subscriptions_add" title="Add Subscriptions" translate="title" />
+                        <resource id="PayPal_Subscription::subscriptions_edit" title="Edit Subscriptions" translate="title" />
+                        <resource id="PayPal_Subscription::subscriptions_delete" title="Delete Subscriptions" translate="title" />
+                        <resource id="PayPal_Subscription::subscriptions_release" title="Manually Release Subscriptions" translate="title" />
+                    </resource>
+                    <resource id="PayPal_Subscription::subscription_history" title="History" translate="title" />
+                </resource>
+                <resource id="Magento_Reports::report">
+                    <resource id="Magento_Reports::salesroot">
+                        <resource id="PayPal_Subscription::subscription_report" title="Subscriptions" translate="title" sortOrder="100" />
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="PayPal_Subscription::config" title="Subscriptions Section" translate="title" />
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

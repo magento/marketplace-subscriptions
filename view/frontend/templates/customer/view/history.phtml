@@ -1,0 +1,53 @@
+<?php
+/**
+ * PayPal Subscriptions
+ * @var PayPal\Subscription\Block\Customer\History $block
+ * @var PayPal\Subscription\Model\SubscriptionHistory $subscriptionHistory
+ */
+
+$subscriptionHistoryCollection = $block->getSubscriptionHistory();
+?>
+<section class="block ps-customer-history">
+
+    <h3 class="block-title ps-customer-history__title">
+        <span><?= $block->escapeHtml(__('Past Changes')) ?></span>
+    </h3>
+    <p><?= $block->escapeHtml(__('Past changes to your subscription.')) ?></p>
+
+    <div class="block-content table-wrapper">
+        <?php if ($subscriptionHistoryCollection): ?>
+            <table class="data table ps-customer-history-table">
+                <thead>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Action')) ?></th>
+                        <th><?= $block->escapeHtml(__('Description')) ?></th>
+                        <th><?= $block->escapeHtml(__('Date')) ?></th>
+                    </tr>
+                </thead>
+                <?php foreach ($subscriptionHistoryCollection as $subscriptionHistory): ?>
+                    <tr>
+                        <td class="col"
+                            data-th="<?= $block->escapeHtml(__('Action')) ?>">
+                            <?= $block->escapeHtml($subscriptionHistory->getAction()) ?>
+                        </td>
+                        <td class="col">
+                            <?= $block->escapeHtml($subscriptionHistory->getDescription()) ?>
+                        </td>
+                        <td class="col">
+                            <?=$block->escapeHtml($block->formatDate($subscriptionHistory->getCreatedAt())) ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+            <?php if ($block->getPagerHtml()): ?>
+                <div class="toolbar bottom">
+                    <?= $block->getPagerHtml() ?>
+                </div>
+            <?php endif ?>
+        <?php else: ?>
+            <p class="message info empty">
+                <?= $block->escapeHtml(__('No history available.')) ?>
+            </p>
+        <?php endif ?>
+    </div>
+</section>

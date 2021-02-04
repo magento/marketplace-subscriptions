@@ -1,0 +1,15 @@
+<?php
+/**
+ * @var \Magento\Sales\Api\Data\OrderItemInterface $items
+ * @var \PayPal\Subscription\ViewModel\Email $viewModel
+ */
+$items = $block->getItems();
+$viewModel = $block->getViewModel();
+?>
+
+<?php foreach ($items as $item): ?>
+    <?= $block->escapeHtml($item->getName()) ?>
+    <?= $block->escapeHtml($item->getSku()) ?>
+    <?= $block->escapeHtml($viewModel->formatPrice($item->getPrice())) ?>
+    <?= $block->escapeHtml(number_format($item->getQtyOrdered(), 2)) ?>
+<?php endforeach; ?>

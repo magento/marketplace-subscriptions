@@ -1,0 +1,42 @@
+<?php
+/**
+ * PayPal Subscriptions
+ * @var PayPal\Subscription\Block\Customer\Addresses\UpdateAddress $block
+ * @var PayPal\Subscription\ViewModel\Customer\Address $addressHelper
+ */
+
+$addressHelper = $block->getAddressHelper();
+?>
+
+<div class="block">
+    <h3 class="block-title">
+        <strong><?= $block->escapeHtml(__('Use Saved Address')) ?></strong>
+    </h3>
+    <div class="block-content">
+        <?php if ($block->getAllAddresses()): ?>
+            <div data-bind="scope: 'updateAddress'">
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            </div>
+        <?php else: ?>
+            <p class="empty">
+                <?= $block->escapeHtml(__('You have no other address entries in your address book.')) ?>
+            </p>
+        <?php endif ?>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+         "Magento_Ui/js/core/app": {
+            "components": {
+                "updateAddress": {
+                    "component": "PayPal_Subscription/js/view/customer/addresses/existing-address",
+                    "addresses": <?= /* @noEscape */ $block->getAllAddressesJson(); ?>
+                }
+            }
+        }
+    }
+}
+
+</script>

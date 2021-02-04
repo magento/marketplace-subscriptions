@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * PayPal Subscriptions
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <update handle="customer_account"/>
+
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Update Payment Method</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceContainer name="content">
+            <block class="PayPal\Subscription\Block\Customer\Payment"
+                   name="paypal.subscription.customer.payment"
+                   template="PayPal_Subscription::customer/payment.phtml"
+                   cacheable="false">
+
+                <!-- Add Braintree Credit Card -->
+                <block class="PayPal\Subscription\Block\Customer\Payment"
+                       name="paypal.subscription.customer.braintree.form"
+                       template="PayPal_Subscription::customer/payment/braintree-cc.phtml"
+                       as="paypal-subscription-braintree-cc"
+                       cacheable="false">
+                </block>
+
+                <!-- Add Braintree PayPal -->
+                <block class="PayPal\Subscription\Block\Customer\Payment"
+                       name="paypal.subscription.customer.braintree.paypal"
+                       template="PayPal_Subscription::customer/payment/braintree-paypal.phtml"
+                       as="paypal-subscription-braintree-paypal"
+                       cacheable="false">
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

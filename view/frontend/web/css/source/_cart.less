@@ -1,0 +1,99 @@
+//
+//  Paypal Subscriptions Cart Item
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+
+  .ps-basket-item {
+    .lib-css(background, @ps-basket__background);
+    .lib-css(padding, @ps-basket__padding);
+    .lib-css(margin, @ps-basket__margin);
+
+    //
+    //  Accordion
+    //  ---------------------------------------------
+
+    &__title {
+      margin: 0;
+
+      // When accordion is expanded
+      &[aria-expanded=true] {
+        .ps-basket-item__trigger {
+          .lib-icon-font-symbol(
+            @_icon-font-content: @icon-up,
+            @_icon-font-position: after
+          );
+        }
+      }
+    }
+
+    //
+    //  Button Trigger
+    //  ---------------------------------------------
+
+    &__trigger {
+      .lib-button-reset();
+      .lib-css(font-weight, @ps-basket-button__font-weight);
+
+      &:not(.primary) {
+        .lib-css(box-shadow, @ps-basket-button__box-shadow);
+      }
+
+      .lib-icon-font(
+        @_icon-font-content: @ps-basket-button-icon__icon,
+        @_icon-font-size: @ps-basket-button-icon__font-size,
+        @_icon-font-position: @ps-basket-button-icon__position,
+        @_icon-font-display: @ps-basket-button-icon__display,
+        @_icon-font-color: @ps-basket-button-icon__color,
+        @_icon-font-margin: @ps-basket-button-icon__margin
+      );
+    }
+
+    //
+    //  Label
+    //  ---------------------------------------------
+
+    &__label {
+      .lib-css(display, @ps-basket-label__display);
+      .lib-css(margin, @ps-basket-label__margin);
+      .lib-typography(
+        @_font-size: @ps-basket-label__font-size,
+        @_color: @ps-basket-label__color,
+        @_font-family: @ps-basket-label__font-family,
+        @_font-weight: @ps-basket-label__font-weight,
+        @_line-height: @ps-basket-label__line-height,
+        @_font-style: @ps-basket-label__font-style
+      );
+    }
+
+    //
+    //  Content
+    //  ---------------------------------------------
+
+    &__content {
+      .lib-css(margin, @ps-basket-content__margin);
+
+      // Hide content on page load
+      display: none;
+    }
+
+    //
+    //  Select
+    //  ---------------------------------------------
+
+    &__select {
+      .lib-css(display, @ps-basket-select__display);
+      .lib-css(margin, @ps-basket-select__margin);
+    }
+
+    //
+    //  Price
+    //  ---------------------------------------------
+
+    &__price {
+      .lib-css(display, @ps-basket-price__display);
+      .lib-font-size(@ps-basket-price__font-size);
+      .lib-css(font-weight, @ps-basket-price__font-weight);
+    }
+  }
+}

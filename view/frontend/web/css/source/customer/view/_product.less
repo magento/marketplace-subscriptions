@@ -1,0 +1,44 @@
+//
+//  Paypal Subscriptions View Product
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+
+  //
+  //   Product
+  //  ---------------------------------------------
+
+  .ps-customer-product {
+    .lib-vendor-prefix-display(flex);
+    .lib-css(margin, @ps-account-view-product__margin);
+
+    //
+    //   Product Details
+    //  ---------------------------------------------
+
+    &__details {
+      padding: @indent__base;
+    }
+
+    //
+    //   Product Image
+    //  ---------------------------------------------
+
+    &__img {
+      display: block;
+    }
+
+    //
+    //   Product Name
+    //  ---------------------------------------------
+
+    &__title {
+      .lib-font-size(@h3__font-size);
+      margin-bottom: @indent__s;
+    }
+  }
+
+  .ps-error {
+    color: @error__color;
+  }
+}

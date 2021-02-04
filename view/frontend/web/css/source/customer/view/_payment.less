@@ -1,0 +1,94 @@
+//
+//  Paypal Subscriptions History
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+
+  .ps-payment-braintree {
+
+    //
+    //  Fields
+    //  ---------------------------------------------
+
+    &__field {
+      .lib-css(border, @ps-account-payment-field__border);
+      .lib-css(height, @ps-account-payment-field__height);
+      .lib-css(line-height, @ps-account-payment-field__line-height);
+      .lib-css(padding, @ps-account-payment-field__padding);
+      .lib-css(box-sizing, border-box);
+    }
+
+    //
+    //  Date Fields
+    //  ---------------------------------------------
+
+    &__date {
+      .lib-vendor-prefix-display(flex);
+    }
+  }
+
+  //
+  //  Payment list
+  //  ---------------------------------------------
+
+  .ps-payment {
+
+    &-list {
+      .lib-vendor-prefix-display(flex);
+      .lib-vendor-prefix-flex-wrap(wrap);
+      .lib-list-reset-styles();
+
+      &-item {
+        .lib-css(margin, @ps-account-payment-existing-item__margin);
+        .lib-css(width, ~'calc(100% / @{ps-account-payment-existing-item--mobile__count})');
+
+        &__title {
+          .lib-css(text-transform, @ps-account-payment-existing-item-title__text-transform);
+          .lib-css(margin, @ps-account-payment-existing-item-title__margin);
+        }
+
+        &-info {
+          .lib-list-reset-styles();
+          .lib-css(margin, @ps-account-payment-existing-item-info__margin);
+
+          &__item {
+            .lib-css(margin, 0);
+          }
+        }
+      }
+    }
+  }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+
+  //
+  //  Payment list
+  //  ---------------------------------------------
+
+  .ps-payment {
+
+    &-list {
+      &-item {
+        .lib-css(width, ~'calc(100% / @{ps-account-payment-existing-item--tablet__count})');
+      }
+    }
+  }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__l) {
+
+  //
+  //  Payment list
+  //  ---------------------------------------------
+
+  .ps-payment {
+
+    &-list {
+      &-item {
+        .lib-css(width, ~'calc(100% / @{ps-account-payment-existing-item--desktop__count})');
+      }
+    }
+  }
+
+}

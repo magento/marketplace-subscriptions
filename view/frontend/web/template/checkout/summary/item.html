@@ -1,0 +1,35 @@
+<!--
+/**
+ * PayPal Subscriptions Checkout Summary Item
+ */
+-->
+
+<!-- ko if: isSubscription($parents[1]) -->
+    <section class="ps-summary-item">
+        <h4 class="ps-summary-item__title"
+            data-bind="i18n: 'Your Subscription Summary'"></h4>
+
+        <!-- ko if: getFrequencyInterval($parents[1]) -->
+            <div class="ps-summary-item__content">
+                <p class="ps-summary-item__frequency">
+                    <span data-bind="i18n: 'Deliver:'"></span>
+                    <span data-bind="i18n: getFrequencyIntervalLabel()"></span>
+                </p>
+                <p class="ps-summary-item__delivery">
+                    <span data-bind="i18n: 'Your next delivery will be dispatched in'"></span>
+                    <span data-bind="i18n: getFrequencyIntervalInDays()"></span>
+                </p>
+            </div>
+        <!-- /ko -->
+
+        <!-- ko if: getItemPrice($parents[1]) -->
+            <div class="ps-summary-item__price">
+                <p>
+                    <span data-bind="i18n: 'Total:'"></span>
+                    <span class="ps-summary-item__price"
+                          data-bind="i18n: getItemPrice()"></span>
+                </p>
+            </div>
+        <!-- /ko -->
+    </section>
+<!-- /ko -->

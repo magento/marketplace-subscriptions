@@ -1,0 +1,22 @@
+<!--
+/**
+ * PayPal Subscriptions Default Addresses
+ */
+-->
+<div class="box">
+    <h4 class="box-title">
+        <span data-bind="i18n: 'Default Billing Address'"></span>
+    </h4>
+    <div class="box-content">
+        <address data-bind="html: getBillingAddress()"></address>
+    </div>
+</div>
+
+<div class="box">
+    <h4 class="box-title">
+        <span data-bind="i18n: 'Default Shipping Address'"></span>
+    </h4>
+    <div class="box-content">
+        <address data-bind="html: getShippingAddress()"></address>
+    </div>
+</div>

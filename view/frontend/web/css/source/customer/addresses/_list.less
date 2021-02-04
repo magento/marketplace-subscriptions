@@ -1,0 +1,104 @@
+//
+//  Paypal Subscriptions Addresses
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+
+  //
+  //  Existing Address List
+  //  ---------------------------------------------
+
+  .ps-address-list {
+    .lib-vendor-prefix-display(flex);
+    .lib-vendor-prefix-flex-wrap(wrap);
+    .lib-list-reset-styles();
+
+    //
+    //  Existing Address List Item
+    //  ---------------------------------------------
+
+    &-item {
+      .lib-css(width, ~'calc(100% / @{ps-account-addresses-existing--mobile__count})');
+      .lib-css(margin, @ps-account-addresses-existing-item__margin);
+      .lib-css(padding, @ps-account-addresses-existing-item__padding);
+      .lib-css(box-sizing, border-box);
+
+      &__telephone {
+        .lib-css(margin, @ps-account-addresses-existing-item-tel__margin);
+      }
+
+      &__action {
+        &.action.primary {
+          .lib-css(display, @ps-account-addresses-existing-item-actions__display);
+          .lib-css(margin, @ps-account-addresses-existing-item-actions__margin);
+        }
+      }
+    }
+  }
+
+  //
+  //  New Address Form
+  //  ---------------------------------------------
+
+  .ps-add-address-form {
+    .lib-vendor-prefix-display(flex);
+    .lib-vendor-prefix-flex-wrap(wrap);
+    .lib-css(margin, @ps-account-addresses-new__margin);
+
+    &__container {
+      display: none; // Hide on page load
+    }
+
+    &-modal .modal-inner-wrap {
+      .lib-css(max-width, @ps-account-addresses-new__max-width);
+    }
+
+    .fieldset {
+      .lib-css(width, @ps-account-addresses-new-fieldset--mobile__width);
+      .lib-css(padding, @ps-account-addresses-new-fieldset__padding);
+      .lib-css(margin, @ps-account-addresses-new-fieldset__margin);
+      .lib-css(box-sizing, border-box);
+    }
+
+    .actions-toolbar {
+      .lib-css(width, @ps-account-addresses-new-actions__width);
+    }
+  }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+
+  //
+  //  Existing Address List
+  //  ---------------------------------------------
+
+  .ps-address-list {
+    &-item {
+      .lib-css(width, ~'calc(100% / @{ps-account-addresses-existing--tablet__count})');
+    }
+  }
+
+  //
+  //  New Address Form
+  //  ---------------------------------------------
+
+  .ps-add-address-form {
+    .fieldset {
+      .lib-css(width, @ps-account-addresses-new-fieldset--desktop__width);
+    }
+  }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__l) {
+
+  //
+  //  Existing Address List
+  //  ---------------------------------------------
+
+  .ps-address-list {
+    &-item {
+      .lib-css(width, ~'calc(100% / @{ps-account-addresses-existing--desktop__count})');
+    }
+  }
+
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="catalog_controller_product_init_after">
+        <observer name="paypal_subscription_currentproduct" instance="PayPal\Subscription\Observer\RegisterCurrentProductObserver"/>
+    </event>
+    <event name="checkout_cart_product_add_after">
+        <observer name="paypal_subscription_cart_product_add" instance="PayPal\Subscription\Observer\CartProductAddAfterObserver" />
+    </event>
+    <event name="checkout_cart_update_items_after">
+        <observer name="paypal_subscription_cart_product_update" instance="PayPal\Subscription\Observer\CartProductUpdateAfterObserver"/>
+    </event>
+    <event name="checkout_allow_guest">
+        <observer name="paypal_subscription_check_customer_login" instance="PayPal\Subscription\Observer\CheckCustomerLoginObserver"/>
+    </event>
+</config>

@@ -1,0 +1,25 @@
+<!--
+*
+* PayPal Subscriptions
+*
+-->
+<div class="fieldset">
+    <div class="field">
+        <label class="label"
+               for="select-interval"
+               data-bind="i18n: 'Deliver Every: '"></label>
+
+        <select id="select-interval"
+                data-bind="options: setIntervalValues(),
+                   optionsText: 'label',
+                   optionsValue: 'value',
+                   value: value,
+                   event: { change: updateInterval }"></select>
+
+        <p class="ps-customer-delivery__note">
+            <span data-bind="i18n: 'Your delivery will be dispatched every ' + value + ' days'"></span>
+        </p>
+
+        <p class="ps-error" data-bind="i18n: message, attr: { class: messageClass }"></p>
+    </div>
+</div>

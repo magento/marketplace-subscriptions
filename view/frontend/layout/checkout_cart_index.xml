@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *  PayPal Subscriptions
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+
+        <!-- Add input to the cart item -->
+        <referenceBlock name="additional.product.info">
+
+            <block name="paypal.subscription.cart.item"
+                   template="PayPal_Subscription::cart/item.phtml">
+                <arguments>
+                    <argument name="view_model"
+                              xsi:type="object">PayPal\Subscription\ViewModel\Cart\Item</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+
+    </body>
+</page>

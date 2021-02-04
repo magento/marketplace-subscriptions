@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ *  PayPal Subscriptions
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <update handle="customer_account"/>
+
+    <body>
+        <!-- Page Title -->
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true"
+                          name="title"
+                          xsi:type="string">My Subscriptions</argument>
+            </action>
+        </referenceBlock>
+
+        <!-- Main Content -->
+        <referenceContainer name="content">
+            <!-- Product Details -->
+            <block class="PayPal\Subscription\Block\Customer\View"
+                   name="paypal.subscription.customer.view.details"
+                   template="PayPal_Subscription::customer/view/details.phtml"
+                   cacheable="false">
+            </block>
+
+            <!-- Next Delivery -->
+            <block class="PayPal\Subscription\Block\Customer\View"
+                   name="paypal.subscription.customer.view.delivery"
+                   template="PayPal_Subscription::customer/view/delivery.phtml"
+                   cacheable="false">
+            </block>
+
+            <!-- Previous Releases -->
+            <block class="PayPal\Subscription\Block\Customer\View\Releases"
+                   name="paypal.subscription.customer.view.history"
+                   template="PayPal_Subscription::customer/view/releases.phtml"
+                   cacheable="false">
+            </block>
+
+            <!-- Shipping & billing Addresses -->
+            <block class="PayPal\Subscription\Block\Customer\View"
+                   name="paypal.subscription.customer.view.addresses"
+                   template="PayPal_Subscription::customer/view/addresses.phtml"
+                   cacheable="false">
+            </block>
+
+            <!-- Payment Methods & Shipping Methods -->
+            <block class="PayPal\Subscription\Block\Customer\View"
+                   name="paypal.subscription.customer.view.methods"
+                   template="PayPal_Subscription::customer/view/methods.phtml"
+                   cacheable="false">
+            </block>
+
+            <block class="PayPal\Subscription\Block\Customer\History"
+                   name="paypal.subscription.customer.history"
+                   template="PayPal_Subscription::customer/view/history.phtml"
+                   cacheable="false">
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,49 @@
+//
+//  Paypal Subscriptions Checkout
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+
+  //
+  //  Summary Item
+  //  ---------------------------------------------
+
+  .ps-summary-item {
+    .lib-css(margin, @ps-summary-item__margin);
+
+    //
+    //  Fieldset
+    //  ---------------------------------------------
+
+    &__title {
+      .lib-css(margin, @ps-summary-item-title__margin);
+    }
+
+    //
+    //  Price
+    //  ---------------------------------------------
+
+    &__price {
+      .lib-css(font-weight, @ps-summary-item-price__font-weight);
+      .lib-css(margin, @ps-summary-item-price__margin);
+    }
+
+    //
+    //  Frequency
+    //  ---------------------------------------------
+
+    &__frequency {
+      .lib-css(display, @ps-summary-item-frequency__display);
+      .lib-css(font-weight, @ps-summary-item-frequency__font-weight);
+      .lib-css(margin, @ps-summary-item-frequency__margin);
+    }
+
+    //
+    //  Next Delivery Date
+    //  ---------------------------------------------
+
+    &__delivery {
+      .lib-font-size(@ps-summary-item-delivery__font-size);
+    }
+  }
+}

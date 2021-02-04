@@ -1,0 +1,36 @@
+//
+//  Paypal Subscriptions History
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+
+  .ps-customer-history {
+
+    //
+    //  Pager
+    //  ---------------------------------------------
+
+    .pager {
+      .lib-vendor-prefix-display(flex);
+      .lib-vendor-prefix-flex-direction(column);
+      .lib-vendor-box-align(center);
+      .lib-css(justify-content, @ps-account-view-history-pager__justify);
+      .lib-css(margin, @ps-account-view-history-pager__margin);
+    }
+  }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__s) {
+
+  .ps-customer-history {
+
+    //
+    //  Pager
+    //  ---------------------------------------------
+
+    .pager {
+      .lib-vendor-prefix-flex-direction(row);
+    }
+  }
+
+}

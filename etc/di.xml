@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Subscriptions -->
+    <preference for="PayPal\Subscription\Api\SubscriptionRepositoryInterface" type="PayPal\Subscription\Model\SubscriptionRepository" />
+    <preference for="PayPal\Subscription\Api\SubscriptionManagementInterface" type="PayPal\Subscription\Model\SubscriptionManagement" />
+    <preference for="PayPal\Subscription\Api\Data\SubscriptionInterface" type="PayPal\Subscription\Model\Subscription" />
+    <preference for="PayPal\Subscription\Api\Data\SubscriptionSearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
+    <!-- Frequency Profiles -->
+    <preference for="PayPal\Subscription\Api\FrequencyProfileRepositoryInterface" type="PayPal\Subscription\Model\FrequencyProfileRepository" />
+    <preference for="PayPal\Subscription\Api\Data\FrequencyProfileInterface" type="PayPal\Subscription\Model\FrequencyProfile" />
+    <preference for="PayPal\Subscription\Api\Data\FrequencyProfileSearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
+    <!-- Subscription Items -->
+    <preference for="PayPal\Subscription\Api\SubscriptionItemRepositoryInterface" type="PayPal\Subscription\Model\SubscriptionItemRepository" />
+    <preference for="PayPal\Subscription\Api\SubscriptionItemManagementInterface" type="PayPal\Subscription\Model\SubscriptionItemManagement" />
+    <preference for="PayPal\Subscription\Api\Data\SubscriptionItemInterface" type="PayPal\Subscription\Model\SubscriptionItem" />
+    <preference for="PayPal\Subscription\Api\Data\SubscriptionItemSearchResultInterface" type="Magento\Framework\Api\SearchResults"/>
+    <!-- Subscription History -->
+    <preference for="PayPal\Subscription\Api\SubscriptionHistoryRepositoryInterface" type="PayPal\Subscription\Model\SubscriptionHistoryRepository"/>
+    <preference for="PayPal\Subscription\Api\Data\SubscriptionHistoryInterface" type="PayPal\Subscription\Model\SubscriptionHistory"/>
+    <!-- Subscription Release -->
+    <preference for="PayPal\Subscription\Api\Data\SubscriptionReleaseInterface" type="PayPal\Subscription\Model\SubscriptionRelease"/>
+    <!-- Quote Management (part of Web API) -->
+    <preference for="PayPal\Subscription\Api\GuestQuoteManagementInterface" type="PayPal\Subscription\Model\GuestQuoteManagement"/>
+    <preference for="PayPal\Subscription\Api\QuoteManagementInterface" type="PayPal\Subscription\Model\QuoteManagement"/>
+    <!-- Braintree -->
+    <preference for="PayPal\Subscription\Api\BraintreePaymentInterface" type="PayPal\Subscription\Model\Braintree\Payment"/>
+    <preference for="PayPal\Subscription\Api\BraintreeInterface" type="PayPal\Subscription\Model\Braintree"/>
+    <preference for="PayPal\Subscription\Api\Data\BraintreeDataInterface" type="PayPal\Subscription\Model\BraintreeData"/>
+    <!-- Release Consumer -->
+    <preference for="PayPal\Subscription\Api\ReleaseConsumerInterface" type="PayPal\Subscription\Model\ReleaseConsumer"/>
+    <!-- BT Channel Override -->
+    <preference for="Magento\Braintree\Gateway\Request\ChannelDataBuilder" type="PayPal\Subscription\Gateway\Request\ChannelDataBuilder"/>
+    <!-- Grids -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="subscription_grid_data_source" xsi:type="string">PayPal\Subscription\Model\ResourceModel\Subscription\Grid\Collection</item>
+                <item name="frequency_profile_grid_data_source" xsi:type="string">PayPal\Subscription\Model\ResourceModel\FrequencyProfile\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="PayPal\Subscription\Model\ResourceModel\Subscription\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">paypal_subs_subscription</argument>
+            <argument name="resourceModel" xsi:type="string">PayPal\Subscription\Model\ResourceModel\Subscription</argument>
+        </arguments>
+    </type>
+    <virtualType name="PayPal\Subscription\Model\ResourceModel\FrequencyProfile\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">paypal_subs_frequency_profile</argument>
+            <argument name="resourceModel" xsi:type="string">PayPal\Subscription\Model\ResourceModel\FrequencyProfile</argument>
+        </arguments>
+    </virtualType>
+    <!-- Plugins -->
+    <type name="Magento\Checkout\CustomerData\DefaultItem">
+        <plugin name="paypal_subscription_cart_item_data" type="PayPal\Subscription\Plugin\CartItemData" disabled="false" sortOrder="10"/>
+    </type>
+    <type name="Magento\Checkout\CustomerData\Cart">
+        <plugin name="paypal_subscription_cart_data" type="PayPal\Subscription\Plugin\CartData" disabled="false" sortOrder="10"/>
+    </type>
+    <type name="Magento\Checkout\Model\DefaultConfigProvider">
+        <plugin name="paypal_subscription_checkout_summary" type="PayPal\Subscription\Plugin\CheckoutSummary" disabled="false" sortOrder="10"/>
+    </type>
+    <!-- Authenticate account subscription pages -->
+    <type name="PayPal\Subscription\Controller\Customer\Index">
+        <plugin name="authentication" type="PayPal\Subscription\Plugin\Controller\Customer\Authenticate"/>
+    </type>
+    <type name="PayPal\Subscription\Controller\Customer\View">
+        <plugin name="authentication" type="PayPal\Subscription\Plugin\Controller\Customer\Authenticate"/>
+    </type>
+    <type name="PayPal\Subscription\Controller\Customer\History">
+        <plugin name="authentication" type="PayPal\Subscription\Plugin\Controller\Customer\Authenticate"/>
+    </type>
+    <!-- CLI Release Command -->
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="release_subscription" xsi:type="object">PayPal\Subscription\Console\Command\ReleaseSubscriptionCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Custom Logger -->
+    <virtualType name="PayPal\Subscription\Model\Logger\Debug" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/paypal_subscription.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayPal\Subscription\Model\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">PayPalSubscription</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="debug" xsi:type="object">PayPal\Subscription\Model\Logger\Debug</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Subscription Payment -->
+    <type name="PayPal\Subscription\Api\ReleaseConsumerInterface">
+        <arguments>
+            <argument name="subscriptionPayments" xsi:type="array">
+                <item name="braintree" xsi:type="object">PayPal\Subscription\Model\Payment\Braintree\CreditCard</item>
+                <item name="braintree_paypal" xsi:type="object">PayPal\Subscription\Model\Payment\Braintree\PayPal</item>
+            </argument>
+        </arguments>
+        <!-- Add Logger to Classes -->
+        <arguments>
+            <argument name="logger" xsi:type="object">PayPal\Subscription\Model\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="PayPal\Subscription\Model\Email">
+        <arguments>
+            <argument name="logger" xsi:type="object">PayPal\Subscription\Model\Logger</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid" type="Magento\Sales\Model\ResourceModel\Grid">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="contains_subscription" xsi:type="string">sales_order.contains_subscription</item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>

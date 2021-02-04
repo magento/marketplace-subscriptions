@@ -1,0 +1,53 @@
+<!--
+*
+* PayPal Subscriptions
+* Use this area to show items subscription info
+*
+-->
+
+<!--  ko if: item.is_subscription -->
+<li class="ps-minicart-item">
+
+    <button class="ps-minicart-item__edit"
+            type="button"
+            data-bind="i18n: 'Your Subscription Summary', click: $parent.setShowSubscriptionEdit(item.item_id)"></button>
+    
+    <div class="ps-minicart-item__content"
+         data-bind="visible: $parent.items[item.item_id]()">
+
+        <!--  ko if: $parent.setOptionValues(item) -->
+        <label>
+            <span class="ps-minicart-item__label"
+                  data-bind="i18n: 'Deliver Every:'"></span>
+
+            <select class="ps-minicart-item__select"
+                    name="interval"
+                    data-bind="attr: { 'data-item-select': $parent.getItemId(item) },
+                           options: $parent.setOptionValues(item),
+                           optionsText: 'label',
+                           optionsValue: 'value',
+                           value: item.frequency_option_interval,
+                           event: { change: $parent.updateInterval.bind(item) }"></select>
+        </label>
+        <!-- /ko -->
+
+        <!--  ko if: item.frequency_option_interval -->
+            <p class="ps-minicart-item__frequency">
+                <span data-bind="i18n: 'Your next delivery will be dispatched in '"></span>
+                <span data-bind="text: item.frequency_option_interval, attr: { 'data-item-frequency': $parent.getItemId(item) }"></span>
+                <span data-bind="i18n: ' days.'"></span>
+            </p>
+        <!-- /ko -->
+
+        <!--  ko if: item.subscription_price_value -->
+            <p>
+                <strong class="ps-minicart-item__price">
+                    <span data-bind="i18n: 'Total: '"></span>
+                    <span data-bind="text: item.subscription_price_value"></span>
+                </strong>
+            </p>
+        <!-- /ko -->
+    </div>
+
+</li>
+<!-- /ko -->

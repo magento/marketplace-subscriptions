@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="paypal_subscriptions_configuration_subscription_new"
+              label="PayPal Subscription Created Email"
+              file="subscription_new.html"
+              type="html"
+              module="PayPal_Subscription"
+              area="frontend"/>
+    <template id="paypal_subscriptions_configuration_subscription_update"
+              label="PayPal Subscription Update Email"
+              file="subscription_update.html"
+              type="html"
+              module="PayPal_Subscription"
+              area="frontend"/>
+    <template id="paypal_subscriptions_configuration_release_failure"
+              label="PayPal Release Failure Email"
+              file="release_failure.html"
+              type="html"
+              module="PayPal_Subscription"
+              area="frontend"/>
+</config>

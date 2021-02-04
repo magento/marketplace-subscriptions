@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Email Product List" design_abstraction="custom">
+    <body>
+        <block class="Magento\Framework\View\Element\Template"
+               name="order_items"
+               template="PayPal_Subscription::email/order_items.phtml"/>
+    </body>
+</page>

@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <!-- PayPal Subscription Tables -->
+    <table name="paypal_subs_frequency_profile" engine="innodb" resource="default">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="Profile ID" identity="true"/>
+        <column xsi:type="varchar" name="name" length="45" nullable="false" comment="Profile name"/>
+        <column xsi:type="longtext" name="frequency_options" comment="Frequency options"/>
+        <column xsi:type="int" name="min_releases" padding="10" unsigned="true" nullable="true" comment="Min. number of releases"/>
+        <column xsi:type="int" name="max_releases" padding="10" unsigned="true" nullable="true" comment="Max. number of releases"/>
+        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <table name="paypal_subs_subscription" engine="innodb" resource="default">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="Subscription ID" identity="true"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" comment="Customer ID"/>
+        <column xsi:type="int" name="original_order_id" padding="10" unsigned="true" nullable="false" comment="Original Order ID"/>
+        <column xsi:type="tinyint" name="status" unsigned="true" nullable="false" comment="Status"/>
+        <column xsi:type="datetime" name="previous_release_date" nullable="true" on_update="false" comment="Previous release date"/>
+        <column xsi:type="datetime" name="next_release_date" nullable="true" on_update="false" comment="Next release date"/>
+        <column xsi:type="int" name="frequency_profile_id" padding="10" unsigned="true" nullable="true" comment="Frequency Profile ID"/>
+        <column xsi:type="int" name="frequency" padding="10" unsigned="true" nullable="false" comment="Frequency"/>
+        <column xsi:type="varchar" name="billing_address" length="255" nullable="false" comment="Billing address"/>
+        <column xsi:type="varchar" name="shipping_address" length="255" nullable="false" comment="Shipping address"/>
+        <column xsi:type="decimal" name="shipping_price" precision="12" scale="4" nullable="false" comment="Shipping price"/>
+        <column xsi:type="varchar" name="shipping_method" length="45" nullable="false" comment="Shipping method"/>
+        <column xsi:type="varchar" name="payment_method" length="45" nullable="false" comment="Payment method"/>
+        <column xsi:type="longtext" name="payment_data" comment="Payment data"/>
+        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign"
+                    referenceId="PP_SUBS_SUB_FREQ_PROF_ID_PP_SUBS_FREQ_PROF_ID"
+                    table="paypal_subs_subscription"
+                    column="frequency_profile_id"
+                    referenceTable="paypal_subs_frequency_profile"
+                    referenceColumn="id"
+                    onDelete="SET NULL"/>
+        <constraint xsi:type="foreign"
+                    referenceId="PP_SUBS_SUB_CUST_ID_CUST_ENT_ENT_ID"
+                    table="paypal_subs_subscription"
+                    column="customer_id"
+                    referenceTable="customer_entity"
+                    referenceColumn="entity_id"
+                    onDelete="NO ACTION"/>
+        <constraint xsi:type="foreign"
+                    referenceId="PP_SUBS_SUB_ORIG_ORD_ID_SALES_ORD_GRID_ENT_ID"
+                    table="paypal_subs_subscription"
+                    column="original_order_id"
+                    referenceTable="sales_order"
+                    referenceColumn="entity_id"
+                    onDelete="NO ACTION"/>
+    </table>
+    <table name="paypal_subs_subscription_item" engine="innodb" resource="default">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="Subscription Item ID" identity="true"/>
+        <column xsi:type="int" name="subscription_id" padding="10" unsigned="true" nullable="false" comment="Subscription ID"/>
+        <column xsi:type="varchar" name="sku" length="45" nullable="false" comment="SKU"/>
+        <column xsi:type="decimal" name="price" precision="12" scale="4" nullable="false" comment="Price"/>
+        <column xsi:type="int" name="qty" padding="10" unsigned="true" nullable="false" comment="Quantity"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign"
+                    referenceId="PP_SUBS_SUB_ITEM_SUB_ID_PP_SUBS_SUB_ID"
+                    table="paypal_subs_subscription_item"
+                    column="subscription_id"
+                    referenceTable="paypal_subs_subscription"
+                    referenceColumn="id"
+                    onDelete="CASCADE"/>
+        <constraint xsi:type="foreign"
+                    referenceId="PP_SUBS_SUB_ITEM_SUB_ID_CAT_PRO_ENT_ENT_ID"
+                    table="paypal_subs_subscription_item"
+                    column="product_id"
+                    referenceTable="catalog_product_entity"
+                    referenceColumn="entity_id"
+                    onDelete="NO ACTION"/>
+        <index referenceId="INDEX_SKU" indexType="btree">
+            <column name="sku"/>
+        </index>
+    </table>
+    <table name="paypal_subs_subscription_history" engine="innodb" resource="default">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="Subscription History ID" identity="true"/>
+        <column xsi:type="int" name="subscription_id" padding="10" unsigned="true" nullable="false" comment="Subscription ID"/>
+        <column xsi:type="varchar" name="action" length="45" nullable="false" comment="Action"/>
+        <column xsi:type="varchar" name="action_type" length="45" nullable="false" comment="Action Type"/>
+        <column xsi:type="varchar" name="description" length="255" comment="Description"/>
+        <column xsi:type="int" name="admin_user_id" padding="10" unsigned="true" comment="Admin ID"/>
+        <column xsi:type="tinyint" name="customer_notified" comment="Customer Notified?" default="0"/>
+        <column xsi:type="tinyint" name="visible_to_customer" comment="Visible to Customer?" default="0"/>
+        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign"
+                    referenceId="PP_SUBS_SUB_HIST_SUB_ID_PP_SUBS_SUB_ID"
+                    table="paypal_subs_subscription_history"
+                    column="subscription_id"
+                    referenceTable="paypal_subs_subscription"
+                    referenceColumn="id"
+                    onDelete="CASCADE"/>
+        <constraint xsi:type="foreign"
+                    referenceId="PP_SUBS_SUB_HIST_SUB_ID_ADM_USR_USR_ID"
+                    table="paypal_subs_subscription_history"
+                    column="admin_user_id"
+                    referenceTable="admin_user"
+                    referenceColumn="user_id"
+                    onDelete="SET NULL"/>
+    </table>
+    <table name="paypal_subs_subscription_release" engine="innodb" resource="default">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="Subscription Release ID" identity="true"/>
+        <column xsi:type="int" name="subscription_id" padding="10" unsigned="true" nullable="false" comment="Subscription ID"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" comment="Customer ID"/>
+        <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" comment="Order ID"/>
+        <column xsi:type="tinyint" name="status" unsigned="true" nullable="false" comment="Status"/>
+        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign"
+                    referenceId="PP_SUBS_SUB_REL_SUB_ID_PP_SUBS_SUB_ID"
+                    table="paypal_subs_subscription_release"
+                    column="subscription_id"
+                    referenceTable="paypal_subs_subscription"
+                    referenceColumn="id"
+                    onDelete="CASCADE"/>
+        <constraint xsi:type="foreign"
+                    referenceId="PP_SUBS_SUB_REL_CUST_ID_CUST_ENT_ENT_ID"
+                    table="paypal_subs_subscription_release"
+                    column="customer_id"
+                    referenceTable="customer_entity"
+                    referenceColumn="entity_id"
+                    onDelete="NO ACTION"/>
+        <constraint xsi:type="foreign"
+                    referenceId="PP_SUBS_SUB_REL_ORD_ID_SALES_ORD_ENT_ID"
+                    table="paypal_subs_subscription_release"
+                    column="order_id"
+                    referenceTable="sales_order"
+                    referenceColumn="entity_id"
+                    onDelete="NO ACTION"/>
+    </table>
+    <table name="paypal_subs_report_aggregated_daily" engine="innodb" resource="default">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="ID" identity="true"/>
+        <column xsi:type="date" name="period" comment="Period"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" comment="Store ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true" comment="Product ID"/>
+        <column xsi:type="text" name="product_sku" nullable="true" comment="Product SKU"/>
+        <column xsi:type="text" name="product_name" nullable="true" comment="Product Name"/>
+        <column xsi:type="int" name="num_subscriptions" nullable="false" default="0" comment="Number of Subscriptions"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="INDEX_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="INDEX_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+    </table>
+    <table name="paypal_subs_report_aggregated_monthly" engine="innodb" resource="default">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="ID" identity="true"/>
+        <column xsi:type="date" name="period" comment="Period"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" comment="Store ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true" comment="Product ID"/>
+        <column xsi:type="text" name="product_sku" nullable="true" comment="Product SKU"/>
+        <column xsi:type="text" name="product_name" nullable="true" comment="Product Name"/>
+        <column xsi:type="int" name="num_subscriptions" nullable="false" default="0" comment="Number of Subscriptions"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="INDEX_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="INDEX_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+    </table>
+    <table name="paypal_subs_report_aggregated_yearly" engine="innodb" resource="default">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="ID" identity="true"/>
+        <column xsi:type="date" name="period" comment="Period"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" comment="Store ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true" comment="Product ID"/>
+        <column xsi:type="text" name="product_sku" nullable="true" comment="Product SKU"/>
+        <column xsi:type="text" name="product_name" nullable="true" comment="Product Name"/>
+        <column xsi:type="int" name="num_subscriptions" nullable="false" default="0" comment="Number of Subscriptions"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="INDEX_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="INDEX_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+    </table>
+    <!-- Magento Core Tables -->
+    <table name="sales_order">
+        <column xsi:type="int" name="contains_subscription" padding="10" unsigned="true" nullable="false" comment="Order contains subscription item."/>
+    </table>
+    <table name="sales_order_grid">
+        <column xsi:type="int" name="contains_subscription" padding="10" unsigned="true" nullable="false" comment="Order contains subscription item."/>
+    </table>
+</schema>

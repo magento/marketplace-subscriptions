@@ -1,0 +1,32 @@
+<!--
+/**
+ * PayPal Subscriptions Existing Addresses
+ */
+-->
+
+<!-- if: getExistingAddresses() -->
+    <ul class="ps-address-list">
+
+        <!-- ko foreach: { data: getExistingAddresses(), as: 'element' } -->
+        <li class="ps-address-list-item">
+
+            <address class="ps-address-list-item__address"
+                     data-bind="html: $parent.formatAddress(element.address)"></address>
+
+            <a class="ps-address-list-item__telephone"
+               data-bind="attr: { href: 'tel:' + element.telephone }, i18n: element.telephone"></a>
+
+            <button class="action primary ps-address-list-item__action"
+                    data-bind="click: $parent.setBillingAddress.bind($parent, element.id, element.subscriptionId)">
+                <span data-bind="i18n: 'Use as billing address'"></span>
+            </button>
+
+            <button class="action primary ps-address-list-item__action"
+                    data-bind="click: $parent.setShippingAddress.bind($parent, element.id, element.subscriptionId)">
+                <span data-bind="i18n: 'Use as shipping address'"></span>
+            </button>
+        </li>
+        <!--/ko-->
+
+    </ul>
+<!--/ko-->

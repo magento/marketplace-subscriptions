@@ -1,0 +1,25 @@
+<!--
+*
+* PayPal Subscriptions
+*
+-->
+<div class="fieldset">
+    <div class="field">
+        <label class="label"
+               for="select-status"
+               data-bind="i18n: 'Current Subscription Status: '"></label>
+
+        <select id="select-status"
+                data-bind="options: setStatusOptions(),
+                   optionsText: 'label',
+                   optionsValue: 'value',
+                   value: status,
+                   event: { change: updateStatus }"></select>
+
+        <p class="ps-customer-delivery__note">
+            <span data-bind="i18n: 'Update, Pause or cancel your subscription'"></span>
+        </p>
+
+        <p class="ps-error" data-bind="i18n: message, attr: { class: messageClass }"></p>
+    </div>
+</div>

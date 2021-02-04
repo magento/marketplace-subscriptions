@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="paypal_subscriptions" translate="label" type="text" sortOrder="420" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Subscriptions</label>
+            <tab>sales</tab>
+            <resource>PayPal_Subscription::config</resource>
+            <group id="configuration" translate="label" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Configuration</label>
+                <field id="active" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Subscriptions</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>paypal/subscriptions/active</config_path>
+                </field>
+                <field id="subscription_new" translate="label comment" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>New Subscription Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="subscription_update" translate="label comment" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Update Subscription Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="release_failure" translate="label comment" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Release Failure Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="failed_payments" translate="label comment" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Number of Failed Payments Allowed</label>
+                    <comment>After the number of failed payments has been reached, the subscription will be cancelled.</comment>
+                    <config_path>paypal/subscriptions/failed_payments</config_path>
+                    <validate>validate-number</validate>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="cron_enabled" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable CRON</label>
+                    <comment>Under most circumstances, you should keep CRON enabled.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>paypal/subscriptions/cron_enabled</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="cron_schedule" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CRON Schedule</label>
+                    <config_path>paypal/subscriptions/cron_schedule</config_path>
+                    <validate>validate-cron</validate>
+                    <depends>
+                        <field id="active">1</field>
+                        <field id="cron_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

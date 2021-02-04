@@ -1,0 +1,12 @@
+<?php
+/**
+ * @var \Magento\Quote\Api\Data\CartItemInterface $items
+ */
+$items = $block->getItems();
+?>
+
+<?php foreach ($items as $item): ?>
+    <?= $block->escapeHtml($item->getName()) ?>
+    x
+    <?= $block->escapeHtml(number_format($item->getQtyOrdered(), 2)) ?>
+<?php endforeach; ?>

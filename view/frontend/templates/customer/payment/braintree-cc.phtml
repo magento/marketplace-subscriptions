@@ -1,0 +1,89 @@
+<?php
+/**
+ * PayPal Subscriptions
+ * @var PayPal\Subscription\Block\Customer\Payment $block
+ * @var Magento\Vault\Api\Data\PaymentTokenInterface $paymentMethod
+ */
+
+$clientTokenUrl = $block->getClientToken();
+
+?>
+
+<div class="payment-form" data-bind="scope: 'addBraintreeCC'">
+    <h4 class="box-title">
+        <span><?= $block->escapeHtml(__('Add a new Credit or Debit Card')) ?></span>
+    </h4>
+
+    <form id="co-transparent-form-braintree"
+          class="form"
+          data-bind="submit: tokenizeHostedFields"
+          method="post"
+          novalidate="novalidate">
+
+        <!-- ko if: message -->
+            <span class="message error empty" data-bind="i18n: message"></span>
+        <!-- /ko -->
+
+        <div class="fieldset">
+
+            <div class="field number required">
+                <label class="label"
+                       data-bind="attr: {for: numberSelector}">
+                    <span data-bind="i18n: 'Credit Card Number'"></span>
+                </label>
+                <div class="control">
+                    <div class="ps-payment-braintree__field"
+                         data-bind="attr: {id: numberSelector}"></div>
+                </div>
+            </div>
+
+            <div class="field number required">
+                <label class="label"
+                       data-bind="attr: {for: expirationMonth}">
+                    <span data-bind="i18n: 'Expiration Date'"></span>
+                </label>
+                <div class="control">
+                    <div class="ps-payment-braintree__date">
+
+                        <div class="ps-payment-braintree__field"
+                             data-bind="attr: {id: expirationMonth}"></div>
+
+                        <div class="ps-payment-braintree__field"
+                             data-bind="attr: {id: expirationYear}"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field cvv required">
+                <label data-bind="attr: {for: cvv}"
+                       class="label">
+                    <span data-bind="i18n: 'Card Verification Number'"></span>
+                </label>
+                <div class="control">
+                    <div class="ps-payment-braintree__field"
+                         data-bind="attr: {id: cvv}"></div>
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="action primary">
+                <span data-bind="i18n: 'Add payment method'"></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "addBraintreeCC": {
+                    "component": "PayPal_Subscription/js/view/customer/payment/add-braintree-card",
+                    "subscriptionId": "<?= $block->escapeHtml($block->getSubscriptionId()) ?>"
+                }
+            }
+        }
+    }
+}
+</script>

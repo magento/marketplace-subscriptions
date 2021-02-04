@@ -1,0 +1,57 @@
+<?php
+/**
+ * PayPal Subscriptions
+ * @var PayPal\Subscription\Block\Customer\View $block
+ * @var PayPal\Subscription\Model\Subscription $subscription
+ * @todo Tidy up this file
+ */
+
+$subscription = $block->getSubscription();
+$addressesUrl = $block->getUrl('subscriptions/customer/addresses/id/' . $subscription->getId());
+?>
+
+<section class="block">
+
+    <h3 class="block-title">
+        <span><?= $block->escapeHtml(__('Addresses')) ?></span>
+    </h3>
+
+    <div class="block-content">
+
+        <div class="box">
+            <h4 class="box-title">
+                <span><?= $block->escapeHtml(__('Default Billing Address')) ?></span>
+            </h4>
+            <div class="box-content">
+                <address>
+                    <?= $block->escapeHtml($block->formatAddress($subscription->getBillingAddress())) ?>
+                </address>
+            </div>
+            <div class="box-actions">
+                <a class="action edit"
+                   href="<?= $block->escapeUrl($addressesUrl) ?>">
+                    <span><?= $block->escapeHtml(__('Change Billing Address')) ?></span>
+                </a>
+            </div>
+
+            <?= $block->getAddressHtml($subscription->getBillingAddress()); ?>
+        </div>
+
+        <div class="box">
+            <h4 class="box-title">
+                <span><?= $block->escapeHtml(__('Default Shipping Address')) ?></span>
+            </h4>
+            <div class="box-content">
+                <address>
+                    <?= $block->escapeHtml($block->formatAddress($subscription->getShippingAddress())) ?>
+                </address>
+            </div>
+            <div class="box-actions">
+                <a class="action edit"
+                   href="<?= $block->escapeUrl($addressesUrl) ?>">
+                    <span><?= $block->escapeHtml(__('Change Shipping Address')) ?></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

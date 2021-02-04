@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <paypal_subscriptions>
+            <configuration>
+                <failed_payments>5</failed_payments>
+                <cron_enabled>1</cron_enabled>
+                <cron_schedule>0 0 * * *</cron_schedule>
+            </configuration>
+        </paypal_subscriptions>
+    </default>
+</config>

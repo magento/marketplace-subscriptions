@@ -1,0 +1,27 @@
+//
+//  PayPal Subscriptions Product
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+
+  .ps-product {
+
+    //
+    //  Fieldset
+    //  ---------------------------------------------
+
+    &__fieldset {
+      .lib-css(margin, @ps-product-fieldset__margin);
+    }
+
+    //
+    //  Price
+    //  ---------------------------------------------
+
+    &__price {
+      .lib-font-size(@ps-product-price__font-size);
+      .lib-css(font-weight, @ps-product-price__font-weight);
+      .lib-css(margin, @ps-product-price__margin);
+    }
+  }
+}

@@ -1,0 +1,59 @@
+<?php
+/** @var \PayPal\Subscription\Block\Adminhtml\Subscriptions\Edit\Payment $block */
+// @codingStandardsIgnoreFile
+?>
+<div class="admin__fieldset">
+    <div class="admin__field">
+        <div class="admin__field-label">
+            <label>
+                <span><?=$block->escapeHtml(__("New Payment Method")); ?></span>
+            </label>
+        </div>
+        <div class="admin__field-control">
+            <form id="payment_form_braintree" action="<?=$block->escapeUrl($block->getFormAction()); ?>" method="post">
+                <?= $block->getBlockHtml('formkey') ?>
+                <input type="hidden" name="payment_method_nonce" />
+                <div class="admin__field field field-braintree_cc_number_container  required _required" >
+                    <label class="label admin__field-label" for="braintree_cc_number_container">
+                        <span><?=$block->escapeHtml(__('Card Number')); ?></span>
+                    </label>
+                    <div class="admin__field-control control">
+                        <div id="braintree_cc_number_container" class="control-value admin__field-value">
+                            <div class="admin__control-text hosted-control hosted-control" id="braintree_cc_number"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin__field field field-braintree_cc_exp_container  required _required">
+                    <label class="label admin__field-label" for="braintree_cc_exp_container">
+                        <span><?=$block->escapeHtml(__('Expiration Date')); ?></span>
+                    </label>
+                    <div class="admin__field-control control">
+                        <div id="braintree_cc_exp_container" class="control-value admin__field-value">
+                            <div class="hosted-date-wrap">
+                                <div class="admin__control-text hosted-control hosted-date" id="braintree_cc_exp_month"></div>
+                                <div class="admin__control-text hosted-control hosted-date" id="braintree_cc_exp_year"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin__field field field-braintree_cc_cid_container  required _required">
+                    <label class="label admin__field-label" for="braintree_cc_cid_container">
+                        <span><?=$block->escapeHtml(__('Card Verification Number')); ?></span>
+                    </label>
+                    <div class="admin__field-control control">
+                        <div id="braintree_cc_cid_container" class="control-value admin__field-value">
+                            <div class="admin__control-text hosted-control hosted-cid" id="braintree_cc_cid"></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <button title="Add Payment Method" type="button" class="action-default scalable save primary" id="payment_form_submit">
+                <?=$block->escapeHtml(__('Add Payment Method')); ?>
+            </button>
+            <div class="admin__field-note">
+                <span><strong><?=$block->escapeHtml(__('Ensure you have saved any changes before Adding a New Payment Method.')); ?></strong><span>
+            </div>
+        </div>
+    </div>
+</div>

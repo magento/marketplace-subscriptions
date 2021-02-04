@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="\Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid" type="\PayPal\Subscription\Block\Adminhtml\Order\Create\Items\Grid"/>
+    <type name="Magento\Quote\Model\Quote\Item\ToOrderItem">
+        <plugin name="paypal_subscription_to_order_item" type="PayPal\Subscription\Plugin\ToOrderItem" sortOrder="1" />
+    </type>
+    <type name="\Magento\Customer\Model\AttributeMetadataResolver">
+        <plugin name="paypal_subscription_new_address" type="PayPal\Subscription\Plugin\NewAddress" />
+    </type>
+    <!-- Report -->
+    <type name="Magento\Reports\Model\ResourceModel\Refresh\Collection">
+        <plugin name="paypal_subscription_report" type="PayPal\Subscription\Plugin\Magento\Reports\Model\ResourceModel\Refresh\Collection" sortOrder="1" />
+    </type>
+    <type name="Magento\Reports\Controller\Adminhtml\Report\Statistics">
+        <arguments>
+            <argument name="reportTypes" xsi:type="array">
+                <item name="subscriptionreport" xsi:type="string">PayPal\Subscription\Model\ResourceModel\Report\Report</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Product Attribute modifier -->
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="subscription_only" xsi:type="array">
+                    <item name="class" xsi:type="string">PayPal\Subscription\Ui\DataProvider\Product\Form\Modifier\SubscriptionOnly</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>

@@ -1,0 +1,72 @@
+<?php
+/**
+ * PayPal Subscriptions
+ * @var PayPal\Subscription\Block\Customer\Payment $block
+ * @var Magento\Vault\Api\Data\PaymentTokenInterface $paymentMethod
+ */
+
+$paymentMethods = $block->getPaymentMethods();
+?>
+
+<section class="block">
+
+    <h3 class="block-title">
+        <strong><?= $block->escapeHtml(__('Available payment methods')) ?></strong>
+    </h3>
+
+    <div class="block-content">
+        <?php if ($paymentMethods): ?>
+
+            <div data-bind="scope: 'selectExistingMethod'">
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            </div>
+
+        <?php else: ?>
+            <p class="message info empty">
+                <?= $block->escapeHtml(__('No payment methods available.')) ?>
+            </p>
+        <?php endif; ?>
+    </div>
+</section>
+
+<section class="block">
+
+    <h3 class="block-title">
+        <strong><?= $block->escapeHtml(__('Add new payment methods')) ?></strong>
+    </h3>
+
+    <div class="block-content">
+
+        <div class="box">
+            <?= $block->getChildHtml('paypal-subscription-braintree-cc'); ?>
+        </div>
+
+        <div class="box">
+            <?= $block->getChildHtml('paypal-subscription-braintree-paypal'); ?>
+        </div>
+
+    </div>
+</section>
+
+<div class="secondary">
+    <a class="action" href="<?= $block->escapeUrl($block->getBackUrl()) ?>">
+        <span><?= $block->escapeHtml(__('Back')) ?></span>
+    </a>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+              "selectExistingMethod": {
+                    "component": "PayPal_Subscription/js/view/customer/payment/select-existing-method",
+                    "template": "PayPal_Subscription/customer/payment/select-existing-method",
+                    "methods": <?=  /* @noEscape */ $block->getPaymentMethodsJson() ?>,
+                    "subscriptionId": "<?= $block->escapeHtml($block->getSubscriptionId()) ?>"
+                }
+            }
+        }
+    }
+}
+</script>

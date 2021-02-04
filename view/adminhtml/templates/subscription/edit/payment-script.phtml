@@ -1,0 +1,30 @@
+<?php
+use Magento\Braintree\Block\Payment;
+
+/** @var Payment $block */
+
+$code = $block->escapeHtml($block->getCode());
+?>
+<script>
+    //<![CDATA[
+    require(
+        [
+            'PayPal_Subscription/js/form/braintree/cc',
+            'jquery',
+            'Magento_Ui/js/lib/view/utils/dom-observer',
+            'mage/backend/form',
+            'mage/backend/validation',
+            'domReady!'
+        ], function(Braintree, $, domObserver) {
+            new Braintree(<?= /* @noEscape */ $block->getPaymentConfig() ?>);
+            domObserver.get('#payment_form_braintree', function () {
+                $('#payment_form_braintree').form().validation();
+                $('#payment_form_submit').click(function() {
+                    $("#payment_form_braintree").trigger('takePayment');
+                });
+            });
+
+
+        });
+    //]]>
+</script>

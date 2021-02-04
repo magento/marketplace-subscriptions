@@ -1,0 +1,42 @@
+<?php
+/**
+ * PayPal Subscriptions
+ * @var PayPal\Subscription\Block\Customer\View $block
+ * @var PayPal\Subscription\Model\Subscription $subscription
+ */
+
+$subscription = $block->getSubscription();
+$editUrl = $block->getUrl('subscriptions/customer/payment/id/' . $subscription->getId());
+?>
+
+
+<section class="block">
+
+    <h3 class="block-title">
+        <span><?= $block->escapeHtml(__('Payment Methods')) ?></span>
+    </h3>
+
+    <div class="block-content">
+        <div class="block-content">
+
+            <div class="box">
+                <h4 class="box-title">
+                    <span><?= $block->escapeHtml(__('Payment Methods')) ?></span>
+                </h4>
+                <div class="box-content">
+
+                    <?php if ($subscription->getPaymentMethod() === 'braintree'): ?>
+                        <p><?= $block->escapeHtml(__('Payment Method: Card')) ?></p>
+                    <?php else: ?>
+                        <p><?= $block->escapeHtml(__('Payment Method: PayPal')) ?></p>
+                    <?php endif ;?>
+                    <a class="action edit"
+                       href="<?= $block->escapeUrl($editUrl); ?>">
+                        <span><?= $block->escapeHtml(__('Update payment method')) ?></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

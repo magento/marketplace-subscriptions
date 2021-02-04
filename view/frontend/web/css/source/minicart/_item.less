@@ -1,0 +1,114 @@
+//
+//  Paypal Subscriptions Minicart Item
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+
+  .ps-minicart-item {
+    .lib-css(background, @ps-minicart__background);
+    .lib-css(padding, @ps-minicart__padding);
+
+    //
+    //  Edit
+    //  ---------------------------------------------
+
+    &__edit {
+      .lib-css(background, @ps-minicart-button__background);
+      .lib-css(border, @ps-minicart-button__border);
+      .lib-css(width, @ps-minicart-button__width);
+      .lib-css(text-align, @ps-minicart-button__text-align);
+      .lib-css(padding, @ps-minicart-button__padding);
+
+      // Button Resets
+      &:hover,
+      &:active,
+      &:focus {
+        .lib-css(background, @ps-minicart-button__background);
+        .lib-css(border, @ps-minicart-button__border);
+      }
+
+      // Button Resets
+      &:not(.primary) {
+        .lib-css(box-shadow, @ps-minicart-button__box-shadow);
+
+        &:active {
+          .lib-css(box-shadow, @ps-minicart-button__box-shadow);
+        }
+      }
+
+      // Add icon
+      .lib-icon-font(
+        @_icon-font-content: @ps-minicart-button-icon__icon,
+        @_icon-font-size: @ps-minicart-button-icon__font-size,
+        @_icon-font-position: @ps-minicart-button-icon__position,
+        @_icon-font-display: @ps-minicart-button-icon__display,
+        @_icon-font-color: @ps-minicart-button-icon__color,
+        @_icon-font-margin: @ps-minicart-button-icon__margin
+      );
+
+      // When accordion is expanded
+      &[aria-expanded=true] {
+        .ps-basket-item__trigger {
+          .lib-icon-font-symbol(
+            @_icon-font-content: @ps-minicart-button-icon__icon--expanded,
+            @_icon-font-position: @ps-minicart-button-icon__position--expanded
+          );
+        }
+      }
+    }
+
+    //
+    //  Content
+    //  ---------------------------------------------
+
+    &__content {
+      .lib-css(margin, @ps-minicart-content__margin);
+    }
+
+    //
+    //  Label
+    //  ---------------------------------------------
+
+    &__label {
+      display: block;
+      .lib-css(margin, @form-field-type-label-block__margin);
+      .lib-typography(
+        @_font-size: @form-field-label__font-size,
+        @_color: @form-field-label__color,
+        @_font-family: @form-field-label__font-family,
+        @_font-weight: @form-field-label__font-weight,
+        @_line-height: @form-field-label__line-height,
+        @_font-style: @form-field-label__font-style
+      );
+    }
+
+    //
+    //  Select
+    //  ---------------------------------------------
+
+    &__select {
+      .lib-css(display, @ps-minicart-select__display);
+      .lib-css(margin, @ps-minicart-select__margin);
+    }
+
+    //
+    //  Price
+    //  ---------------------------------------------
+
+    &__price {
+      .lib-css(display, @ps-minicart-price__display);
+      .lib-font-size(@font-size__l);
+      .lib-css(font-weight, @ps-minicart-price__font-weight);
+    }
+  }
+
+  //
+  //  Override Magento block cart li margin
+  //  ---------------------------------------------
+
+  .minicart-wrapper .block-minicart li {
+    &.ps-minicart-item {
+      .lib-css(margin, @ps-minicart__margin);
+    }
+  }
+}

@@ -1,0 +1,183 @@
+{
+    "paypal_subs_frequency_profile": {
+        "column": {
+            "id": true,
+            "name": true,
+            "frequency_options": true,
+            "min_releases": true,
+            "max_releases": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "paypal_subs_subscription": {
+        "column": {
+            "id": true,
+            "customer_id": true,
+            "original_order_id": true,
+            "status": true,
+            "previous_release_date": true,
+            "next_release_date": true,
+            "frequency_profile_id": true,
+            "frequency": true,
+            "billing_address": true,
+            "shipping_address": true,
+            "shipping_price": true,
+            "shipping_method": true,
+            "payment_method": true,
+            "payment_data": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_9ED4D2643A118807E66F99E6CFDD8213": true,
+            "PAYPAL_SUBS_SUBSCRIPTION_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true,
+            "FK_E80DD68BF77B5F70370B05F3CFC94ABB": true,
+            "PAYPAL_SUBS_SUBSCRIPTION_ORIGINAL_ORDER_ID_SALES_ORDER_ENTITY_ID": true
+        }
+    },
+    "paypal_subs_subscription_item": {
+        "column": {
+            "id": true,
+            "subscription_id": true,
+            "sku": true,
+            "price": true,
+            "qty": true,
+            "product_id": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "PAYPAL_SUBS_SUBSCRIPTION_ITEM_SKU": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_D03DBD13778B8648853AE844B7DF1269": true,
+            "PAYPAL_SUBS_SUBSCRIPTION_ITEM_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    },
+    "paypal_subs_subscription_history": {
+        "column": {
+            "id": true,
+            "subscription_id": true,
+            "action": true,
+            "action_type": true,
+            "status": true,
+            "description": true,
+            "additional_data": true,
+            "completed_by": true,
+            "admin_user_id": true,
+            "customer_notified": true,
+            "visible_to_customer": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_F240919B98E711C0096A4CB9F700FF00": true,
+            "PAYPAL_SUBS_SUBSCRIPTION_HISTORY_ADM_USR_ID_ADM_USR_USR_ID": true
+        }
+    },
+    "paypal_subs_subscription_release": {
+        "column": {
+            "id": true,
+            "subscription_id": true,
+            "customer_id": true,
+            "order_id": true,
+            "status": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_D354B10B45B81B46B6D4A46B548CE289": true,
+            "PAYPAL_SUBS_SUBSCRIPTION_RELEASE_CSTR_ID_CSTR_ENTT_ENTT_ID": true,
+            "PAYPAL_SUBS_SUBSCRIPTION_RELEASE_ORDER_ID_SALES_ORDER_ENTITY_ID": true
+        }
+    },
+    "sales_order": {
+        "column": {
+            "contains_subscription": true
+        }
+    },
+    "sales_order_grid": {
+        "column": {
+            "contains_subscription": true
+        }
+    },
+    "paypal_subs_report_daily": {
+        "column": {
+            "id": true,
+            "period": true,
+            "store_id": true,
+            "product_id": true,
+            "product_sku": true,
+            "product_name": true,
+            "num_subscriptions": true
+        },
+        "index": {
+            "PAYPAL_SUBS_REPORT_DAILY_STORE_ID": true,
+            "PAYPAL_SUBS_REPORT_DAILY_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "paypal_subs_report_aggregated_daily": {
+        "column": {
+            "id": true,
+            "period": true,
+            "store_id": true,
+            "product_id": true,
+            "product_sku": true,
+            "product_name": true,
+            "num_subscriptions": true
+        },
+        "index": {
+            "PAYPAL_SUBS_REPORT_AGGREGATED_DAILY_STORE_ID": true,
+            "PAYPAL_SUBS_REPORT_AGGREGATED_DAILY_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "paypal_subs_report_aggregated_monthly": {
+        "column": {
+            "id": true,
+            "period": true,
+            "store_id": true,
+            "product_id": true,
+            "product_sku": true,
+            "product_name": true,
+            "num_subscriptions": true
+        },
+        "index": {
+            "PAYPAL_SUBS_REPORT_AGGREGATED_MONTHLY_STORE_ID": true,
+            "PAYPAL_SUBS_REPORT_AGGREGATED_MONTHLY_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "paypal_subs_report_aggregated_yearly": {
+        "column": {
+            "id": true,
+            "period": true,
+            "store_id": true,
+            "product_id": true,
+            "product_sku": true,
+            "product_name": true,
+            "num_subscriptions": true
+        },
+        "index": {
+            "PAYPAL_SUBS_REPORT_AGGREGATED_YEARLY_STORE_ID": true,
+            "PAYPAL_SUBS_REPORT_AGGREGATED_YEARLY_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

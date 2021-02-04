@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">subscription_edit_items.subscription_edit_items_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>columns</spinner>
+        <deps>
+            <dep>subscription_edit_items.subscription_edit_items_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="subscription_edit_items_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <dataProvider class="PayPal\Subscription\Model\SubscriptionItems\DataProvider" name="subscription_edit_items_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <filters name="listing_filters"/>
+        <paging name="listing_paging" />
+    </listingToolbar>
+    <columns name="columns">
+        <column name="id">
+            <settings>
+                <draggable>false</draggable>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+            </settings>
+        </column>
+        <column name="name">
+            <settings>
+                <draggable>false</draggable>
+                <filter>text</filter>
+                <label translate="true">Name</label>
+            </settings>
+        </column>
+        <column name="sku">
+            <settings>
+                <draggable>false</draggable>
+                <filter>text</filter>
+                <label translate="true">SKU</label>
+            </settings>
+        </column>
+        <column name="qty">
+            <settings>
+                <draggable>false</draggable>
+                <filter>text</filter>
+                <label translate="true">Quantity</label>
+            </settings>
+        </column>
+        <column name="price">
+            <settings>
+                <draggable>false</draggable>
+                <filter>text</filter>
+                <label translate="true">Price</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

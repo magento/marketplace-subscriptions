@@ -1,0 +1,84 @@
+<?php
+/**
+ * @var Magento\Checkout\Block\Cart\Item\Renderer $block
+ * @var PayPal\Subscription\ViewModel\Cart\Item $viewModel
+ */
+
+$viewModel = $block->getViewModel();
+$cartItem = $block->getItem();
+?>
+
+<!-- Check if item has a subscription -->
+<?php if ($viewModel->hasSubscription($cartItem)): ?>
+    <div class="ps-basket-item"
+         data-mage-init='{
+           "accordion":{
+            "active": [],
+           "collapsible": true
+         }}'
+    >
+        <h4 class="ps-basket-item__title"
+            data-role="collapsible">
+
+            <button class="ps-basket-item__trigger"
+                    data-role="trigger"
+                    type="button">
+                <?= $block->escapeHtml(__('Your Subscription Summary')) ?>
+            </button>
+        </h4>
+
+        <div class="ps-basket-item__content"
+             data-role="content">
+
+            <!-- Check if item has frequency Options -->
+            <?php if ($frequencyOptions = $viewModel->getFrequencyProfileOptions($cartItem)): ?>
+
+                <label class="label ps-basket-item__label"
+                       for="paypal-subscription-frequency-option">
+                    <?= $block->escapeHtml(__('Deliver Every:')) ?>
+                </label>
+
+                <select id="paypal-subscription-frequency-option"
+                        class="ps-basket-item__select"
+                        name="cart[<?= $block->escapeHtmlAttr($cartItem->getId()) ?>][frequency_option]">
+
+                    <?php if ($viewModel->isSubscriptionOnly($cartItem)): ?>
+                        <option disabled>
+                            <?= $block->escapeHtml(__('Delivery Frequency')) ?>
+                        </option>
+                    <?php else: ?>
+                        <option value="0">
+                            <?= $block->escapeHtml(__('No thanks')) ?>
+                        </option>
+                    <?php endif; ?>
+
+                    <!-- Foreach Option -->
+                    <?php foreach ($frequencyOptions as $option): ?>
+                        <option value="<?= $block->escapeHtmlAttr($option['interval']); ?>"
+                            <?= $block->escapeHtmlAttr($viewModel->getSelectedFrequency($cartItem, $option) ?
+                                'selected' : '') ?>>
+                            <?= $block->escapeHtml($option['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+
+            <?php endif; ?>
+
+            <p>
+                <span class="ps-basket-item__frequency">
+                    <?=
+                    $block->escapeHtml(
+                        __(
+                            'Your next delivery will be dispatched in %1 days.',
+                            $viewModel->getFrequencyInterval($cartItem)
+                        )
+                    )
+                    ?>
+                </span>
+                <strong class="ps-basket-item__price">
+                    <?= $block->escapeHtml(__('Total: %1', $viewModel->formatPrice($cartItem->getPrice()))) ?>
+                </strong>
+            </p>
+        </div>
+    </div>
+<?php endif; ?>

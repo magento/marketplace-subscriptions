@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <!-- Subscription Module Events -->
+    <event name="paypal_subscription_save_before">
+        <observer name="paypal_subscription_save" instance="PayPal\Subscription\Observer\SubscriptionObserver"/>
+    </event>
+    <event name="paypal_subscription_history_save_before">
+        <observer name="paypal_subscription_history_save" instance="PayPal\Subscription\Observer\SubscriptionHistoryObserver"/>
+    </event>
+    <!-- Core Magento Events -->
+    <event name="sales_model_service_quote_submit_before">
+        <observer name="paypal_subscription_convert_item_options" instance="PayPal\Subscription\Observer\ConvertItemOptionsObserver"/>
+    </event>
+    <event name="sales_order_save_after">
+        <observer name="paypal_subscription_contains_subscription" instance="PayPal\Subscription\Observer\ContainsSubscriptionObserver"/>
+    </event>
+    <event name="sales_order_payment_save_after">
+        <observer name="paypal_subscription_create_subscription" instance="PayPal\Subscription\Observer\CreateSubscriptionObserver"/>
+    </event>
+</config>

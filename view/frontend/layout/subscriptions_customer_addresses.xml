@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * PayPal Subscriptions
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <body>
+
+        <!-- Set page title -->
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Update Addresses</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceContainer name="content">
+
+            <!-- Current Addresses -->
+            <block class="PayPal\Subscription\Block\Customer\View"
+                   name="paypal.subscription.customer.billing"
+                   template="PayPal_Subscription::customer/addresses/default.phtml"
+                   cacheable="false">
+            </block>
+
+            <!-- Use existing address -->
+            <block class="PayPal\Subscription\Block\Customer\Addresses\UpdateAddress"
+                   name="address_grid"
+                   template="PayPal_Subscription::customer/addresses/existing-address.phtml"
+                   cacheable="false">
+                <arguments>
+                    <argument name="address_helper" xsi:type="object">PayPal\Subscription\ViewModel\Customer\Address</argument>
+                </arguments>
+            </block>
+
+            <!-- Add new address -->
+            <block class="Magento\Customer\Block\Address\Edit"
+                   name="paypal.subscription.customer.billing.edit"
+                   template="PayPal_Subscription::customer/addresses/new-address.phtml"
+                   cacheable="false">
+                <arguments>
+                    <argument name="address_helper" xsi:type="object">PayPal\Subscription\ViewModel\Customer\Address</argument>
+                    <argument name="attribute_data" xsi:type="object">Magento\Customer\Block\DataProviders\AddressAttributeData</argument>
+                    <argument name="post_code_config" xsi:type="object">Magento\Customer\Block\DataProviders\PostCodesPatternsAttributeData</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

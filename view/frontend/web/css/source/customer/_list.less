@@ -1,0 +1,104 @@
+//
+//  Paypal Subscriptions Customer List
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+
+  //
+  //  Subscription List
+  //  ---------------------------------------------
+
+  .ps-customer-list {
+
+    //
+    //  Label
+    //  ---------------------------------------------
+
+    &__label {
+      .lib-css(display, @ps-customer-list__display);
+      .lib-css(width, @ps-customer-list__width);
+    }
+
+    //
+    //  Title
+    //  ---------------------------------------------
+
+    &__title {
+      .lib-vendor-prefix-flex-grow(1);
+      .lib-vendor-prefix-flex-shrink(0);
+      .lib-vendor-prefix-flex-basis(0);
+      .lib-css(margin, @ps-customer-list-title__margin);
+      .lib-css(font-weight, @ps-customer-list-title__font-weight);
+    }
+  }
+
+  //
+  //  Subscription Status
+  //  ---------------------------------------------
+
+  .ps-status {
+    .lib-css(border-radius, @ps-customer-status__border-radius);
+    .lib-css(padding, @ps-customer-status__padding);
+    .lib-css(background-color, @ps-customer-status__background-color);
+    .lib-css(display, @ps-customer-status__display);
+    .lib-css(text-align, @ps-customer-status__text-align);
+    .lib-css(box-sizing, @ps-customer-status__box-sizing);
+
+    &--active {
+      .lib-css(background-color, @ps-customer-status--active__background-color);
+      .lib-css(color, @ps-customer-status--active__color);
+    }
+
+    &--paused {
+      .lib-css(background-color, @ps-customer-status--paused__background-color);
+      .lib-css(color, @ps-customer-status--paused__color);
+    }
+
+    &--cancelled {
+      .lib-css(background-color, @ps-customer-status--cancelled__background-color);
+      .lib-css(color, @ps-customer-status--cancelled__color);
+    }
+
+    &--expired {
+      .lib-css(background-color, @ps-customer-status--expired__background-color);
+      .lib-css(color, @ps-customer-status--expired__color);
+    }
+  }
+}
+
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+
+  //
+  //  Subscription Status
+  //  ---------------------------------------------
+
+  .ps-status {
+    .lib-css(width, @ps-customer-status__width);
+  }
+}
+
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__l) {
+
+  .ps-customer-list {
+
+    //
+    //  Item
+    //  ---------------------------------------------
+
+    &__item {
+      .lib-vendor-prefix-display();
+      .lib-vendor-prefix-flex-direction(row-reverse);
+    }
+
+    &__image {
+      .lib-css(width, @ps-customer-list-image__width);
+      .lib-css(padding, @ps-customer-list-image__padding);
+
+      img {
+        .lib-css(width, @ps-customer-list-image__width);
+      }
+    }
+  }
+}

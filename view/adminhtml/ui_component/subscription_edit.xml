@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">subscription_edit.subscription_edit_data_source</item>
+            <item name="deps" xsi:type="string">subscription_edit.subscription_edit_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Subscription</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">subscription_edit</item>
+        </item>
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="string">PayPal\Subscription\Block\Adminhtml\Subscriptions\Edit\BackButton</item>
+            <item name="release" xsi:type="string">PayPal\Subscription\Block\Adminhtml\Subscriptions\Edit\ReleaseButton</item>
+            <item name="save_and_continue" xsi:type="string">PayPal\Subscription\Block\Adminhtml\Subscriptions\Edit\SaveAndContinueButton</item>
+            <item name="save" xsi:type="string">PayPal\Subscription\Block\Adminhtml\Subscriptions\Edit\SaveButton</item>
+        </item>
+        <item name="layout" xsi:type="array">
+            <item name="type" xsi:type="string">tabs</item>
+            <item name="navContainerName" xsi:type="string">left</item>
+        </item>
+    </argument>
+
+    <dataSource name="subscription_edit_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">PayPal\Subscription\Model\Subscription\DataProvider</argument>
+            <argument name="name" xsi:type="string">subscription_edit_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="paypal_subscription/subscriptions/save" />
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+
+    <fieldset name="overview">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">false</item>
+                <item name="label" xsi:type="string" translate="true">Summary</item>
+                <item name="sortOrder" xsi:type="number">10</item>
+            </item>
+        </argument>
+
+        <field name="notify_customer" formElement="checkbox">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Notify Customer?</label>
+                <tooltip>
+                    <description translate="true">Should the customer be notified via email about any changes you make?</description>
+                </tooltip>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="number">0</map>
+                            <map name="true" xsi:type="number">1</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="visible_to_customer" formElement="checkbox">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Visible to Customer?</label>
+                <tooltip>
+                    <description translate="true">Should the changes you make be shown in the customers subscription history?</description>
+                </tooltip>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="number">0</map>
+                            <map name="true" xsi:type="number">1</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="id" formElement="input">
+            <settings>
+                <dataType>number</dataType>
+                <elementTmpl>ui/form/element/text</elementTmpl>
+                <label translate="true">ID</label>
+            </settings>
+        </field>
+        <field name="status" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Status</label>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="PayPal\Subscription\Model\Config\Source\Subscription\Status"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="previous_release_date" formElement="input">
+            <settings>
+                <dataType>date</dataType>
+                <elementTmpl>ui/form/element/text</elementTmpl>
+                <label translate="true">Previous Release Date</label>
+            </settings>
+        </field>
+        <field name="next_release_date" formElement="input">
+            <settings>
+                <dataType>date</dataType>
+                <elementTmpl>ui/form/element/text</elementTmpl>
+                <label translate="true">Next Release Date</label>
+            </settings>
+        </field>
+        <field name="frequency" formElement="select">
+            <settings>
+                <dataScope>frequency</dataScope>
+                <dataType>text</dataType>
+                <label translate="true">Frequency</label>
+                <imports>
+                    <link name="setOptions">${ $.provider }:data.frequencyOptions</link>
+                </imports>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <caption translate="true">-- Please Select --</caption>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+    </fieldset>
+
+    <fieldset name="items">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">false</item>
+                <item name="label" xsi:type="string" translate="true">Items</item>
+                <item name="sortOrder" xsi:type="number">10</item>
+            </item>
+        </argument>
+        <insertListing name="subscription_edit_items">
+            <settings>
+                <dataLinks>
+                    <exports>false</exports>
+                    <imports>true</imports>
+                </dataLinks>
+                <externalProvider>subscription_edit_items.subscription_edit_items_data_source</externalProvider>
+                <autoRender>true</autoRender>
+                <dataScope>subscription_edit_items</dataScope>
+                <ns>subscription_edit_items</ns>
+                <exports>
+                    <link name="parent_id">${ $.externalProvider }:params.parent_id</link>
+                </exports>
+                <imports>
+                    <link name="parent_id">${ $.provider }:data.id</link>
+                </imports>
+            </settings>
+        </insertListing>
+    </fieldset>
+
+    <fieldset name="shipping">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">false</item>
+                <item name="label" xsi:type="string" translate="true">Billing and Shipping</item>
+                <item name="sortOrder" xsi:type="number">10</item>
+            </item>
+        </argument>
+        <field name="billing_address" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <elementTmpl>ui/form/element/text</elementTmpl>
+                <label translate="true">Billing Address</label>
+            </settings>
+        </field>
+        <field name="existing_billing_address" formElement="select" component="PayPal_Subscription/js/form/element/select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Existing Billing Address</label>
+                <imports>
+                    <link name="setOptions">${ $.provider }:data.addresses</link>
+                </imports>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <caption translate="true">-- Please Select --</caption>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <button name="add_address" component="Magento_Customer/js/address/default-address">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="formElement" xsi:type="string">container</item>
+                    <item name="buttonClasses" xsi:type="string">add-new-address-button</item>
+                    <item name="actions" xsi:type="array">
+                        <item name="0" xsi:type="array">
+                            <item name="targetName" xsi:type="string">${ $.parentName}.customer_address_update_modal.update_customer_address_form_loader</item>
+                            <item name="actionName" xsi:type="string">destroyInserted</item>
+                        </item>
+                        <item name="1" xsi:type="array">
+                            <item name="targetName" xsi:type="string">${ $.parentName}.customer_address_update_modal</item>
+                            <item name="actionName" xsi:type="string">openModal</item>
+                        </item>
+                        <item name="2" xsi:type="array">
+                            <item name="targetName" xsi:type="string">${ $.parentName}.customer_address_update_modal.update_customer_address_form_loader</item>
+                            <item name="actionName" xsi:type="string">render</item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <title translate="true">Add New Address</title>
+                <imports>
+                    <link name="parentId">${ $.provider}:data.customer_id</link>
+                </imports>
+            </settings>
+        </button>
+        <modal name="customer_address_update_modal">
+            <settings>
+                <options>
+                    <option name="title" xsi:type="string">Add/Update Address</option>
+                </options>
+            </settings>
+            <insertForm name="update_customer_address_form_loader" component="PayPal_Subscription/js/form/components/insert-form">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="addressListingProvider" xsi:type="string">ns = customer_address_listing, index = customer_address_listing</item>
+                        <item name="addressModalProvider" xsi:type="string">${ $.parentName }</item>
+                    </item>
+                </argument>
+                <settings>
+                    <formSubmitType>ajax</formSubmitType>
+                    <renderUrl path="mui/index/render_handle">
+                        <param name="handle">customer_address_edit</param>
+                        <param name="buttons">1</param>
+                    </renderUrl>
+                    <loading>false</loading>
+                    <toolbarContainer>${ $.parentName }</toolbarContainer>
+                    <externalProvider>${ $.ns }.customer_address_form_data_source</externalProvider>
+                    <ns>customer_address_form</ns>
+                    <exports>
+                        <link name="parentId">${ $.externalProvider }:data.parent_id</link>
+                    </exports>
+                    <imports>
+                        <link name="parentId">${ $.provider}:data.customer_id</link>
+                        <link name="onAddressDelete">${ $.ns }.${ $.ns }:deleteAddressAction</link>
+                    </imports>
+                </settings>
+            </insertForm>
+        </modal>
+
+        <field name="shipping_address" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <elementTmpl>ui/form/element/text</elementTmpl>
+                <label translate="true">Shipping Address</label>
+            </settings>
+        </field>
+        <field name="existing_shipping_address" formElement="select" component="PayPal_Subscription/js/form/element/select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Existing Shipping Address</label>
+                <imports>
+                    <link name="setOptions">${ $.provider }:data.addresses</link>
+                </imports>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <caption translate="true">-- Please Select --</caption>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="shipping_method" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <elementTmpl>ui/form/element/text</elementTmpl>
+                <label translate="true">Current Shipping Method</label>
+            </settings>
+        </field>
+
+        <field name="available_shipping_method" formElement="select">
+            <settings>
+                <label translate="true">Available Shipping Methods</label>
+                <notice translate="true">
+                    If the shipping address has changed, please save those changes before changing the shipping method.
+                </notice>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="PayPal\Subscription\Model\Config\Source\Subscription\ShippingMethod"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+    </fieldset>
+
+    <fieldset name="payment">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">false</item>
+                <item name="label" xsi:type="string" translate="true">Payment Method</item>
+                <item name="sortOrder" xsi:type="number">10</item>
+            </item>
+        </argument>
+        <field name="payment_method" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <elementTmpl>ui/form/element/text</elementTmpl>
+                <label translate="true">Current Payment Method</label>
+            </settings>
+        </field>
+        <field name="existing_payment_method" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Change to an Existing Payment Method</label>
+                <imports>
+                    <link name="setOptions">${ $.provider }:data.paymentMethods</link>
+                </imports>
+                <notice translate="true">
+                    Change the payment method used on this subscription to one of the customer's existing saved Braintree payment methods.
+                </notice>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <caption translate="true">-- Please Select --</caption>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <htmlContent name="html_content">
+            <block class="PayPal\Subscription\Block\Adminhtml\Subscriptions\Edit\Payment"
+                   template="PayPal_Subscription::subscription/edit/payment.phtml"
+                   name="add_payment"/>
+        </htmlContent>
+    </fieldset>
+
+    <fieldset name="history">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">false</item>
+                <item name="label" xsi:type="string" translate="true">History</item>
+                <item name="sortOrder" xsi:type="number">10</item>
+            </item>
+        </argument>
+        <insertListing name="subscription_edit_history">
+            <settings>
+                <dataLinks>
+                    <exports>false</exports>
+                    <imports>true</imports>
+                </dataLinks>
+                <externalProvider>subscription_edit_history.subscription_edit_history_data_source</externalProvider>
+                <autoRender>true</autoRender>
+                <dataScope>subscription_edit_history</dataScope>
+                <ns>subscription_edit_history</ns>
+                <exports>
+                    <link name="parent_id">${ $.externalProvider }:params.parent_id</link>
+                </exports>
+                <imports>
+                    <link name="parent_id">${ $.provider }:data.id</link>
+                </imports>
+            </settings>
+        </insertListing>
+    </fieldset>
+</form>

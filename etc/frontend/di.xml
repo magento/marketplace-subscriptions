@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Prevent add-to-cart button showing on subscription-only products -->
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="CategoryView" type="PayPal\Subscription\Plugin\CategoryView" sortOrder="10"/>
+    </type>
+    <type name="PayPal\Subscription\Plugin\CategoryView">
+        <arguments>
+            <argument name="actions" xsi:type="array">
+                <item name="catalog_category_view" xsi:type="string">catalog_category_view</item>
+                <item name="catalogsearch_result_index" xsi:type="string">catalogsearch_result_index</item>
+                <item name="cms_index_index" xsi:type="string">cms_index_index</item>
+                <item name="cms_page_view" xsi:type="string">cms_page_view</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Ensure subscription-only products can not be added to cart unless frequency is specified -->
+    <type name="Magento\Checkout\Model\Cart">
+        <plugin name="paypal_subscription_cart_add_validate" type="PayPal\Subscription\Plugin\CartAddValidate"/>
+    </type>
+    <type name="PayPal\Subscription\Plugin\CartAddValidate">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+</config>
