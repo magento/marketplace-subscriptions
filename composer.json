@@ -12,7 +12,6 @@
     }
   ],
   "require": {
-    "gene/module-braintree": "*",
     "php": "*"
   },
   "autoload": {
