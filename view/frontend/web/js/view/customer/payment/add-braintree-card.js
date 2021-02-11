@@ -2,7 +2,7 @@ define([
     'uiComponent',
     'jquery',
     'underscore',
-    'Magento_Braintree/js/view/payment/adapter',
+    'PayPal_Braintree/js/view/payment/adapter',
     'mage/translate',
     'PayPal_Subscription/js/action/customer/payment/update-braintree-cc-payment',
     'PayPal_Subscription/js/action/customer/payment/load-client-token',

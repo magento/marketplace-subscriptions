@@ -4,7 +4,7 @@
     <module name="PayPal_Subscription" setup_version="1.0.0">
         <sequence>
             <module name="Magento_Amqp"/>
-            <module name="Magento_Braintree"/>
+            <module name="PayPal_Braintree"/>
             <module name="Magento_Catalog"/>
             <module name="Magento_Customer"/>
             <module name="Magento_Eav"/>
