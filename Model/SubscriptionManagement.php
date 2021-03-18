@@ -179,7 +179,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             $subscription->setFrequencyProfileId($frequencyProfileId ? (int) $frequencyProfileId : null);
             $subscription->setFrequency($frequency);
             $subscription->setBillingAddress($this->helper->getSerialisedAddress($order->getBillingAddress()));
-            $subscription->setShippingAddress($this->helper->getSerialisedAddress($order->getShippingAddress()));
+            $subscription->setShippingAddress($this->helper->getSerialisedAddress($order->getBillingAddress()));
             $subscription->setShippingPrice(((float) $order->getShippingAmount()) ?? 0.00);
             $subscription->setShippingMethod($order->getShippingMethod() ?? '');
             $subscription->setPaymentMethod($payment->getMethod());

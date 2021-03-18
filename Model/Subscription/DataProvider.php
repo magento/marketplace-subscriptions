@@ -156,8 +156,7 @@ class DataProvider extends AbstractDataProvider
             }
 
             // Get customer addresses on file
-            $addresses = $this->addressCollectionFactory->create()
-                ->getItemsByColumnValue('parent_id', $subscription->getCustomerId());
+            $addresses = [];
             /** @var Address $address */
             foreach ($addresses as $address) {
                 $addressParts = array_filter([
