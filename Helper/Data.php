@@ -283,10 +283,7 @@ class Data extends AbstractHelper
         $quote->setShippingAddress($this->setAddress($subscription->getShippingAddress()));
         $quote->collectTotals();
 
-        $address = $quote->getShippingAddress();
-        $rates = $address->collectShippingRates();
-
-        return $rates->getAllShippingRates();
+        return [];
     }
 
     private function getSubscription($id)
