@@ -399,6 +399,14 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             if ($order && $order->canInvoice()) {
                 $this->invoiceOrder->execute($order->getId(), true);
             }
+
+            $subscription->addHistory(
+                "Release",
+                "customer",
+                "The subscription has been renewed and payment of $" . $order->getGrandTotal() . " has been received.",
+                true,
+                false
+            );
         } catch (AlreadyExistsException | Exception $e) {
             throw new LocalizedException(__('Could not create release: %1', $e->getMessage()));
         }
