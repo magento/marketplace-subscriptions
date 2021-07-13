@@ -257,7 +257,6 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             $shippingAddress = $this->setAddress($subscription->getShippingAddress());
             $quote->setShippingAddress($shippingAddress);
 
-            $this->addShipping($quote, $subscription->getShippingMethod());
             $this->addPayment(
                 $quote,
                 $subscription->getPaymentMethod(),
@@ -293,10 +292,6 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             }
 
             $order->save();
-
-            if ($order && $order->canInvoice()) {
-                $this->invoiceOrder->execute($order->getId(), true);
-            }
             return $order;
         } catch (DocumentValidationException |
         CouldNotInvoiceException |
@@ -394,11 +389,16 @@ class ReleaseConsumer implements ReleaseConsumerInterface
 
             // Update subscription release dates
             $subscription->setPreviousReleaseDate($subscription->getNextReleaseDate());
+            $subscription->setOrderId((int) $order->getEntityId());
             $subscription->setNextReleaseDate(date(
                 'Y-m-d H:i:s',
-                strtotime(sprintf('+ %d days', $subscription->getFrequency()))
+                strtotime(sprintf('+ %d month', $subscription->getFrequency()))
             ));
             $this->subscriptionResource->save($subscription);
+
+            if ($order && $order->canInvoice()) {
+                $this->invoiceOrder->execute($order->getId(), true);
+            }
         } catch (AlreadyExistsException | Exception $e) {
             throw new LocalizedException(__('Could not create release: %1', $e->getMessage()));
         }

@@ -173,7 +173,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             $subscription->setNextReleaseDate(
                 date(
                     'Y-m-d H:i:s',
-                    strtotime(sprintf('+ %d days', $frequency))
+                    strtotime(sprintf('+ %d month', $frequency))
                 )
             );
             $subscription->setFrequencyProfileId($frequencyProfileId ? (int) $frequencyProfileId : null);
