@@ -83,7 +83,9 @@ class Payment extends Template
     public function getPaymentMethodsJson(): string
     {
         $subscription = $this->subscriptionRepository->getById($this->getSubscriptionId());
-        $subscriptionPaymentData = $this->serializer->unserialize($subscription->getPaymentData());
+        if (!empty($subscription->getPaymentData())) {
+            $subscriptionPaymentData = $this->serializer->unserialize($subscription->getPaymentData());
+        }
 
         $methods = [];
 
@@ -102,9 +104,11 @@ class Payment extends Template
                 $value['masked'] = $tokenDetails['maskedCC'];
                 $value['cardType'] = $tokenDetails['type'];
                 $value['expires'] = $tokenDetails['expirationDate'];
+            } else {
+                $value['payerEmail'] = $tokenDetails['payerEmail'] ? $tokenDetails['payerEmail'] : '';
             }
 
-            if ($subscriptionPaymentData['public_hash'] === $paymentMethod->getPublicHash()) {
+            if (!empty($subscription->getPaymentData()) && ($subscriptionPaymentData['public_hash'] === $paymentMethod->getPublicHash())) {
                 $value['is_current_method'] = true;
             }
 

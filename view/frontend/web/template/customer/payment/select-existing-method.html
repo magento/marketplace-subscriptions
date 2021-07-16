@@ -28,6 +28,13 @@
                                   data-bind="i18n: 'Expires: ' + method.expires"></span>
                         </li>
                     <!-- /ko -->
+
+                    <!-- ko if: method.payerEmail -->
+                    <li class="ps-payment-list-item-info__item">
+                            <span class="ps-address-list-item__address"
+                                  data-bind="i18n: 'Paypal email: ' + method.payerEmail"></span>
+                    </li>
+                    <!-- /ko -->
                 </ul>
 
                 <!-- ko ifnot: $parent.getCurrentMethod(method.id) -->
