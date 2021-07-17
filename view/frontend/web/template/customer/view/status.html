@@ -4,12 +4,13 @@
 *
 -->
 <div class="fieldset">
-    <div class="field">
-        <label class="label"
-               for="select-status"
-               data-bind="i18n: 'Current Subscription Status: '"></label>
-
-        <select id="select-status"
+    <div>
+        <div>
+            <label class="label"
+                   for="select-status"
+                   data-bind="i18n: 'Current Subscription Status:'"></label>
+        </div>
+        <select style="width:300px;" id="select-status"
                 data-bind="options: setStatusOptions(),
                    optionsText: 'label',
                    optionsValue: 'value',
