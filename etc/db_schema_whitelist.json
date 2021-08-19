@@ -29,6 +29,7 @@
             "shipping_method": true,
             "payment_method": true,
             "payment_data": true,
+            "count_of_failed_attempts": true,
             "created_at": true,
             "updated_at": true
         },

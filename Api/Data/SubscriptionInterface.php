@@ -24,6 +24,7 @@ interface SubscriptionInterface
     public const SHIPPING_METHOD = 'shipping_method';
     public const PAYMENT_METHOD = 'payment_method';
     public const PAYMENT_DATA = 'payment_data';
+    public const COUNT_OF_FAILED_ATTEMPTS = 'count_of_failed_attempts';
     public const CREATED_AT = 'created_at';
     public const UPDATED_AT = 'updated_at';
 
@@ -185,6 +186,17 @@ interface SubscriptionInterface
      * @return SubscriptionInterface
      */
     public function setPaymentData(string $paymentData): SubscriptionInterface;
+
+    /**
+     * @return int
+     */
+    public function getCountOfFailedAttempts(): int;
+
+    /**
+     * @param int $countOfFailedAttempts
+     * @return SubscriptionInterface
+     */
+    public function setCountOfFailedAttempts(int $countOfFailedAttempts): SubscriptionInterface;
 
     /**
      * @return string|null

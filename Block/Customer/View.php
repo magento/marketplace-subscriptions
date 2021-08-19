@@ -215,7 +215,6 @@ class View extends Template
     {
         $statusArray = [
             1 => 'Active',
-            2 => 'Pause',
             3 => 'Cancel'
         ];
 

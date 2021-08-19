@@ -30,6 +30,7 @@
         <column xsi:type="longtext" name="payment_data" comment="Payment data"/>
         <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
         <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+        <column xsi:type="tinyint" name="count_of_failed_attempts" default="0" comment="Count of failed attempts"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>

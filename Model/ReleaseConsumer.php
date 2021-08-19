@@ -200,19 +200,25 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             $order = $this->createOrder($quote);
             $this->createRelease($subscription, $order);
         } catch (LocalizedException $e) {
-            $this->subscriptionManagement->changeStatus(
-                $subscription->getCustomerId(),
-                $subscription->getId(),
-                SubscriptionInterface::STATUS_PAUSED
-            );
+            $failedAttempts = (int) $subscription->getCountOfFailedAttempts();
+            $failedAttempts = $failedAttempts + 1;
+            $subscription->setCountOfFailedAttempts($failedAttempts);
+            $subscription->save();
+            if ($failedAttempts >= 3) {
+                $this->subscriptionManagement->changeStatus(
+                    $subscription->getCustomerId(),
+                    $subscription->getId(),
+                    SubscriptionInterface::STATUS_CANCELLED
+                );
 
-            $subscription->addHistory(
-                "Release",
-                "customer",
-                "Subscription automatically paused: " . $e->getMessage(),
-                true,
-                false
-            );
+                $subscription->addHistory(
+                    "Release",
+                    "customer",
+                    "Subscription automatically canceled",
+                    true,
+                    false
+                );
+            }
 
             if ($quote) {
                 $this->releaseEmail->failure($quote, $quote->getCustomer(), $e->getMessage());

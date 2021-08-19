@@ -326,6 +326,23 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * @return int
+     */
+    public function getCountOfFailedAttempts(): int
+    {
+        return (int) $this->getData(self::COUNT_OF_FAILED_ATTEMPTS);
+    }
+
+    /**
+     * @param int $countOfFailedAttempts
+     * @return SubscriptionInterface
+     */
+    public function setCountOfFailedAttempts(int $countOfFailedAttempts): SubscriptionInterface
+    {
+        return $this->setData(self::COUNT_OF_FAILED_ATTEMPTS, $countOfFailedAttempts);
+    }
+
+    /**
      * @return string|null
      */
     public function getCreatedAt(): ?string
