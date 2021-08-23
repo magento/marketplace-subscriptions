@@ -63,6 +63,18 @@ interface SubscriptionManagementInterface
 
     /**
      * @param int $customerId
+     * @param int $subscriptionId
+     * @param int $failedAttempts
+     * @return Data\SubscriptionInterface
+     */
+    public function updateCoultOfFailedAttempts(
+        int $customerId,
+        int $subscriptionId,
+        int $failedAttempts
+    ): \PayPal\Subscription\Api\Data\SubscriptionInterface;
+
+    /**
+     * @param int $customerId
      * @param string $addressType
      * @param int $subscriptionId
      * @param int $addressId

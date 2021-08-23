@@ -202,8 +202,11 @@ class ReleaseConsumer implements ReleaseConsumerInterface
         } catch (LocalizedException $e) {
             $failedAttempts = (int) $subscription->getCountOfFailedAttempts();
             $failedAttempts = $failedAttempts + 1;
-            $subscription->setCountOfFailedAttempts($failedAttempts);
-            $subscription->save();
+            $this->subscriptionManagement->updateCoultOfFailedAttempts(
+                $subscription->getCustomerId(),
+                $subscription->getId(),
+                $failedAttempts
+            );
             if ($failedAttempts >= 3) {
                 $this->subscriptionManagement->changeStatus(
                     $subscription->getCustomerId(),

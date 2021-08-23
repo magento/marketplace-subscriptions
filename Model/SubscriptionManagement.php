@@ -264,6 +264,26 @@ class SubscriptionManagement implements SubscriptionManagementInterface
 
     /**
      * @param int $customerId
+     * @param int $subscriptionId
+     * @param int $failedAttempts
+     * @return SubscriptionInterface
+     * @throws AlreadyExistsException
+     * @throws LocalizedException
+     */
+    public function updateCoultOfFailedAttempts(int $customerId, int $subscriptionId, int $failedAttempts): SubscriptionInterface
+    {
+        try {
+            $subscription = $this->subscriptionRepository->getCustomerSubscription($customerId, $subscriptionId);
+            $subscription->setCountOfFailedAttempts($failedAttempts);
+            $this->subscriptionRepository->save($subscription);
+            return $subscription;
+        } catch (NoSuchEntityException $e) {
+            throw new LocalizedException(__('Could not update failed attempts.'));
+        }
+    }
+
+    /**
+     * @param int $customerId
      * @param string $addressType
      * @param int $subscriptionId
      * @param int $addressId
