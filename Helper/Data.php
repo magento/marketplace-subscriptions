@@ -162,6 +162,17 @@ class Data extends AbstractHelper
     /**
      * @return bool
      */
+    public function getCountOfFailedAttempts(): int
+    {
+        return (int) $this->scopeConfig->getValue(
+            self::CONFIG_PREFIX . 'failed_payments',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * @return bool
+     */
     public function isCronActive(): bool
     {
         return (bool) $this->scopeConfig->getValue(

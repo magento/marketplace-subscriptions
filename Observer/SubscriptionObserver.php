@@ -58,6 +58,7 @@ class SubscriptionObserver implements ObserverInterface
             $subscription = $observer->getEvent()->getSubscription();
             $customer = $this->customerRepository->getById($subscription->getCustomerId());
             if ($subscription->isObjectNew()) {
+                return;
                 $this->subscriptionEmail->new($subscription, $customer);
             }
         } catch (NoSuchEntityException $e) {

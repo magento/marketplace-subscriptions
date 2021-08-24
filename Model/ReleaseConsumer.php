@@ -40,6 +40,7 @@ use PayPal\Subscription\Model\ResourceModel\Subscription as SubscriptionResource
 use PayPal\Subscription\Model\ResourceModel\SubscriptionItem\CollectionFactory as SubscriptionItemCollectionFactory;
 use PayPal\Subscription\Model\ResourceModel\SubscriptionRelease as SubscriptionReleaseResource;
 use Psr\Log\LoggerInterface;
+use PayPal\Subscription\Helper\Data as SubscriptionHelper;
 
 /**
  * Consumer for Release Message Queue.
@@ -132,6 +133,11 @@ class ReleaseConsumer implements ReleaseConsumerInterface
     private $subscriptionManagement;
 
     /**
+     * @var SubscriptionHelper
+     */
+    private $subscriptionHelper;
+
+    /**
      * ReleaseConsumer constructor.
      * @param SubscriptionItemCollectionFactory $subscriptionItemCollectionFactory
      * @param CustomerRepositoryInterface $customerRepository
@@ -168,6 +174,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
         SerializerInterface $serializer,
         LoggerInterface $logger,
         ReleaseEmail $releaseEmail,
+        SubscriptionHelper $subscriptionHelper,
         $subscriptionPayments = []
     ) {
         $this->subscriptionItemCollectionFactory = $subscriptionItemCollectionFactory;
@@ -187,6 +194,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
         $this->logger = $logger;
         $this->subscriptionPayments = $subscriptionPayments;
         $this->releaseEmail = $releaseEmail;
+        $this->subscriptionHelper = $subscriptionHelper;
     }
 
     /**
@@ -199,6 +207,11 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             $quote = $this->createQuote($subscription);
             $order = $this->createOrder($quote);
             $this->createRelease($subscription, $order);
+            $this->subscriptionManagement->updateCoultOfFailedAttempts(
+                $subscription->getCustomerId(),
+                $subscription->getId(),
+                0
+            );
         } catch (LocalizedException $e) {
             $failedAttempts = (int) $subscription->getCountOfFailedAttempts();
             $failedAttempts = $failedAttempts + 1;
@@ -207,7 +220,9 @@ class ReleaseConsumer implements ReleaseConsumerInterface
                 $subscription->getId(),
                 $failedAttempts
             );
-            if ($failedAttempts >= 3) {
+
+            $maxFailedAttempts = $this->subscriptionHelper->getCountOfFailedAttempts() ? (int) $this->subscriptionHelper->getCountOfFailedAttempts() : 3;
+            if ($failedAttempts >= $this->subscriptionHelper->getCountOfFailedAttempts()) {
                 $this->subscriptionManagement->changeStatus(
                     $subscription->getCustomerId(),
                     $subscription->getId(),
