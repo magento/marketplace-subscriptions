@@ -18,7 +18,8 @@
               type="html"
               module="PayPal_Subscription"
               area="frontend"/>
-    <template id="paypal_subscriptions_configuration_subsciption_renew"
+    <template id="paypal_subscriptions_configuration_subscription_renew"
+
               label="PayPal Renew Subscription"
               file="subscription_renew.html"
               type="html"
