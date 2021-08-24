@@ -41,6 +41,9 @@ use PayPal\Subscription\Model\ResourceModel\SubscriptionItem\CollectionFactory a
 use PayPal\Subscription\Model\ResourceModel\SubscriptionRelease as SubscriptionReleaseResource;
 use Psr\Log\LoggerInterface;
 use PayPal\Subscription\Helper\Data as SubscriptionHelper;
+use PayPal\Subscription\Model\Email\Subscription as SubscriptionEmail;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
  * Consumer for Release Message Queue.
@@ -138,6 +141,16 @@ class ReleaseConsumer implements ReleaseConsumerInterface
     private $subscriptionHelper;
 
     /**
+     * @var SubscriptionEmail
+     */
+    private $subscriptionEmail;
+
+    /**
+     * @var ScopeConfigInterface|MockObject
+     */
+    private $scopeConfig;
+
+    /**
      * ReleaseConsumer constructor.
      * @param SubscriptionItemCollectionFactory $subscriptionItemCollectionFactory
      * @param CustomerRepositoryInterface $customerRepository
@@ -155,6 +168,9 @@ class ReleaseConsumer implements ReleaseConsumerInterface
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param ReleaseEmail $releaseEmail
+     * @param SubscriptionHelper $subscriptionHelper
+     * @param SubscriptionEmail $subscriptionEmail
+     * @param ScopeConfigInterface $scopeConfig
      * @param array $subscriptionPayments
      */
     public function __construct(
@@ -175,6 +191,8 @@ class ReleaseConsumer implements ReleaseConsumerInterface
         LoggerInterface $logger,
         ReleaseEmail $releaseEmail,
         SubscriptionHelper $subscriptionHelper,
+        SubscriptionEmail $subscriptionEmail,
+        ScopeConfigInterface $scopeConfig,
         $subscriptionPayments = []
     ) {
         $this->subscriptionItemCollectionFactory = $subscriptionItemCollectionFactory;
@@ -195,6 +213,8 @@ class ReleaseConsumer implements ReleaseConsumerInterface
         $this->subscriptionPayments = $subscriptionPayments;
         $this->releaseEmail = $releaseEmail;
         $this->subscriptionHelper = $subscriptionHelper;
+        $this->subscriptionEmail = $subscriptionEmail;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -424,6 +444,8 @@ class ReleaseConsumer implements ReleaseConsumerInterface
                 $this->invoiceOrder->execute($order->getId(), true);
             }
 
+            $this->sendRenewEmail($subscription, $order);
+
             $subscription->addHistory(
                 "Release",
                 "customer",
@@ -434,6 +456,37 @@ class ReleaseConsumer implements ReleaseConsumerInterface
         } catch (AlreadyExistsException | Exception $e) {
             throw new LocalizedException(__('Could not create release: %1', $e->getMessage()));
         }
+    }
+
+    /**
+     * @param SubscriptionInterface $subscription
+     * @param $order
+     * @return mixed
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    private function sendRenewEmail(SubscriptionInterface $subscription, $order)
+    {
+        $subscriptionItems = [];
+        foreach ($order->getItems() as $item) {
+            if ($item->getProductOptionByCode(SubscriptionHelper::IS_SUBSCRIPTION)) {
+                $subscriptionItems[] = $item;
+            }
+        }
+        $customer = $this->customerRepository->getById($subscription->getCustomerId());
+        $data = [
+            'store' => $order->getStore(),
+            'customer_name' => sprintf('%1$s %2$s', $customer->getFirstname(), $customer->getLastname()),
+            'subscription' => $subscription,
+            'items' => $subscriptionItems
+        ];
+
+        $customTemplate = $this->scopeConfig->getValue(
+            SubscriptionEmail::CONFIG_RENEW_SUBSCRIPTION,
+            ScopeInterface::SCOPE_STORE
+        );
+
+        return $this->subscriptionEmail->sendEmail($data, $customer, $customTemplate ?? SubscriptionEmail::CONFIG_RENEW_SUBSCRIPTION);
     }
 
     /**

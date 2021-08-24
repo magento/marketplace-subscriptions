@@ -18,4 +18,10 @@
               type="html"
               module="PayPal_Subscription"
               area="frontend"/>
+    <template id="paypal_subscriptions_configuration_subsciption_renew"
+              label="PayPal Renew Subscription"
+              file="subscription_renew.html"
+              type="html"
+              module="PayPal_Subscription"
+              area="frontend"/>
 </config>

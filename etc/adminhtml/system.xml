@@ -17,6 +17,11 @@
                     <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
                 </field>
+                <field id="subscription_renew" translate="label comment" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Renew Subscription Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
                 <field id="subscription_update" translate="label comment" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Update Subscription Email Template</label>
                     <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>

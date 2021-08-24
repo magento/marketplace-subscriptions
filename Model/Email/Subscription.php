@@ -23,11 +23,14 @@ use Psr\Log\LoggerInterface;
 
 class Subscription extends Email
 {
-    private const TEMPLATE_NEW_SUBSCRIPTION = 'paypal_subscriptions_configuration_subscription_new';
-    private const TEMPLATE_UPDATE_SUBSCRIPTION = 'paypal_subscriptions_configuration_subscription_update';
+    public const TEMPLATE_NEW_SUBSCRIPTION = 'paypal_subscriptions_configuration_subscription_new';
+    public const TEMPLATE_UPDATE_SUBSCRIPTION = 'paypal_subscriptions_configuration_subscription_update';
+    public const TEMPLATE_RENEW_SUBSCRIPTION = 'paypal_subscriptions_configuration_subscription_renew';
 
-    private const CONFIG_NEW_SUBSCRIPTION = 'paypal_subscriptions/configuration/subscription_new';
-    private const CONFIG_UPDATE_SUBSCRIPTION = 'paypal_subscriptions/configuration/subscription_update';
+    public const CONFIG_NEW_SUBSCRIPTION = 'paypal_subscriptions/configuration/subscription_new';
+    public const CONFIG_UPDATE_SUBSCRIPTION = 'paypal_subscriptions/configuration/subscription_update';
+    public const CONFIG_RENEW_SUBSCRIPTION = 'paypal_subscriptions/configuration/subscription_renew';
+
 
     /**
      * @var SubscriptionItemCollectionFactory

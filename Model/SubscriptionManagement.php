@@ -239,48 +239,28 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @throws LocalizedException
      */
     public function changeStatus(int $customerId, int $subscriptionId, int $status): SubscriptionInterface
-    {
-        try {
-            $subscription = $this->subscriptionRepository->getCustomerSubscription($customerId, $subscriptionId);
-            $oldStatus = $this->helper->getStatusLabel($subscription->getStatus());
-            if ($oldStatus == $status) {
-                return $subscription;
-            }
-            $subscription->setStatus($status);
-            $this->subscriptionRepository->save($subscription);
-            $newStatus = $this->helper->getStatusLabel($status);
-
-            $subscription->addHistory(
-                'Change Status',
-                'customer',
-                sprintf('The status was updated from %s to %s', $oldStatus, $newStatus)
-            );
-
+{
+    try {
+        $subscription = $this->subscriptionRepository->getCustomerSubscription($customerId, $subscriptionId);
+        $oldStatus = $this->helper->getStatusLabel($subscription->getStatus());
+        if ($oldStatus == $status) {
             return $subscription;
-        } catch (NoSuchEntityException $e) {
-            throw new LocalizedException(__('Could not update status.'));
         }
-    }
+        $subscription->setStatus($status);
+        $this->subscriptionRepository->save($subscription);
+        $newStatus = $this->helper->getStatusLabel($status);
 
-    /**
-     * @param int $customerId
-     * @param int $subscriptionId
-     * @param int $failedAttempts
-     * @return SubscriptionInterface
-     * @throws AlreadyExistsException
-     * @throws LocalizedException
-     */
-    public function updateCoultOfFailedAttempts(int $customerId, int $subscriptionId, int $failedAttempts): SubscriptionInterface
-    {
-        try {
-            $subscription = $this->subscriptionRepository->getCustomerSubscription($customerId, $subscriptionId);
-            $subscription->setCountOfFailedAttempts($failedAttempts);
-            $this->subscriptionRepository->save($subscription);
-            return $subscription;
-        } catch (NoSuchEntityException $e) {
-            throw new LocalizedException(__('Could not update failed attempts.'));
-        }
+        $subscription->addHistory(
+            'Change Status',
+            'customer',
+            sprintf('The status was updated from %s to %s', $oldStatus, $newStatus)
+        );
+
+        return $subscription;
+    } catch (NoSuchEntityException $e) {
+        throw new LocalizedException(__('Could not update status.'));
     }
+}
 
     /**
      * @param int $customerId
@@ -457,5 +437,25 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         $searchCriteria = $this->searchCriteriaBuilder->create();
 
         return $this->subscriptionRepository->getList($searchCriteria)->getItems();
+    }
+
+    /**
+     * @param int $customerId
+     * @param int $subscriptionId
+     * @param int $failedAttempts
+     * @return SubscriptionInterface
+     * @throws AlreadyExistsException
+     * @throws LocalizedException
+     */
+    public function updateCoultOfFailedAttempts(int $customerId, int $subscriptionId, int $failedAttempts): SubscriptionInterface
+    {
+        try {
+            $subscription = $this->subscriptionRepository->getCustomerSubscription($customerId, $subscriptionId);
+            $subscription->setCountOfFailedAttempts($failedAttempts);
+            $this->subscriptionRepository->save($subscription);
+            return $subscription;
+        } catch (NoSuchEntityException $e) {
+            throw new LocalizedException(__('Could not update failed attempts.'));
+        }
     }
 }

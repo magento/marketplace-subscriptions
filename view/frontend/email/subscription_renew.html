@@ -1,0 +1,22 @@
+<!--@subject {{trans "%store_name New Subscription" store_name=$store.frontend_name}} @-->
+<!--@vars {
+"var customer_name":"Customer Name",
+"var subscription.getFrequency()":"Subscription Frequency (in days)",
+"var subscription.getNextReleaseDate()":"Next Release Date",
+"var formattedBillingAddress":"Billing Address",
+"var formattedShippingAddress":"Shipping Address",
+"var subscription.getShippingPrice()":"Shipping Price",
+"layout handle=\"subscription_items\" order=$items area=\"frontend\"":"Subscription Items Grid"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{var customer_name}}</p>
+<p>{{var subscription.getFrequency()}}</p>
+<p>{{var subscription.getNextReleaseDate()}}</p>
+<p>{{var formattedBillingAddress}}</p>
+<p>{{var formattedShippingAddress}}</p>
+<p>{{var subscription.getShippingPrice()}}</p>
+
+{{layout handle="subscription_items" items=$items area="frontend"}}
+
+{{template config_path="design/email/footer_template"}}

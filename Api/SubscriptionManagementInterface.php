@@ -61,6 +61,7 @@ interface SubscriptionManagementInterface
         int $status
     ): \PayPal\Subscription\Api\Data\SubscriptionInterface;
 
+
     /**
      * @param int $customerId
      * @param int $subscriptionId
