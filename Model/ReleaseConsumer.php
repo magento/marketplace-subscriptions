@@ -486,7 +486,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             ScopeInterface::SCOPE_STORE
         );
 
-        return $this->subscriptionEmail->sendEmail($data, $customer, $customTemplate ?? SubscriptionEmail::CONFIG_RENEW_SUBSCRIPTION);
+        return $this->subscriptionEmail->sendEmail($data, $customer, $customTemplate ?? SubscriptionEmail::TEMPLATE_RENEW_SUBSCRIPTION);
     }
 
     /**
