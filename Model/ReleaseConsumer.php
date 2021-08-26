@@ -249,6 +249,8 @@ class ReleaseConsumer implements ReleaseConsumerInterface
                     SubscriptionInterface::STATUS_CANCELLED
                 );
 
+                $this->sendCancelEmail($subscription, $quote);
+
                 $subscription->addHistory(
                     "Release",
                     "customer",
@@ -326,12 +328,12 @@ class ReleaseConsumer implements ReleaseConsumerInterface
 
             foreach ($order->getItems() as $orderItem) {
                 $orderItem->setProductOptions(
-                    // @codingStandardsIgnoreStart
+                // @codingStandardsIgnoreStart
                     array_merge(
                         $orderItem->getProductOptions(),
                         ['is_subscription' => true]
                     )
-                    // @codingStandardsIgnoreEnd
+                // @codingStandardsIgnoreEnd
                 );
             }
 
@@ -429,7 +431,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
                 ->setCustomerId($subscription->getCustomerId())
                 ->setOrderId((int) $order->getEntityId())
                 ->setStatus(SubscriptionReleaseInterface::STATUS_ACTIVE);
-                $this->subscriptionReleaseResource->save($release);
+            $this->subscriptionReleaseResource->save($release);
 
             // Update subscription release dates
             $subscription->setPreviousReleaseDate($subscription->getNextReleaseDate());
@@ -487,6 +489,35 @@ class ReleaseConsumer implements ReleaseConsumerInterface
         );
 
         return $this->subscriptionEmail->sendEmail($data, $customer, $customTemplate ?? SubscriptionEmail::TEMPLATE_RENEW_SUBSCRIPTION);
+    }
+
+    /**
+     * @param SubscriptionInterface $subscription
+     * @param $quote
+     * @return array
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    private function sendCancelEmail(SubscriptionInterface $subscription, $quote)
+    {
+        $orderItems = [];
+        foreach ($quote->getItemsCollection()->getItems() as $item) {
+            $orderItems[] = $item;
+        }
+
+        $customer = $this->customerRepository->getById($subscription->getCustomerId());
+        $data = [
+            'customer_name' => sprintf('%1$s %2$s', $customer->getFirstname(), $customer->getLastname()),
+            'subscription' => $subscription,
+            'items' => $orderItems
+        ];
+
+        $customTemplate = $this->scopeConfig->getValue(
+            SubscriptionEmail::CONFIG_CANCEL_SUBSCRIPTION,
+            ScopeInterface::SCOPE_STORE
+        );
+
+        return $this->subscriptionEmail->sendEmail($data, $customer, $customTemplate ?? SubscriptionEmail::TEMPLATE_CANCEL_SUBSCRIPTION);
     }
 
     /**

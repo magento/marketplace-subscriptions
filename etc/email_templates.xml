@@ -19,9 +19,14 @@
               module="PayPal_Subscription"
               area="frontend"/>
     <template id="paypal_subscriptions_configuration_subscription_renew"
-
               label="PayPal Renew Subscription"
               file="subscription_renew.html"
+              type="html"
+              module="PayPal_Subscription"
+              area="frontend"/>
+    <template id="paypal_subscriptions_configuration_subscription_cancel"
+              label="You Subscription was cancelled"
+              file="subscription_cancel.html"
               type="html"
               module="PayPal_Subscription"
               area="frontend"/>
