@@ -243,13 +243,13 @@ class SubscriptionManagement implements SubscriptionManagementInterface
     try {
         $subscription = $this->subscriptionRepository->getCustomerSubscription($customerId, $subscriptionId);
         $oldStatus = $this->helper->getStatusLabel($subscription->getStatus());
+        if ($subscription->getStatus() == $status) {
+            return $subscription;
+        }
         $subscription->setStatus($status);
         $this->subscriptionRepository->save($subscription);
         $newStatus = $this->helper->getStatusLabel($status);
 
-        if ($oldStatus == $newStatus) {
-            return $subscription;
-        }
         $subscription->addHistory(
             'Change Status',
             'customer',
