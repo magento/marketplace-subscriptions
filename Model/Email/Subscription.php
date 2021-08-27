@@ -26,10 +26,12 @@ class Subscription extends Email
     public const TEMPLATE_NEW_SUBSCRIPTION = 'paypal_subscriptions_configuration_subscription_new';
     public const TEMPLATE_UPDATE_SUBSCRIPTION = 'paypal_subscriptions_configuration_subscription_update';
     public const TEMPLATE_RENEW_SUBSCRIPTION = 'paypal_subscriptions_configuration_subscription_renew';
+    public const TEMPLATE_CANCEL_SUBSCRIPTION = 'paypal_subscriptions_configuration_subscription_cancel';
 
     public const CONFIG_NEW_SUBSCRIPTION = 'paypal_subscriptions/configuration/subscription_new';
     public const CONFIG_UPDATE_SUBSCRIPTION = 'paypal_subscriptions/configuration/subscription_update';
     public const CONFIG_RENEW_SUBSCRIPTION = 'paypal_subscriptions/configuration/subscription_renew';
+    public const CONFIG_CANCEL_SUBSCRIPTION = 'paypal_subscriptions/configuration/subscription_cancel';
 
 
     /**
