@@ -22,16 +22,16 @@ class Release extends Email
      */
     public function failure(CartInterface $quote, CustomerInterface $customer, string $reason)
     {
-        $orderItems = [];
+        $orderItem = [];
 
         foreach ($quote->getItemsCollection()->getItems() as $item) {
-            $orderItems[] = $item;
+            $orderItem = $item;
         }
 
         $data = [
             'customer_name' => sprintf('%1$s %2$s', $customer->getFirstname(), $customer->getLastname()),
             'failure_reason' => $reason,
-            'order_items' => $orderItems
+            'item' => $orderItem
         ];
 
         $this->sendEmailAdmin($data, $customTemplate ?? self::TEMPLATE_FAILURE, $customer);
@@ -47,7 +47,7 @@ class Release extends Email
         $data = [
             'customer_name' => 'Unknown',
             'failure_reason' => $reason,
-            'order_items' => []
+            'item' => []
         ];
 
         return $this->sendEmailAdmin($data, $this->getCustomTemplate());

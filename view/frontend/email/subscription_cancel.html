@@ -1,12 +1,24 @@
-<!--@subject {{trans "Your Subscription was canceled"}} @-->
+<!--@subject {{trans "Renew you subscription Adobe Commerce"}} @-->
 <!--@vars {
 "var customer_name":"Customer Name",
-"layout handle=\"subscription_items\" order=$items area=\"frontend\"":"Subscription Items Grid"
+"var item":"Subscription item"
 } @-->
 {{template config_path="design/email/header_template"}}
+<tr>
+    <td colspan="2" style="padding-left:15px;">
 
-<p>Hello, {{var customer_name}}</p>
-<p>Your subscription has been canceled.</p>
-{{layout handle="subscription_items" items=$items area="frontend"}}
-
-{{template config_path="design/email/footer_template"}}
+        <p>Hello, {{var customer_name}}</p>
+        <p>Your monthly subscription for extension "{{var item.getName()}}" has been canceled.</p>
+        </br>
+        <p>Best Regards,</p>
+        <p>The team at Adobe.</p><br>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+        {{template config_path="design/email/footer_template"}}
+    </td>
+</tr>
+</table>
+</body>
+</html>

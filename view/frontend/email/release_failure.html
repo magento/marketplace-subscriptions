@@ -1,15 +1,25 @@
-<!--@subject {{trans "%store_name Subscription Release Failure" store_name=$store.frontend_name}} @-->
+<!--@subject {{trans "Your Subscription Release Failure"}} @-->
 <!--@vars {
 "var customer_name":"Customer Name",
-"var failure_reason":"Failure Reason",
-"layout handle=\"order_items\" order=$order_items area=\"frontend\"":"Order Items Grid"
+"var item":"Subscription item"
 } @-->
 {{template config_path="design/email/header_template"}}
+<tr>
+    <td colspan="2" style="padding-left:15px;">
 
-<p>{{var customer_name}}</p>
-
-{{layout handle="order_items" items=$order_items area="frontend"}}
-
-<p>{{var failure_reason}}</p>
-
-{{template config_path="design/email/footer_template"}}
+        <p>Hello, {{var customer_name}}</p>
+        <p>We were unable to receive payment for your subscription for product "{{var item.getName()}}".</p>
+        <p>Please check your current payment method or add a new one in your account.</p>
+        </br>
+        <p>Best Regards,</p>
+        <p>The team at Adobe.</p><br>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+        {{template config_path="design/email/footer_template"}}
+    </td>
+</tr>
+</table>
+</body>
+</html>

@@ -1,13 +1,26 @@
-<!--@subject {{trans "%store_name Subscription Update" store_name=$store.frontend_name}} @-->
+<!--@subject {{trans "You Subscription was updated"}} @-->
 <!--@vars {
 "var customer_name":"Customer Name",
 "var update.action":"Update Action",
 "var update.description":"Update Description"
 } @-->
 {{template config_path="design/email/header_template"}}
-paypal_update
-<p>{{var customer_name}}</p>
-<p>{{var update.action}}</p>
-<p>{{var update.description}}</p>
-
-{{template config_path="design/email/footer_template"}}
+<tr>
+    <td colspan="2" style="padding-left:15px;">
+        <p>Hello, {{var customer_name}}</p>
+        <p>You subscription was successfully updated.</p>
+        <p>Action:</p>
+        <p>{{var update.description}}</p>
+        </br>
+        <p>Best Regards,</p>
+        <p>The team at Adobe.</p><br>
+    </td>
+</tr>
+<tr>
+    <td colspan="2">
+        {{template config_path="design/email/footer_template"}}
+    </td>
+</tr>
+</table>
+</body>
+</html>

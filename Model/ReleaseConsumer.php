@@ -469,10 +469,10 @@ class ReleaseConsumer implements ReleaseConsumerInterface
      */
     private function sendRenewEmail(SubscriptionInterface $subscription, $order)
     {
-        $subscriptionItems = [];
+        $subscriptionItem = [];
         foreach ($order->getItems() as $item) {
             if ($item->getProductOptionByCode(SubscriptionHelper::IS_SUBSCRIPTION)) {
-                $subscriptionItems[] = $item;
+                $subscriptionItem = $item;
             }
         }
         $customer = $this->customerRepository->getById($subscription->getCustomerId());
@@ -480,7 +480,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             'store' => $order->getStore(),
             'customer_name' => sprintf('%1$s %2$s', $customer->getFirstname(), $customer->getLastname()),
             'subscription' => $subscription,
-            'items' => $subscriptionItems
+            'item' => $subscriptionItem
         ];
 
         $customTemplate = $this->scopeConfig->getValue(
@@ -500,16 +500,16 @@ class ReleaseConsumer implements ReleaseConsumerInterface
      */
     private function sendCancelEmail(SubscriptionInterface $subscription, $quote)
     {
-        $orderItems = [];
+        $orderItem = [];
         foreach ($quote->getItemsCollection()->getItems() as $item) {
-            $orderItems[] = $item;
+            $orderItem = $item;
         }
 
         $customer = $this->customerRepository->getById($subscription->getCustomerId());
         $data = [
             'customer_name' => sprintf('%1$s %2$s', $customer->getFirstname(), $customer->getLastname()),
             'subscription' => $subscription,
-            'items' => $orderItems
+            'item' => $orderItem
         ];
 
         $customTemplate = $this->scopeConfig->getValue(
