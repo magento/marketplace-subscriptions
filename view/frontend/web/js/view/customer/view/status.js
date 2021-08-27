@@ -42,6 +42,12 @@ define([
             var that = this,
                 updatedStatus = event.target.value;
 
+            if (event.target.value == 3) {
+                if (!confirm('Are you sure you want to cancel your subscription?. In this case, you will not be able to activate it or get your money back.')) {
+                    return;
+                }
+            }
+
             // Clear Message
             that.clearMessage();
 
