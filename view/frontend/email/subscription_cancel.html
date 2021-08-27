@@ -1,17 +1,12 @@
-<!--@subject {{trans "%store_name New Subscription" store_name=$store.frontend_name}} @-->
+<!--@subject {{trans "Your Subscription was canceled"}} @-->
 <!--@vars {
 "var customer_name":"Customer Name",
-"var subscription.getFrequency()":"Subscription Frequency (in days)",
-"var subscription.getNextReleaseDate()":"Next Release Date",
-"var formattedBillingAddress":"Billing Address",
-"var formattedShippingAddress":"Shipping Address",
-"var subscription.getShippingPrice()":"Shipping Price",
 "layout handle=\"subscription_items\" order=$items area=\"frontend\"":"Subscription Items Grid"
 } @-->
 {{template config_path="design/email/header_template"}}
 
 <p>Hello, {{var customer_name}}</p>
-<p>Your subscription was canceled.</p>
+<p>Your subscription has been canceled.</p>
 {{layout handle="subscription_items" items=$items area="frontend"}}
 
 {{template config_path="design/email/footer_template"}}
