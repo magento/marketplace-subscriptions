@@ -44,6 +44,7 @@ define([
 
             if (event.target.value == 3) {
                 if (!confirm('Are you sure you want to cancel your subscription?. In this case, you will not be able to activate it or get your money back.')) {
+                    $('#select-status option[value=1]').attr('selected','selected');
                     return;
                 }
             }
