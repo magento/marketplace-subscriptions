@@ -235,22 +235,21 @@ class View extends Template
      * @param array $attributes
      * @return string
      */
+    /**
+     * @param $product
+     * @param array $attributes
+     * @return string
+     */
     public function getImageUrl($product, $attributes = []): string
     {
-        $imageType = self::IMAGE_TYPE;
-        $imagePath = $product->getProductUrl();
-
-        if ($imagePath && $imagePath !== '' && $imagePath !== 'no_selection') {
-
-            // Get Image Url
-            $image = $this->imageHelper
-                ->init($product, $imageType, $attributes)
+        $imagePath = $product->getImage();
+        if (!empty($imagePath) && $imagePath !== 'no_selection') {
+            $url = $this->imageHelper
+                ->init($product, self::IMAGE_TYPE, $attributes)
                 ->setImageFile($imagePath)
                 ->getUrl();
-
-            return $image;
+            return $url;
         }
-
         return '';
     }
 }
