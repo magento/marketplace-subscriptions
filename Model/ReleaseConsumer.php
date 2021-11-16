@@ -438,7 +438,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             $subscription->setOrderId((int) $order->getEntityId());
             $subscription->setNextReleaseDate(date(
                 'Y-m-d H:i:s',
-                strtotime(sprintf('+ %d month', $subscription->getFrequency()))
+                strtotime(sprintf('+ %d year', $subscription->getFrequency()))
             ));
             $this->subscriptionResource->save($subscription);
 
