@@ -143,13 +143,14 @@ define([
          */
         tokenizeHostedFields: function () {
             var that = this;
-
+            $('body').trigger('processStart');
             // Reset Message
             that.message();
 
             // Tokenize
             this.hostedFieldsInstance.tokenize({}, function (tokenizeErr, payload) {
                 if (tokenizeErr) {
+                    $('body').trigger('processStart');
                     switch (tokenizeErr.code) {
                         case 'HOSTED_FIELDS_FIELDS_EMPTY':
                             that.message($t('All fields are empty! Please fill out the form.'));
@@ -167,6 +168,7 @@ define([
                             that.message($t('Something went wrong.'));
                     }
                 } else {
+                    $('body').trigger('processStart');
                     this.config.onPaymentMethodReceived(payload);
                 }
             }.bind(this));
