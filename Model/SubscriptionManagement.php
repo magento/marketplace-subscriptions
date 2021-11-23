@@ -138,7 +138,8 @@ class SubscriptionManagement implements SubscriptionManagementInterface
         $subscription = $this->createSubscription(
             $order,
             $frequency,
-            $frequencyProfileId
+            $frequencyProfileId,
+            $item
         );
         $this->subscriptionItemManagement->createSubscriptionItem($subscription, $item);
 
@@ -149,13 +150,14 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @param OrderInterface $order
      * @param int $frequency
      * @param null $frequencyProfileId
+     * @param null $item
      * @return SubscriptionInterface
-     * @throws LocalizedException
      */
     public function createSubscription(
         OrderInterface $order,
         int $frequency,
-        $frequencyProfileId = null
+        $frequencyProfileId = null,
+        $item = null
     ): SubscriptionInterface {
         if (!$order->getCustomerId()) {
             throw new LocalizedException(__('Customer ID missing.'));
@@ -170,12 +172,22 @@ class SubscriptionManagement implements SubscriptionManagementInterface
             $subscription->setCustomerId((int) $order->getCustomerId());
             $subscription->setOrderId((int) $order->getId());
             $subscription->setStatus(SubscriptionInterface::STATUS_ACTIVE);
-            $subscription->setNextReleaseDate(
-                date(
-                    'Y-m-d H:i:s',
-                    strtotime(sprintf('+ %d year', $frequency))
-                )
-            );
+            if (!is_null($item) && !empty($item->getData('mm_is_grace_period_applied'))) {
+                $subscription->setNextReleaseDate(
+                    date(
+                        'Y-m-d H:i:s',
+                        strtotime(sprintf('+ %d days', 180))
+                    );
+                );
+            } else {
+                $subscription->setNextReleaseDate(
+                    date(
+                        'Y-m-d H:i:s',
+                        strtotime(sprintf('+ %d year', $frequency))
+                    )
+                );
+            }
+
             $subscription->setFrequencyProfileId($frequencyProfileId ? (int) $frequencyProfileId : null);
             $subscription->setFrequency($frequency);
             $subscription->setBillingAddress($this->helper->getSerialisedAddress($order->getBillingAddress()));
@@ -239,28 +251,28 @@ class SubscriptionManagement implements SubscriptionManagementInterface
      * @throws LocalizedException
      */
     public function changeStatus(int $customerId, int $subscriptionId, int $status): SubscriptionInterface
-{
-    try {
-        $subscription = $this->subscriptionRepository->getCustomerSubscription($customerId, $subscriptionId);
-        $oldStatus = $this->helper->getStatusLabel($subscription->getStatus());
-        if ($subscription->getStatus() == $status) {
+    {
+        try {
+            $subscription = $this->subscriptionRepository->getCustomerSubscription($customerId, $subscriptionId);
+            $oldStatus = $this->helper->getStatusLabel($subscription->getStatus());
+            if ($subscription->getStatus() == $status) {
+                return $subscription;
+            }
+            $subscription->setStatus($status);
+            $this->subscriptionRepository->save($subscription);
+            $newStatus = $this->helper->getStatusLabel($status);
+
+            $subscription->addHistory(
+                'Change Status',
+                'customer',
+                sprintf('The status was updated from %s to %s', $oldStatus, $newStatus)
+            );
+
             return $subscription;
+        } catch (NoSuchEntityException $e) {
+            throw new LocalizedException(__('Could not update status.'));
         }
-        $subscription->setStatus($status);
-        $this->subscriptionRepository->save($subscription);
-        $newStatus = $this->helper->getStatusLabel($status);
-
-        $subscription->addHistory(
-            'Change Status',
-            'customer',
-            sprintf('The status was updated from %s to %s', $oldStatus, $newStatus)
-        );
-
-        return $subscription;
-    } catch (NoSuchEntityException $e) {
-        throw new LocalizedException(__('Could not update status.'));
     }
-}
 
     /**
      * @param int $customerId
