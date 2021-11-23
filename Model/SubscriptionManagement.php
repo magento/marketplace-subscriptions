@@ -177,7 +177,7 @@ class SubscriptionManagement implements SubscriptionManagementInterface
                     date(
                         'Y-m-d H:i:s',
                         strtotime(sprintf('+ %d days', 180))
-                    );
+                    )
                 );
             } else {
                 $subscription->setNextReleaseDate(
