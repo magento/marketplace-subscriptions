@@ -112,8 +112,8 @@ class CartItemData
 
         // Get product ID from item
         $product = $this->productRepository->getById($quoteItem->getProductId());
-
-        if ($frequencyProfileId = $product->getCustomAttribute('subscription_frequency_profile')) {
+        $frequencyProfileId = (int)$product->getCustomAttribute('subscription_frequency_profile');
+        if (!empty($frequencyProfileId)) {
 
             $frequencyProfile = $this->frequencyProfile->getById((int) $frequencyProfileId->getValue());
             $intervalOptions = $frequencyProfile->getFrequencyOptions();
