@@ -112,17 +112,19 @@ class CartItemData
 
         // Get product ID from item
         $product = $this->productRepository->getById($quoteItem->getProductId());
-        $frequencyProfileId = (int)$product->getCustomAttribute('subscription_frequency_profile');
-        if (!empty($frequencyProfileId)) {
 
-            $frequencyProfile = $this->frequencyProfile->getById((int) $frequencyProfileId->getValue());
-            $intervalOptions = $frequencyProfile->getFrequencyOptions();
+        if ($frequencyProfileId = $product->getCustomAttribute('subscription_frequency_profile')) {
+            if (!empty($frequencyProfileId->getValue())) {
+                $frequencyProfile = $this->frequencyProfile->getById((int) $frequencyProfileId->getValue());
+                $intervalOptions = $frequencyProfile->getFrequencyOptions();
 
-            if ($isSubscription && $frequencyOptionInterval) {
-                $subscriptionData[SubscriptionHelper::IS_SUBSCRIPTION] = true;
-                $subscriptionData[SubscriptionHelper::FREQ_OPT_INTERVAL] = $frequencyOptionInterval;
-                $subscriptionData[SubscriptionHelper::FREQ_OPT_INTERVAL_OPTIONS] = $intervalOptions;
+                if ($isSubscription && $frequencyOptionInterval) {
+                    $subscriptionData[SubscriptionHelper::IS_SUBSCRIPTION] = true;
+                    $subscriptionData[SubscriptionHelper::FREQ_OPT_INTERVAL] = $frequencyOptionInterval;
+                    $subscriptionData[SubscriptionHelper::FREQ_OPT_INTERVAL_OPTIONS] = $intervalOptions;
+                }
             }
+
         }
 
         return array_merge($result, $subscriptionData);
