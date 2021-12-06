@@ -20,7 +20,7 @@ class Release extends Email
      * @param string $reason
      * @return array
      */
-    public function failure(CartInterface $quote, CustomerInterface $customer, string $reason)
+    public function failure(CartInterface $quote, CustomerInterface $customer, $subscription)
     {
         $orderItem = [];
 
@@ -30,8 +30,8 @@ class Release extends Email
 
         $data = [
             'customer_name' => sprintf('%1$s %2$s', $customer->getFirstname(), $customer->getLastname()),
-            'failure_reason' => $reason,
-            'item' => $orderItem
+            'item' => $orderItem,
+            'subscription' => $subscription
         ];
 
         $this->sendEmailAdmin($data, $customTemplate ?? self::TEMPLATE_FAILURE, $customer);

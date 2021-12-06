@@ -261,7 +261,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             }
 
             if ($quote) {
-                $this->releaseEmail->failure($quote, $quote->getCustomer(), $e->getMessage());
+                $this->releaseEmail->failure($quote, $quote->getCustomer(), $subscription);
             } else {
                 $this->releaseEmail->failureAdmin($e->getMessage());
             }

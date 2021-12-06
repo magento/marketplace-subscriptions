@@ -134,6 +134,8 @@ class Subscription extends Email
         $data = [
             'store' => $order->getStore(),
             'customer_name' => sprintf('%1$s %2$s', $customer->getFirstname(), $customer->getLastname()),
+            'subscription' => $subscription,
+            'item' => reset($this->getSubscriptionItems($subscription->getId())),
             'update' => [
                 'action' => $updated['action'],
                 'description' => $updated['description'],
