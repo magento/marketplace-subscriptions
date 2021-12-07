@@ -15,6 +15,7 @@ interface SubscriptionItemInterface
     public const PRICE = 'price';
     public const QUANTITY = 'qty';
     public const PRODUCT_ID = 'product_id';
+    public const ORDER_ID = 'order_id';
 
     /**
      * @return int
@@ -70,4 +71,15 @@ interface SubscriptionItemInterface
      * @return SubscriptionItemInterface
      */
     public function setProductId(int $productId): SubscriptionItemInterface;
+
+    /**
+     * @return int
+     */
+    public function getOrderId(): int;
+
+    /**
+     * @param int $orderId
+     * @return SubscriptionItemInterface
+     */
+    public function setOrderId(int $orderId): SubscriptionItemInterface;
 }

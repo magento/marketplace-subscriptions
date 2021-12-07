@@ -49,6 +49,7 @@
             "price": true,
             "qty": true,
             "product_id": true,
+            "order_id": true,
             "created_at": true,
             "updated_at": true
         },
