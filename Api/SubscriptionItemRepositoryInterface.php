@@ -24,9 +24,9 @@ interface SubscriptionItemRepositoryInterface
 
     /**
      * @param SearchCriteriaInterface $searchCriteria
-     * @return SubscriptionItemSearchResultInterface
+     * @return mixed
      */
-    public function getList(SearchCriteriaInterface $searchCriteria): SubscriptionItemSearchResultInterface;
+    public function getList(SearchCriteriaInterface $searchCriteria);
 
     /**
      * @param SubscriptionItemInterface $subscriptionItem
