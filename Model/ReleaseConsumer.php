@@ -242,7 +242,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             );
 
             $maxFailedAttempts = $this->subscriptionHelper->getCountOfFailedAttempts() ? (int) $this->subscriptionHelper->getCountOfFailedAttempts() : 3;
-            if ($failedAttempts >= $this->subscriptionHelper->getCountOfFailedAttempts()) {
+            if ($failedAttempts >= $maxFailedAttempts) {
                 $this->subscriptionManagement->changeStatus(
                     $subscription->getCustomerId(),
                     $subscription->getId(),
@@ -254,7 +254,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
                 $subscription->addHistory(
                     "Release",
                     "customer",
-                    "Subscription automatically canceled",
+                    "Subscription has been automatically canceled",
                     true,
                     false
                 );
@@ -480,6 +480,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             'store' => $order->getStore(),
             'customer_name' => sprintf('%1$s %2$s', $customer->getFirstname(), $customer->getLastname()),
             'subscription' => $subscription,
+            'nextReleaseDate' => substr($subscription->getNextReleaseDate(), 0, 10),
             'item' => $subscriptionItem
         ];
 
