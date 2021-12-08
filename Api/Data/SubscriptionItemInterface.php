@@ -16,8 +16,8 @@ interface SubscriptionItemInterface
     public const QUANTITY = 'qty';
     public const PRODUCT_ID = 'product_id';
     public const ORDER_ID = 'order_id';
-    public const ITEM_ID = 'item_id';
-    public const NAME = 'name';
+    public const ITEM_ID = 'order_item_id';
+    public const NAME = 'order_item_name';
 
     /**
      * @return int
