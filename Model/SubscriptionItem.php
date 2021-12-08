@@ -116,4 +116,21 @@ class SubscriptionItem extends AbstractModel implements SubscriptionItemInterfac
     {
         return $this->setData(self::ORDER_ID, $orderId);
     }
+
+    /**
+     * @return int
+     */
+    public function getOrderItemId(): int
+    {
+        return (int) $this->getData(self::ITEM_ID);
+    }
+
+    /**
+     * @param int $orderItemId
+     * @return SubscriptionItemInterface
+     */
+    public function setOrderItemId(int $orderItemId): SubscriptionItemInterface
+    {
+        return $this->setData(self::ITEM_ID, $orderItemId);
+    }
 }

@@ -50,6 +50,7 @@ class SubscriptionItemManagement implements SubscriptionItemManagementInterface
         $subscriptionItem->setQty((int) $item->getQtyOrdered());
         $subscriptionItem->setProductId((int) $item->getProductId());
         $subscriptionItem->setOrderId((int) $item->getOrderId());
+        $subscriptionItem->setOrderItemId((int) $item->getItemId());
         $this->subscriptionItemRepository->save($subscriptionItem);
 
         return $subscriptionItem;
