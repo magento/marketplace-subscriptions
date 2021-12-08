@@ -131,11 +131,12 @@ class Subscription extends Email
     {
         /** @var Order $order */
         $order = $this->orderRepository->get($subscription->getOrderId());
+        $items = $this->getSubscriptionItems($subscription->getId());
         $data = [
             'store' => $order->getStore(),
             'customer_name' => sprintf('%1$s %2$s', $customer->getFirstname(), $customer->getLastname()),
             'subscription' => $subscription,
-            'item' => reset($this->getSubscriptionItems($subscription->getId())),
+            'item' => reset($items),
             'update' => [
                 'action' => $updated['action'],
                 'description' => $updated['description'],
