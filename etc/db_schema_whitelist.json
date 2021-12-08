@@ -51,6 +51,7 @@
             "product_id": true,
             "order_id": true,
             "order_item_id": true,
+            "order_item_name": true,
             "created_at": true,
             "updated_at": true
         },
