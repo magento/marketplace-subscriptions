@@ -82,7 +82,7 @@ class SubscriptionItemRepository implements SubscriptionItemRepositoryInterface
      * @param SearchCriteriaInterface $searchCriteria
      * @return SubscriptionItemSearchResultInterface
      */
-    public function getList(SearchCriteriaInterface $searchCriteria): SubscriptionItemSearchResultInterface
+    public function getList(SearchCriteriaInterface $searchCriteria)
     {
         $collection = $this->collection->create();
         $this->addFiltersToCollection($searchCriteria, $collection);
