@@ -3,6 +3,7 @@
     <default>
         <paypal_subscriptions>
             <configuration>
+                <active>1</active>
                 <failed_payments>5</failed_payments>
                 <cron_enabled>1</cron_enabled>
                 <cron_schedule>0 0 * * *</cron_schedule>
