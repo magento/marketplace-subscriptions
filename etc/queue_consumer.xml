@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/consumer.xsd">
     <consumer name="PaypalSubscriptionRelease"
               queue="paypal_subscription_release"
-              connection="amqp"
+              connection="db"
               consumerInstance="Magento\Framework\MessageQueue\Consumer"
               handler="PayPal\Subscription\Model\ReleaseConsumer::execute" />
 </config>
