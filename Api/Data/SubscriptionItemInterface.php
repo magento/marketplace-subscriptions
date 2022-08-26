@@ -13,6 +13,7 @@ interface SubscriptionItemInterface
     public const SUBSCRIPTION_ID = 'subscription_id';
     public const SKU = 'sku';
     public const PRICE = 'price';
+    public const ANNUAL_PRICE = 'annual_price';
     public const QUANTITY = 'qty';
     public const PRODUCT_ID = 'product_id';
     public const ORDER_ID = 'order_id';
@@ -51,6 +52,17 @@ interface SubscriptionItemInterface
      * @return SubscriptionItemInterface
      */
     public function setPrice(float $price): SubscriptionItemInterface;
+
+    /**
+     * @return float
+     */
+    public function getAnnualPrice(): float;
+
+    /**
+     * @param float $annualPrice
+     * @return SubscriptionItemInterface
+     */
+    public function setAnnualPrice(float $annualPrice): SubscriptionItemInterface;
 
     /**
      * @return int

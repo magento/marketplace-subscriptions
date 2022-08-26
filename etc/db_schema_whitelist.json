@@ -47,6 +47,7 @@
             "subscription_id": true,
             "sku": true,
             "price": true,
+            "annual_price": true,
             "qty": true,
             "product_id": true,
             "order_id": true,

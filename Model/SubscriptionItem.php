@@ -67,6 +67,23 @@ class SubscriptionItem extends AbstractModel implements SubscriptionItemInterfac
     }
 
     /**
+     * @return float
+     */
+    public function getAnnualPrice(): float
+    {
+        return (float) $this->getData(self::ANNUAL_PRICE);
+    }
+
+    /**
+     * @param float $annualPrice
+     * @return SubscriptionItemInterface
+     */
+    public function setAnnualPrice(float $annualPrice): SubscriptionItemInterface
+    {
+        return $this->setData(self::ANNUAL_PRICE, $annualPrice);
+    }
+
+    /**
      * @return int
      */
     public function getQty(): int

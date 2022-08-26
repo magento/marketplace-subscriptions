@@ -61,6 +61,7 @@
         <column xsi:type="int" name="subscription_id" padding="10" unsigned="true" nullable="false" comment="Subscription ID"/>
         <column xsi:type="varchar" name="sku" length="45" nullable="false" comment="SKU"/>
         <column xsi:type="decimal" name="price" precision="12" scale="4" nullable="false" comment="Price"/>
+        <column xsi:type="decimal" name="annual_price" precision="12" scale="4" nullable="false" comment="Annual Price"/>
         <column xsi:type="int" name="qty" padding="10" unsigned="true" nullable="false" comment="Quantity"/>
         <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Product ID"/>
         <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" comment="Order ID"/>
