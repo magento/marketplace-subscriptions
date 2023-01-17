@@ -533,6 +533,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
             try {
                 $product = $this->productRepository->getById($item->getProductId());
                 $product->setPrice($item->getPeriodicPrice());
+                $product->setData('salable', true);
                 $quote->addProduct($product, $item->getQty());
             } catch (NoSuchEntityException $e) {
                 throw new LocalizedException(__('Could not find product: %1', $e->getMessage()));
