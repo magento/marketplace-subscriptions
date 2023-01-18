@@ -13,7 +13,7 @@ interface ReleaseConsumerInterface
      * @param SubscriptionInterface $subscription
      * @return mixed
      */
-    public function createQuote(SubscriptionInterface $subscription);
+    public function createQuote(SubscriptionInterface $subscription, $subscriptionItems);
 
     /**
      * @param CartInterface $quote

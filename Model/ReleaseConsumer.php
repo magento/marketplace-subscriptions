@@ -44,6 +44,7 @@ use PayPal\Subscription\Helper\Data as SubscriptionHelper;
 use PayPal\Subscription\Model\Email\Subscription as SubscriptionEmail;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
 
 /**
  * Consumer for Release Message Queue.
@@ -224,7 +225,22 @@ class ReleaseConsumer implements ReleaseConsumerInterface
     {
         $quote = null;
         try {
-            $quote = $this->createQuote($subscription);
+            $subscriptionItemsCollection = $this->subscriptionItemCollectionFactory->create();
+            $subscriptionItems = $subscriptionItemsCollection->getItemsByColumnValue(
+                'subscription_id',
+                $subscription->getId()
+            );
+            $disabledProducts = [];
+            foreach ($subscriptionItems as $item) {
+                $product = $this->productRepository->getById($item->getProductId());
+                if ($product->getStatus() == ProductStatus::STATUS_DISABLED) {
+                    $disabledProducts[] = $product;
+                    $product->setStatus(ProductStatus::STATUS_ENABLED);
+                    $this->productRepository->save($product);
+                }
+            }
+
+            $quote = $this->createQuote($subscription, $subscriptionItems);
             $order = $this->createOrder($quote);
             $this->createRelease($subscription, $order);
             $this->subscriptionManagement->updateCoultOfFailedAttempts(
@@ -232,6 +248,11 @@ class ReleaseConsumer implements ReleaseConsumerInterface
                 $subscription->getId(),
                 0
             );
+
+            foreach ($disabledProducts as $disableProduct) {
+                $disableProduct->setStatus(ProductStatus::STATUS_DISABLED);
+                $this->productRepository->save($disableProduct);
+            }
         } catch (LocalizedException $e) {
             $failedAttempts = (int) $subscription->getCountOfFailedAttempts();
             $failedAttempts = $failedAttempts + 1;
@@ -275,17 +296,11 @@ class ReleaseConsumer implements ReleaseConsumerInterface
      * @return Quote|null
      * @throws LocalizedException
      */
-    public function createQuote(SubscriptionInterface $subscription): ?Quote
+    public function createQuote(SubscriptionInterface $subscription, $subscriptionItems): ?Quote
     {
         /** @var CustomerInterface $customer */
         try {
             $customer = $this->customerRepository->getById($subscription->getCustomerId());
-            $subscriptionItemsCollection = $this->subscriptionItemCollectionFactory->create();
-            $subscriptionItems = $subscriptionItemsCollection->getItemsByColumnValue(
-                'subscription_id',
-                $subscription->getId()
-            );
-
             /** @var CartInterface|Quote $quote */
             $quote = $this->quoteFactory->create();
 
