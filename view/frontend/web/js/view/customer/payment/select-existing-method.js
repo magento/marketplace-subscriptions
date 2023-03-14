@@ -3,12 +3,12 @@ define([
     'jquery',
     'uiComponent',
     'ko',
-    'PayPal_Subscription/js/action/customer/payment/set-existing-method'
+    'PayPal_Subscription/js/model/url-builder'
 ], function (
     $,
     Component,
     ko,
-    setExistingPaymentMethod
+    urlBuilder
 ) {
     'use strict';
 
@@ -47,11 +47,19 @@ define([
 
             $('body').trigger('processStart');
 
-            // Set item frequency
-            setExistingPaymentMethod(this.subscriptionId, publicHash).success(function () {
-                $('body').trigger('processStop');
-                that.setCurrentMethod(methodId)
+            var url = urlBuilder.createUrl('/subscription/mine/payment/:subscriptionId/:paymentPublicHash', {
+                subscriptionId: that.subscriptionId,
+                paymentPublicHash: publicHash
             });
+
+            $.ajax({
+                method: "PUT",
+                url: url
+            })
+                .done(function(response) {
+                    $('body').trigger('processStop');
+                    that.setCurrentMethod(methodId)
+                });
         },
 
         /**
