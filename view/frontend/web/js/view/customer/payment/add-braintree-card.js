@@ -103,13 +103,9 @@ define([
                 },
 
                 onPaymentMethodReceived: function (response) {
-                    var url = urlBuilder.createUrl('/subscription/mine/payment/creditcard/:subscriptionId', {
-                        subscriptionId: that.subscriptionId
-                    });
-
                     $.ajax({
                         method: "PUT",
-                        url: url
+                        url: '/rest/V1/subscription/mine/payment/creditcard/' + that.subscriptionId
                     })
                     .done(function(response) {
                         location.reload();
