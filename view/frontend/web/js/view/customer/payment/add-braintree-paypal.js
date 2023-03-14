@@ -126,15 +126,12 @@ define([
          */
         loadClientToken: function () {
             var that = this;
-            $.ajax({
-                method: "GET",
-                url: '/rest/V1/subscription/braintree/token/client'
-            })
-            .done(function(response) {
+
+            // Get Client token
+            loadClientToken().done(function(response) {
                 that.clientToken = response.token;
                 that.setup();
-            })
-            .fail(function(jqXHR, textStatus, errorThrown) {
+            }).error(function () {
                 that.message($t('Sorry, but something went wrong when connecting to Braintree.'))
             });
         },
