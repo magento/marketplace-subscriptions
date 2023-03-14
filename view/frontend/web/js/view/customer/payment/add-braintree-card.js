@@ -4,7 +4,7 @@ define([
     'underscore',
     'PayPal_Braintree/js/view/payment/adapter',
     'mage/translate',
-    'PayPal_Subscription/js/action/customer/payment/update-braintree-cc-payment',
+    'PayPal_Subscription/js/model/url-builder',
     'PayPal_Subscription/js/action/customer/payment/load-client-token',
     'ko'
 ], function(
@@ -13,7 +13,7 @@ define([
     _,
     braintree,
     $t,
-    updatePayment,
+    urlBuilder,
     loadClientToken,
     ko
 ) {
@@ -103,9 +103,17 @@ define([
                 },
 
                 onPaymentMethodReceived: function (response) {
-                    updatePayment(response.nonce, that.subscriptionId).success(function () {
+                    $.ajax({
+                        method: "PUT",
+                        url: '/rest/V1/subscription/mine/payment/creditcard/' + that.subscriptionId,
+                        data: {nonce: response.nonce},
+                        contentType: "application/json",
+                        dataType: "json"
+                    })
+                    .done(function(response) {
                         location.reload();
-                    }).error(function () {
+                    })
+                    .fail(function(jqXHR, textStatus, errorThrown) {
                         that.message($t('Sorry, but something went wrong when taking the payment.'))
                     });
                 }
