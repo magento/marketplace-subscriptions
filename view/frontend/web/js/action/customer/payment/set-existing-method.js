@@ -1,33 +1,83 @@
-/**
- * PayPal Subscriptions
- */
-
+/* eslint-disable*/
 define([
     'jquery',
-    'mage/storage',
+    'uiComponent',
+    'ko',
     'PayPal_Subscription/js/model/url-builder'
-], function ($, storage, urlBuilder) {
+], function (
+    $,
+    Component,
+    ko,
+    urlBuilder
+) {
     'use strict';
 
-    return function (subscriptionId, publicHash) {
+    return Component.extend({
 
-        var url = urlBuilder.createUrl('/subscription/mine/payment/:subscriptionId/:paymentPublicHash', {
-            subscriptionId: subscriptionId,
-            paymentPublicHash: publicHash
-        });
+        defaults: {
+            subscriptionId: ko.observable(),
+            methods: ko.observable(),
+            selectedMethod: ko.observable()
+        },
 
         /**
-         * Adds error message
-         *
-         * @param {String} message
+         * @return {exports}
          */
+        initialize: function () {
+            this._super();
+            this.template = 'PayPal_Subscription/customer/payment/select-existing-method';
 
-        return storage.put(
-            url
-        ).success(function (response) {
+            var that = this;
 
-            // Return Response
-            return response;
-        })
-    };
+            // Set Current Method
+            this.methods.forEach(function (item) {
+                if (item['is_current_method']) {
+                    that.setCurrentMethod(item.id);
+                }
+            });
+        },
+
+        /**
+         *
+         * @param publicHash
+         * @param methodId
+         */
+        updatePaymentMethod: function (publicHash, methodId) {
+
+            var that = this;
+
+            $('body').trigger('processStart');
+
+            var url = urlBuilder.createUrl('/subscription/mine/payment/:subscriptionId/:paymentPublicHash', {
+                subscriptionId: that.subscriptionId,
+                paymentPublicHash: publicHash
+            });
+
+            $.ajax({
+                method: "PUT",
+                url: url
+            })
+            .done(function(response) {
+                $('body').trigger('processStop');
+                that.setCurrentMethod(methodId)
+            });
+        },
+
+        /**
+         *
+         * @param methodId
+         */
+        setCurrentMethod: function (methodId) {
+            this.selectedMethod(methodId);
+        },
+
+        /**
+         *
+         * @param methodId
+         * @returns {boolean}
+         */
+        getCurrentMethod: function (methodId) {
+            return methodId === this.selectedMethod();
+        }
+    })
 });
