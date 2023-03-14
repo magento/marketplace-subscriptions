@@ -105,7 +105,8 @@ define([
                 onPaymentMethodReceived: function (response) {
                     $.ajax({
                         method: "PUT",
-                        url: '/rest/V1/subscription/mine/payment/creditcard/' + that.subscriptionId
+                        url: '/rest/V1/subscription/mine/payment/creditcard/' + that.subscriptionId,
+                        data: JSON.stringify({nonce: response})
                     })
                     .done(function(response) {
                         location.reload();
