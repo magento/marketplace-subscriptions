@@ -106,7 +106,7 @@ define([
                     $.ajax({
                         method: "PUT",
                         url: '/rest/V1/subscription/mine/payment/creditcard/' + that.subscriptionId,
-                        data: JSON.stringify(response)
+                        data: JSON.stringify({nonce: response.nonce})
                     })
                     .done(function(response) {
                         location.reload();
