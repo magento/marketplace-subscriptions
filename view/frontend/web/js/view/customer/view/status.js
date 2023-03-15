@@ -57,24 +57,23 @@ define([
             // Start loader
             $('body').trigger('processStart');
 
-            // Set item frequency
-            setSubscriptionStatus(this.subscriptionId, updatedStatus).error(function () {
+            $.ajax({
+                method: "PUT",
+                url: '/rest/V1/subscription/mine/status/'+ this.subscriptionId +'/' + updatedStatus
+            })
+                .done(function(response) {
+                    $('body').trigger('processStop');
 
-                // Stop loader
-                $('body').trigger('processStop');
-
-                // Add error messaging
-                that.message($t('Unable to update the status, please try again.'));
-                that.messageClass('message error');
-            }).success(function () {
-
-                // Stop loader
-                $('body').trigger('processStop');
-
-                // Add Success Messaging
-                that.message($t('The status successfully updated.'));
-                that.messageClass('message success');
-            });
+                    // Add Success Messaging
+                    that.message($t('The status successfully updated.'));
+                    that.messageClass('message success');
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    $('body').trigger('processStop');
+                    // Add error messaging
+                    that.message($t('Unable to update the status, please try again.'));
+                    that.messageClass('message error');
+                });
         },
 
         /**
