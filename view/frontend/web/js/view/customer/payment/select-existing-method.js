@@ -47,14 +47,9 @@ define([
 
             $('body').trigger('processStart');
 
-            var url = urlBuilder.createUrl('/subscription/mine/payment/:subscriptionId/:paymentPublicHash', {
-                subscriptionId: that.subscriptionId,
-                paymentPublicHash: publicHash
-            });
-
             $.ajax({
                 method: "PUT",
-                url: url
+                url: '/rest/V1/subscription/mine/payment/'+that.subscriptionId+'/'+publicHash
             })
                 .done(function(response) {
                     $('body').trigger('processStop');
