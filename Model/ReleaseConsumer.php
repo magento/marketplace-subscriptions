@@ -253,7 +253,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
                 $disableProduct->setStatus(ProductStatus::STATUS_DISABLED);
                 $this->productRepository->save($disableProduct);
             }
-        } catch (LocalizedException $e) {
+        } catch (Exception $e) {
             $failedAttempts = (int) $subscription->getCountOfFailedAttempts();
             $failedAttempts = $failedAttempts + 1;
             $this->subscriptionManagement->updateCoultOfFailedAttempts(
@@ -262,7 +262,14 @@ class ReleaseConsumer implements ReleaseConsumerInterface
                 $failedAttempts
             );
 
+            $subscriptionItem = reset($subscriptionItems);
+
+            $customer = $this->customerRepository->getById($subscription->getCustomerId());
+            $this->releaseEmail->failure($subscriptionItem, $customer, $subscription);
+            $this->logger->error($e->getMessage());
+
             $maxFailedAttempts = $this->subscriptionHelper->getCountOfFailedAttempts() ? (int) $this->subscriptionHelper->getCountOfFailedAttempts() : 3;
+
             if ($failedAttempts >= $maxFailedAttempts) {
                 $this->subscriptionManagement->changeStatus(
                     $subscription->getCustomerId(),
@@ -270,7 +277,7 @@ class ReleaseConsumer implements ReleaseConsumerInterface
                     SubscriptionInterface::STATUS_CANCELLED
                 );
 
-                $this->sendCancelEmail($subscription, $quote);
+                $this->sendCancelEmail($subscription, $subscriptionItem);
 
                 $subscription->addHistory(
                     "Release",
@@ -280,14 +287,6 @@ class ReleaseConsumer implements ReleaseConsumerInterface
                     false
                 );
             }
-
-            if ($quote) {
-                $this->releaseEmail->failure($quote, $quote->getCustomer(), $subscription);
-            } else {
-                $this->releaseEmail->failureAdmin($e->getMessage());
-            }
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
         }
     }
 
@@ -509,23 +508,17 @@ class ReleaseConsumer implements ReleaseConsumerInterface
 
     /**
      * @param SubscriptionInterface $subscription
-     * @param $quote
      * @return array
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    private function sendCancelEmail(SubscriptionInterface $subscription, $quote)
+    private function sendCancelEmail(SubscriptionInterface $subscription, $subscriptionItem)
     {
-        $orderItem = [];
-        foreach ($quote->getItemsCollection()->getItems() as $item) {
-            $orderItem = $item;
-        }
-
         $customer = $this->customerRepository->getById($subscription->getCustomerId());
         $data = [
             'customer_name' => sprintf('%1$s %2$s', $customer->getFirstname(), $customer->getLastname()),
             'subscription' => $subscription,
-            'item' => $orderItem
+            'item' => $subscriptionItem
         ];
 
         $customTemplate = $this->scopeConfig->getValue(
