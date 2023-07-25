@@ -15,26 +15,19 @@ class Release extends Email
     private const CONFIG_FAILURE = 'paypal_subscriptions/configuration/release_failure';
 
     /**
-     * @param CartInterface $quote
+     * @param $subscriptionItem
      * @param CustomerInterface $customer
-     * @param string $reason
+     * @param $subscription
      * @return array
      */
-    public function failure(CartInterface $quote, CustomerInterface $customer, $subscription)
+    public function failure($subscriptionItem, CustomerInterface $customer, $subscription)
     {
-        $orderItem = [];
-
-        foreach ($quote->getItemsCollection()->getItems() as $item) {
-            $orderItem = $item;
-        }
-
         $data = [
             'customer_name' => sprintf('%1$s %2$s', $customer->getFirstname(), $customer->getLastname()),
-            'item' => $orderItem,
+            'item' => $subscriptionItem,
             'subscription' => $subscription
         ];
 
-        $this->sendEmailAdmin($data, $customTemplate ?? self::TEMPLATE_FAILURE, $customer);
         return $this->sendEmail($data, $customer, $this->getCustomTemplate());
     }
 
