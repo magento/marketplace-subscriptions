@@ -1,0 +1,25 @@
+{
+  "templateVersion": "0.2",
+  "product": {
+    "name": "Adobe Commerce Marketplace Subscription Module",
+    "description": "Adobe Commerce Module allowing the Marketplace store to Sell and support Subscription service"
+  },
+  "contacts": {
+    "team": {
+      "name": "Kraken",
+      "DL": "Grp-Magento-Marketplace-Kraken",
+      "slackChannel": "#team-kraken"
+    }
+  },
+  "ticketTracker": {
+    "functionalJiraQueue": {
+      "projectKey": "ACMS",
+      "component": ""
+    },
+    "securityJiraQueue": {
+      "projectKey": "MAGREQ",
+      "component": "MAGREQ/Marketplace"
+    }
+  },
+  "productionCodeBranches": ["main"]
+}
