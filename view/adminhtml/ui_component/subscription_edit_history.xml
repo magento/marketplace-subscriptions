@@ -14,6 +14,9 @@
     </settings>
     <dataSource name="subscription_edit_history_data_source" component="Magento_Ui/js/grid/provider">
         <settings>
+            <storageConfig>
+                <param name="cacheRequests" xsi:type="boolean">false</param>
+            </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
         <dataProvider class="PayPal\Subscription\Model\SubscriptionHistory\DataProvider" name="subscription_edit_history_data_source">
