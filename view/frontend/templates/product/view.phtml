@@ -1,67 +1,67 @@
 <?php
 /**
  * PayPal Subscriptions
+ *
  * @var Magento\Framework\View\Element\BlockInterface $block
  * @var PayPal\Subscription\ViewModel\Product $viewModel
+ * @var Escaper $escaper
  */
+
+use Magento\Framework\Escaper;
 
 $viewModel = $block->getViewModel();
 $percentageSaved = $viewModel->getPercentageSaved();
-$title = $percentageSaved > 0 ? __('Add subscription & save %1%', $percentageSaved) : __('Add subscription');
+$title = $percentageSaved > 0
+    ? __('Add subscription & save %1%', $percentageSaved)
+    : __('Add subscription');
 
 // If the subscription is available
 if ($viewModel->isSubscriptionAvailable()): ?>
-
     <section class="ps-product">
-        <h3>
-            <?= $block->escapeHtml($title) ?>
-        </h3>
-
+        <h3><?= $escaper->escapeHtml($title) ?></h3>
         <fieldset class="fieldset ps-product__fieldset">
-
             <input type="hidden"
                    name="frequency_profile"
-                   value="<?= $block->escapeHtmlAttr($viewModel->getFrequencyProfileId()) ?>"/>
-
+                   value="<?= $escaper->escapeHtmlAttr($viewModel->getFrequencyProfileId()) ?>"/>
             <div class="field required">
-
                 <label for="ps-frequency-option"
                        class="label">
-                    <span><?= $block->escapeHtml("Would you like to subscribe?"); ?></span>
+                    <span><?= $escaper->escapeHtml("Would you like to subscribe?"); ?></span>
                 </label>
-
                 <select id="ps-frequency-option"
                         name="frequency_option"
                         required="true">
-
                     <?php if (!$viewModel->isSubscriptionOnly()): ?>
                         <option value="0"
                                 selected>
-                            <?= $block->escapeHtml(__("No Thanks")); ?>
+                            <?= $escaper->escapeHtml(__("No Thanks")); ?>
                         </option>
                     <?php else: ?>
                         <option selected
                                 disabled>
-                            <?= $block->escapeHtml(__("Deliver every")); ?>
+                            <?= $escaper->escapeHtml(__("Deliver every")); ?>
                         </option>
                     <?php endif; ?>
 
                     <?php foreach ($viewModel->getFrequencyProfileOptions() as $option): ?>
-                        <option value="<?= $block->escapeHtmlAttr($option['interval']) ?>">
-                            <?= $block->escapeHtml($option['name']); ?>
+                        <?php $isRecommendedOption = $viewModel->isRecommendedOption($option); ?>
+                        <option value="<?= $escaper->escapeHtmlAttr($option['interval']); ?>"
+                            <?php if ($isRecommendedOption): ?>selected="selected"<?php endif; ?>>
+                            <?= $escaper->escapeHtml($option['name']); ?>
+                            <?php if ($isRecommendedOption): ?>
+                                (<?= $escaper->escapeHtml(__('recommended')) ?>)
+                            <?php endif; ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </div>
-
         </fieldset>
 
         <?php if ($price = $viewModel->getSubscriptionPrice()): ?>
             <p>
-                <strong class="ps-product__price"><?= $block->escapeHtml($price); ?></strong>
-                <span><?= $block->escapeHtml(__('/ per delivery')); ?></span>
+                <strong class="ps-product__price"><?= $escaper->escapeHtml($price); ?></strong>
+                <span><?= $escaper->escapeHtml(__('/ per delivery')); ?></span>
             </p>
         <?php endif; ?>
     </section>
-
 <?php endif; ?>

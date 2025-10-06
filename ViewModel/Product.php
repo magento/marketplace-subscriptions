@@ -1,28 +1,31 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\ViewModel;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Pricing\Helper\Data as PricingHelper;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use PayPal\Subscription\Helper\Data as SubscriptionHelper;
-use PayPal\Subscription\Registry\CurrentProduct;
+use Magento\Framework\Registry;
 use Magento\Framework\Serialize\SerializerInterface;
 use PayPal\Subscription\Api\FrequencyProfileRepositoryInterface;
+use PayPal\Subscription\Setup\Patch\Data\InstallRecommendedFrequencyAttributes;
+use PayPal\Subscription\Setup\Patch\Data\AddProductSubscriptionAttributes;
 
 class Product implements ArgumentInterface
 {
     /**
      * @var ProductInterface
      */
-    protected $product;
+    private $product;
 
     /**
-     * @var CurrentProduct
+     * @var Registry
      */
-    protected $currentProduct;
+    protected $registry;
 
     /**
      * @var FrequencyProfileRepositoryInterface
@@ -40,43 +43,63 @@ class Product implements ArgumentInterface
     private $subscriptionHelper;
 
     /**
-     * Product constructor.
+     * @var PricingHelper
+     */
+    private $pricingHelper;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * Product constructor
      *
-     * @param CurrentProduct $currentProduct
+     * @param Registry $registry
      * @param FrequencyProfileRepositoryInterface $frequencyProfile
      * @param SerializerInterface $serializer
      * @param SubscriptionHelper $subscriptionHelper
+     * @param PricingHelper $pricingHelper
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        CurrentProduct $currentProduct,
+        Registry $registry,
         FrequencyProfileRepositoryInterface $frequencyProfile,
         SerializerInterface $serializer,
-        SubscriptionHelper $subscriptionHelper
+        SubscriptionHelper $subscriptionHelper,
+        PricingHelper $pricingHelper,
+        StoreManagerInterface $storeManager
     ) {
-        $this->currentProduct = $currentProduct;
+        $this->registry = $registry;
         $this->frequencyProfile = $frequencyProfile;
         $this->serializer = $serializer;
         $this->subscriptionHelper = $subscriptionHelper;
+        $this->pricingHelper = $pricingHelper;
+        $this->storeManager = $storeManager;
     }
 
     /**
+     * Is subscription available?
+     *
      * @return bool
      */
     public function isSubscriptionAvailable(): bool
     {
         if (!$this->product) {
-            $this->product = $this->currentProduct->get();
+            $this->product = $this->registry->registry('current_product');
         }
         return (bool) $this->product->getData(SubscriptionHelper::SUB_AVAILABLE);
     }
 
     /**
+     * Is product subscription only?
+     *
      * @return bool
      */
     public function isSubscriptionOnly(): bool
     {
         if (!$this->product) {
-            $this->product = $this->currentProduct->get();
+            $this->product = $this->registry->registry('current_product');
         }
         return (bool) $this->product->getData(SubscriptionHelper::SUB_ONLY);
     }
@@ -84,12 +107,13 @@ class Product implements ArgumentInterface
     /**
      * 0 - Fixed Price e.g 9.99
      * 1 - Discount off of base price e.g. 75% off 10.00 is 2.50
+     *
      * @return int|null
      */
     public function getSubscriptionPriceType(): ?int
     {
         if (!$this->product) {
-            $this->product = $this->currentProduct->get();
+            $this->product = $this->registry->registry('current_product');
         }
         return $this->product->getData(SubscriptionHelper::SUB_PRICE_TYPE) !== null
             ? (int) $this->product->getData(SubscriptionHelper::SUB_PRICE_TYPE)
@@ -97,12 +121,14 @@ class Product implements ArgumentInterface
     }
 
     /**
+     * Get subscription price value
+     *
      * @return float|null
      */
     public function getSubscriptionPriceValue(): ?float
     {
         if (!$this->product) {
-            $this->product = $this->currentProduct->get();
+            $this->product = $this->registry->registry('current_product');
         }
         return $this->product->getData(SubscriptionHelper::SUB_PRICE_VALUE) !== null
             ? (float) $this->product->getData(SubscriptionHelper::SUB_PRICE_VALUE)
@@ -121,23 +147,24 @@ class Product implements ArgumentInterface
         }
 
         if (!$this->product) {
-            $this->product = $this->currentProduct->get();
+            $this->product = $this->registry->registry('current_product');
         }
 
         if ($this->getSubscriptionPriceType() === SubscriptionHelper::FIXED_PRICE) {
-            return $this->getSubscriptionPriceValue();
+            return $this->pricingHelper->currency($this->getSubscriptionPriceValue(), true, false);
         }
 
         if ($this->getSubscriptionPriceType() === SubscriptionHelper::DISCOUNT_PRICE) {
-            return $this->subscriptionHelper->getDiscountedPrice(
+            return $this->pricingHelper->currency($this->subscriptionHelper->getDiscountedPrice(
                 $this->getSubscriptionPriceValue(),
-                (float) $this->product->getPrice()
-            );
+                (float) $this->product->getFinalPrice()
+            ), true, false);
         }
     }
 
     /**
      * Returns the percentage saved
+     *
      * @return float
      */
     public function getPercentageSaved(): float
@@ -151,32 +178,128 @@ class Product implements ArgumentInterface
     }
 
     /**
+     * Returns the saving amount for a user.
+     *
+     * @return string
+     */
+    public function getSaving(): string
+    {
+        if (!$this->product) {
+            $this->product = $this->registry->registry('current_product');
+        }
+
+        $discountedPrice = $this->getSubscriptionPriceType() == SubscriptionHelper::DISCOUNT_PRICE ?
+            $this->subscriptionHelper->getDiscountedPrice(
+                $this->getSubscriptionPriceValue(),
+                (float) $this->product->getPrice()
+            ) :
+            $this->getSubscriptionPriceValue();
+
+        $discount = (float) $this->product->getFinalPrice() - $discountedPrice;
+
+        return $this->pricingHelper->currency(
+            $discount,
+            true,
+            false
+        );
+    }
+
+    /**
+     * Get frequency profile ID
+     *
      * @return int
      */
     public function getFrequencyProfileId(): int
     {
         if (!$this->product) {
-            $this->product = $this->currentProduct->get();
+            $this->product = $this->registry->registry('current_product');
         }
 
         return (int) $this->product->getData('subscription_frequency_profile');
     }
 
     /**
+     * Get frequency profile options
+     *
      * @return array
      */
     public function getFrequencyProfileOptions(): array
     {
         if (!$this->product) {
-            $this->product = $this->currentProduct->get();
+            $this->product = $this->registry->registry('current_product');
         }
 
         try {
             $frequencyProfileId = $this->product->getData('subscription_frequency_profile');
             $frequencyProfile = $this->frequencyProfile->getById((int) $frequencyProfileId);
-            return $this->serializer->unserialize($frequencyProfile->getFrequencyOptions());
+            $options = $this->serializer->unserialize($frequencyProfile->getFrequencyOptions());
+            $storeCode = $this->storeManager->getStore()->getCode();
+            $storeNameIndex = 'name_' . $storeCode;
+            foreach ($options as $i => $option) {
+                $storeLabel = $option[$storeNameIndex] ?? null;
+                if ($storeLabel != null) {
+                    $options[$i]['name'] = $storeLabel;
+                }
+            }
+            return $options;
         } catch (NoSuchEntityException $e) {
             return [];
         }
+    }
+
+    /**
+     * Return Recommended Frequency if set
+     *
+     * @return int|null
+     */
+    public function getRecommendedFrequencyOptionId(): ?int
+    {
+        if (!$this->product) {
+            $this->product = $this->registry->registry('current_product');
+        }
+        $recommendedFrequency = $this->product->getData(
+            InstallRecommendedFrequencyAttributes::RECOMMENDED_FREQUENCY_ATTRIBUTE_CODE
+        );
+        return $recommendedFrequency === null ?
+            $recommendedFrequency :
+            (int) $recommendedFrequency;
+    }
+
+    /**
+     * Return Recommended Frequency if set
+     *
+     * @return array
+     */
+    public function getRecommendedFrequencyOption(): array
+    {
+        $options = $this->getFrequencyProfileOptions();
+        if ($options === []) {
+            return [];
+        }
+        $recommendedOptionId = $this->getRecommendedFrequencyOptionId();
+        if ($options === null) {
+            return [];
+        }
+        foreach ($options as $option) {
+            if ($option['interval'] == $recommendedOptionId) {
+                return $option;
+            }
+        }
+        return [];
+    }
+
+    /**
+     * Return boolean on whether option is recommended
+     *
+     * @param array $option
+     * @return bool
+     */
+    public function isRecommendedOption(
+        array $option
+    ): bool {
+        $recommendedOption = $this->getRecommendedFrequencyOptionId();
+        return $recommendedOption === null ?
+            false :
+            (int) $option['interval'] === (int) $recommendedOption;
     }
 }

@@ -1,20 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <!-- Subscription Module Events -->
-    <event name="paypal_subscription_save_before">
-        <observer name="paypal_subscription_save" instance="PayPal\Subscription\Observer\SubscriptionObserver"/>
+    <event name="subscription_create_with_item_after">
+        <observer name="newSubscriptionEmailSender"
+                  instance="PayPal\Subscription\Observer\SendNewSubscriptionEmail"/>
     </event>
     <event name="paypal_subscription_history_save_before">
-        <observer name="paypal_subscription_history_save" instance="PayPal\Subscription\Observer\SubscriptionHistoryObserver"/>
+        <observer name="paypal_subscription_history_save"
+                  instance="PayPal\Subscription\Observer\SubscriptionHistoryObserver"/>
     </event>
-    <!-- Core Magento Events -->
+    <!-- Core Magento Events & Handle Quote to Order Fieldset Data -->
     <event name="sales_model_service_quote_submit_before">
-        <observer name="paypal_subscription_convert_item_options" instance="PayPal\Subscription\Observer\ConvertItemOptionsObserver"/>
+        <observer name="paypal_subscription_convert_item_options"
+                  instance="PayPal\Subscription\Observer\ConvertItemOptionsObserver"/>
+        <observer name="subscriptionQuoteFieldsetToOrder"
+                  instance="PayPal\Subscription\Observer\CopyQuoteSubscriptionToOrder" />
     </event>
     <event name="sales_order_save_after">
-        <observer name="paypal_subscription_contains_subscription" instance="PayPal\Subscription\Observer\ContainsSubscriptionObserver"/>
+        <observer name="paypal_subscription_contains_subscription"
+                  instance="PayPal\Subscription\Observer\ContainsSubscriptionObserver"/>
     </event>
     <event name="sales_order_payment_save_after">
-        <observer name="paypal_subscription_create_subscription" instance="PayPal\Subscription\Observer\CreateSubscriptionObserver"/>
+        <observer name="paypal_subscription_create_subscription"
+                  instance="PayPal\Subscription\Observer\CreateSubscriptionObserver"/>
+    </event>
+    <!-- Subscription Item Update Qty -->
+    <event name="update_subscription_item_qty_after">
+        <observer name="addSubscriptionHistoryOnItemQtyChange"
+                  instance="PayPal\Subscription\Observer\SubscriptionItemQtyChange"/>
+    </event>
+    <event name="payment_method_is_active">
+        <observer name="paypal_subscription_active_payments"
+                  instance="PayPal\Subscription\Observer\PaymentActiveObserver" />
+    </event>
+    <event name="catalog_product_save_before">
+        <observer name="paypal_subscription_disable_bundle_attributes"
+                  instance="PayPal\Subscription\Observer\DisableBundleAttributes" />
+    </event>
+    <event name="sales_quote_add_item">
+        <observer name="paypal_subscription_release_product_add"
+                  instance="PayPal\Subscription\Observer\ReleaseProductAdd" />
     </event>
 </config>

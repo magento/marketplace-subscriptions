@@ -1,36 +1,70 @@
 <?xml version="1.0"?>
-<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <!-- PayPal Subscription Tables -->
     <table name="paypal_subs_frequency_profile" engine="innodb" resource="default">
-        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="Profile ID" identity="true"/>
-        <column xsi:type="varchar" name="name" length="45" nullable="false" comment="Profile name"/>
-        <column xsi:type="longtext" name="frequency_options" comment="Frequency options"/>
-        <column xsi:type="int" name="min_releases" padding="10" unsigned="true" nullable="true" comment="Min. number of releases"/>
-        <column xsi:type="int" name="max_releases" padding="10" unsigned="true" nullable="true" comment="Max. number of releases"/>
-        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
-        <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false"
+                comment="Profile ID" identity="true"/>
+        <column xsi:type="varchar" name="name" length="45" nullable="false"
+                comment="Profile name"/>
+        <column xsi:type="longtext" name="frequency_options"
+                comment="Frequency options"/>
+        <column xsi:type="int" name="min_releases" padding="10" unsigned="true" nullable="true"
+                comment="Min. number of releases"/>
+        <column xsi:type="int" name="max_releases" padding="10" unsigned="true" nullable="true"
+                comment="Max. number of releases"/>
+        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP"
+                comment="Created at"/>
+        <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP"
+                comment="Updated at"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
     </table>
     <table name="paypal_subs_subscription" engine="innodb" resource="default">
-        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="Subscription ID" identity="true"/>
-        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" comment="Customer ID"/>
-        <column xsi:type="int" name="original_order_id" padding="10" unsigned="true" nullable="false" comment="Original Order ID"/>
-        <column xsi:type="tinyint" name="status" unsigned="true" nullable="false" comment="Status"/>
-        <column xsi:type="datetime" name="previous_release_date" nullable="true" on_update="false" comment="Previous release date"/>
-        <column xsi:type="datetime" name="next_release_date" nullable="true" on_update="false" comment="Next release date"/>
-        <column xsi:type="int" name="frequency_profile_id" padding="10" unsigned="true" nullable="true" comment="Frequency Profile ID"/>
-        <column xsi:type="int" name="frequency" padding="10" unsigned="true" nullable="false" comment="Frequency"/>
-        <column xsi:type="varchar" name="billing_address" length="255" nullable="false" comment="Billing address"/>
-        <column xsi:type="varchar" name="shipping_address" length="255" nullable="false" comment="Shipping address"/>
-        <column xsi:type="decimal" name="shipping_price" precision="12" scale="4" nullable="false" comment="Shipping price"/>
-        <column xsi:type="varchar" name="shipping_method" length="45" nullable="false" comment="Shipping method"/>
-        <column xsi:type="varchar" name="payment_method" length="45" nullable="false" comment="Payment method"/>
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false"
+                comment="Subscription ID" identity="true"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false"
+                comment="Customer ID"/>
+        <column xsi:type="int" name="original_order_id" padding="10" unsigned="true" nullable="false"
+                comment="Original Order ID"/>
+        <column xsi:type="tinyint" name="status" unsigned="true" nullable="false"
+                comment="Status"/>
+        <column xsi:type="datetime" name="previous_release_date" nullable="true" on_update="false"
+                comment="Previous release date"/>
+        <column xsi:type="datetime" name="next_release_date" nullable="true" on_update="false"
+                comment="Next release date"/>
+        <column xsi:type="int" name="frequency_profile_id" padding="10" unsigned="true" nullable="true"
+                comment="Frequency Profile ID"/>
+        <column xsi:type="int" name="frequency" padding="10" unsigned="true" nullable="false"
+                comment="Frequency"/>
+        <column xsi:type="mediumtext" name="billing_address" nullable="false"
+                comment="Billing address"/>
+        <column xsi:type="mediumtext" name="shipping_address" nullable="false"
+                comment="Shipping address"/>
+        <column xsi:type="decimal" name="shipping_price" precision="12" scale="4" nullable="false"
+                comment="Shipping price"/>
+        <column xsi:type="varchar" name="shipping_method" length="45" nullable="false"
+                comment="Shipping method"/>
+        <column xsi:type="varchar" name="payment_method" length="45" nullable="false"
+                comment="Payment method"/>
         <column xsi:type="longtext" name="payment_data" comment="Payment data"/>
-        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
-        <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Updated at"/>
-        <column xsi:type="tinyint" name="count_of_failed_attempts" default="0" comment="Count of failed attempts"/>
+        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP"
+                comment="Created at"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP"
+                comment="Updated at"/>
+        <column xsi:type="int" name="stock_failures" padding="10" unsigned="true" nullable="false"
+                comment="Stock failures" />
+        <column xsi:type="int" name="failed_payments" padding="10" unsigned="true" nullable="false"
+                comment="Payment failures" />
+        <column xsi:type="tinyint" name="reminder_email_sent"
+                comment="Has reminder email been sent?" default="0"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
@@ -57,18 +91,22 @@
                     onDelete="NO ACTION"/>
     </table>
     <table name="paypal_subs_subscription_item" engine="innodb" resource="default">
-        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="Subscription Item ID" identity="true"/>
-        <column xsi:type="int" name="subscription_id" padding="10" unsigned="true" nullable="false" comment="Subscription ID"/>
-        <column xsi:type="varchar" name="sku" length="45" nullable="false" comment="SKU"/>
-        <column xsi:type="decimal" name="price" precision="12" scale="4" nullable="false" comment="Price"/>
-        <column xsi:type="decimal" name="periodic_price" precision="12" scale="4" nullable="false" comment="Periodic Price"/>
-        <column xsi:type="int" name="qty" padding="10" unsigned="true" nullable="false" comment="Quantity"/>
-        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Product ID"/>
-        <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" comment="Order ID"/>
-        <column xsi:type="int" name="order_item_id" padding="10" unsigned="true" nullable="false" comment="Order Item ID"/>
-        <column xsi:type="varchar" name="order_item_name" length="200" nullable="false"  comment="Order Item Name"/>
-        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
-        <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false"
+                comment="Subscription Item ID" identity="true"/>
+        <column xsi:type="int" name="subscription_id" padding="10" unsigned="true" nullable="false"
+                comment="Subscription ID"/>
+        <column xsi:type="varchar" name="sku" length="45" nullable="false"
+                comment="SKU"/>
+        <column xsi:type="decimal" name="price" precision="12" scale="4" nullable="false"
+                comment="Price"/>
+        <column xsi:type="int" name="qty" padding="10" unsigned="true" nullable="false"
+                comment="Quantity"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false"
+                comment="Product ID"/>
+        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP"
+                comment="Created at"/>
+        <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP"
+                comment="Updated at"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
@@ -91,15 +129,24 @@
         </index>
     </table>
     <table name="paypal_subs_subscription_history" engine="innodb" resource="default">
-        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="Subscription History ID" identity="true"/>
-        <column xsi:type="int" name="subscription_id" padding="10" unsigned="true" nullable="false" comment="Subscription ID"/>
-        <column xsi:type="varchar" name="action" length="45" nullable="false" comment="Action"/>
-        <column xsi:type="varchar" name="action_type" length="45" nullable="false" comment="Action Type"/>
-        <column xsi:type="varchar" name="description" length="255" comment="Description"/>
-        <column xsi:type="int" name="admin_user_id" padding="10" unsigned="true" comment="Admin ID"/>
-        <column xsi:type="tinyint" name="customer_notified" comment="Customer Notified?" default="0"/>
-        <column xsi:type="tinyint" name="visible_to_customer" comment="Visible to Customer?" default="0"/>
-        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false"
+                comment="Subscription History ID" identity="true"/>
+        <column xsi:type="int" name="subscription_id" padding="10" unsigned="true" nullable="false"
+                comment="Subscription ID"/>
+        <column xsi:type="varchar" name="action" length="45" nullable="false"
+                comment="Action"/>
+        <column xsi:type="varchar" name="action_type" length="45" nullable="false"
+                comment="Action Type"/>
+        <column xsi:type="varchar" name="description" length="255"
+                comment="Description"/>
+        <column xsi:type="int" name="admin_user_id" padding="10" unsigned="true"
+                comment="Admin ID"/>
+        <column xsi:type="tinyint" name="customer_notified"
+                comment="Customer Notified?" default="0"/>
+        <column xsi:type="tinyint" name="visible_to_customer"
+                comment="Visible to Customer?" default="0"/>
+        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP"
+                comment="Created at"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
@@ -119,13 +166,20 @@
                     onDelete="SET NULL"/>
     </table>
     <table name="paypal_subs_subscription_release" engine="innodb" resource="default">
-        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="Subscription Release ID" identity="true"/>
-        <column xsi:type="int" name="subscription_id" padding="10" unsigned="true" nullable="false" comment="Subscription ID"/>
-        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" comment="Customer ID"/>
-        <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" comment="Order ID"/>
-        <column xsi:type="tinyint" name="status" unsigned="true" nullable="false" comment="Status"/>
-        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
-        <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false"
+                comment="Subscription Release ID" identity="true"/>
+        <column xsi:type="int" name="subscription_id" padding="10" unsigned="true" nullable="false"
+                comment="Subscription ID"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false"
+                comment="Customer ID"/>
+        <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false"
+                comment="Order ID"/>
+        <column xsi:type="tinyint" name="status" unsigned="true" nullable="false"
+                comment="Status"/>
+        <column xsi:type="datetime" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP"
+                comment="Created at"/>
+        <column xsi:type="datetime" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP"
+                comment="Updated at"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
@@ -152,13 +206,20 @@
                     onDelete="NO ACTION"/>
     </table>
     <table name="paypal_subs_report_aggregated_daily" engine="innodb" resource="default">
-        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="ID" identity="true"/>
-        <column xsi:type="date" name="period" comment="Period"/>
-        <column xsi:type="smallint" name="store_id" unsigned="true" comment="Store ID"/>
-        <column xsi:type="int" name="product_id" unsigned="true" comment="Product ID"/>
-        <column xsi:type="text" name="product_sku" nullable="true" comment="Product SKU"/>
-        <column xsi:type="text" name="product_name" nullable="true" comment="Product Name"/>
-        <column xsi:type="int" name="num_subscriptions" nullable="false" default="0" comment="Number of Subscriptions"/>
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false"
+                comment="ID" identity="true"/>
+        <column xsi:type="date" name="period"
+                comment="Period"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true"
+                comment="Store ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true"
+                comment="Product ID"/>
+        <column xsi:type="text" name="product_sku" nullable="true"
+                comment="Product SKU"/>
+        <column xsi:type="text" name="product_name" nullable="true"
+                comment="Product Name"/>
+        <column xsi:type="int" name="num_subscriptions" nullable="false" default="0"
+                comment="Number of Subscriptions"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
@@ -170,13 +231,20 @@
         </index>
     </table>
     <table name="paypal_subs_report_aggregated_monthly" engine="innodb" resource="default">
-        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="ID" identity="true"/>
-        <column xsi:type="date" name="period" comment="Period"/>
-        <column xsi:type="smallint" name="store_id" unsigned="true" comment="Store ID"/>
-        <column xsi:type="int" name="product_id" unsigned="true" comment="Product ID"/>
-        <column xsi:type="text" name="product_sku" nullable="true" comment="Product SKU"/>
-        <column xsi:type="text" name="product_name" nullable="true" comment="Product Name"/>
-        <column xsi:type="int" name="num_subscriptions" nullable="false" default="0" comment="Number of Subscriptions"/>
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false"
+                comment="ID" identity="true"/>
+        <column xsi:type="date" name="period"
+                comment="Period"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true"
+                comment="Store ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true"
+                comment="Product ID"/>
+        <column xsi:type="text" name="product_sku" nullable="true"
+                comment="Product SKU"/>
+        <column xsi:type="text" name="product_name" nullable="true"
+                comment="Product Name"/>
+        <column xsi:type="int" name="num_subscriptions" nullable="false" default="0"
+                comment="Number of Subscriptions"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
@@ -188,13 +256,20 @@
         </index>
     </table>
     <table name="paypal_subs_report_aggregated_yearly" engine="innodb" resource="default">
-        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" comment="ID" identity="true"/>
-        <column xsi:type="date" name="period" comment="Period"/>
-        <column xsi:type="smallint" name="store_id" unsigned="true" comment="Store ID"/>
-        <column xsi:type="int" name="product_id" unsigned="true" comment="Product ID"/>
-        <column xsi:type="text" name="product_sku" nullable="true" comment="Product SKU"/>
-        <column xsi:type="text" name="product_name" nullable="true" comment="Product Name"/>
-        <column xsi:type="int" name="num_subscriptions" nullable="false" default="0" comment="Number of Subscriptions"/>
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false"
+                comment="ID" identity="true"/>
+        <column xsi:type="date" name="period"
+                comment="Period"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true"
+                comment="Store ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true"
+                comment="Product ID"/>
+        <column xsi:type="text" name="product_sku" nullable="true"
+                comment="Product SKU"/>
+        <column xsi:type="text" name="product_name" nullable="true"
+                comment="Product Name"/>
+        <column xsi:type="int" name="num_subscriptions" nullable="false" default="0"
+                comment="Number of Subscriptions"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
@@ -207,9 +282,19 @@
     </table>
     <!-- Magento Core Tables -->
     <table name="sales_order">
-        <column xsi:type="int" name="contains_subscription" padding="10" unsigned="true" nullable="false" comment="Order contains subscription item."/>
+        <column xsi:type="int" name="contains_subscription" padding="10" unsigned="true" nullable="false"
+                comment="Order contains subscription item."/>
+        <column xsi:type="int" name="is_subscription_release" padding="10" unsigned="true" nullable="false"
+                comment="Order is the release of a Subscription."/>
     </table>
     <table name="sales_order_grid">
-        <column xsi:type="int" name="contains_subscription" padding="10" unsigned="true" nullable="false" comment="Order contains subscription item."/>
+        <column xsi:type="int" name="contains_subscription" padding="10" unsigned="true" nullable="false"
+                comment="Order contains subscription item."/>
+        <column xsi:type="int" name="is_subscription_release" padding="10" unsigned="true" nullable="false"
+                comment="Order is the release of a Subscription."/>
+    </table>
+    <table name="quote">
+        <column xsi:type="int" name="is_subscription_release" padding="10" unsigned="true" nullable="false"
+                comment="Order is the release of a Subscription."/>
     </table>
 </schema>

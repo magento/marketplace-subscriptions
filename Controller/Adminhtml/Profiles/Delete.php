@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -6,6 +10,9 @@ namespace PayPal\Subscription\Controller\Adminhtml\Profiles;
 
 use Exception;
 use Magento\Backend\App\Action;
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use PayPal\Subscription\Model\FrequencyProfileFactory;
@@ -14,7 +21,7 @@ use PayPal\Subscription\Model\ResourceModel\FrequencyProfile as FrequencyProfile
 /**
  * Controller for deleting Frequency Profiles
  */
-class Delete extends Action
+class Delete extends Action implements ActionInterface, HttpGetActionInterface, HttpPostActionInterface
 {
     public const ADMIN_RESOURCE = 'PayPal_Subscription::subscription_frequency_profiles_delete';
 
@@ -46,6 +53,8 @@ class Delete extends Action
     }
 
     /**
+     * Delete frequency profile
+     *
      * @return ResponseInterface|ResultInterface
      */
     public function execute()
@@ -70,7 +79,7 @@ class Delete extends Action
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function _isAllowed(): bool
     {

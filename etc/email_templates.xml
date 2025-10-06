@@ -1,32 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
-    <template id="paypal_subscriptions_configuration_subscription_new"
-              label="PayPal Subscription Created Email"
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="paypal_subscriptions_email_configuration_subscription_new"
+              label="Subscription Created Email"
               file="subscription_new.html"
               type="html"
               module="PayPal_Subscription"
               area="frontend"/>
-    <template id="paypal_subscriptions_configuration_subscription_update"
-              label="PayPal Subscription Update Email"
+    <template id="paypal_subscriptions_email_configuration_subscription_update"
+              label="Subscription Update Email"
               file="subscription_update.html"
               type="html"
               module="PayPal_Subscription"
               area="frontend"/>
-    <template id="paypal_subscriptions_configuration_release_failure"
-              label="PayPal Release Failure Email"
+    <template id="paypal_subscriptions_email_configuration_subscription_pause"
+              label="Subscription Pause Email"
+              file="subscription_pause.html"
+              type="html"
+              module="PayPal_Subscription"
+              area="frontend"/>
+    <template id="paypal_subscriptions_email_configuration_subscription_cancel"
+              label="Subscription Cancel Email"
+              file="subscription_cancel.html"
+              type="html"
+              module="PayPal_Subscription"
+              area="frontend"/>
+    <template id="paypal_subscriptions_email_configuration_release_failure"
+              label="Subscription Release Failure Email"
               file="release_failure.html"
               type="html"
               module="PayPal_Subscription"
               area="frontend"/>
-    <template id="paypal_subscriptions_configuration_subscription_renew"
-              label="PayPal Renew Subscription"
-              file="subscription_renew.html"
+    <template id="paypal_subscriptions_email_configuration_release_reminder"
+              label="Subscription Release Reminder Email"
+              file="release_reminder.html"
               type="html"
               module="PayPal_Subscription"
               area="frontend"/>
-    <template id="paypal_subscriptions_configuration_subscription_cancel"
-              label="You Subscription was cancelled"
-              file="subscription_cancel.html"
+    <template id="paypal_subscriptions_email_configuration_release_skipped"
+              label="Subscription Release Skipped Email"
+              file="release_skipped.html"
+              type="html"
+              module="PayPal_Subscription"
+              area="frontend"/>
+    <template id="paypal_subscriptions_email_configuration_release_failure_admin"
+              label="Subscription Release Failure Email (Admin)"
+              file="release_failure_admin.html"
+              type="html"
+              module="PayPal_Subscription"
+              area="frontend"/>
+    <template id="paypal_subscriptions_email_configuration_price_changed"
+              label="Subscription Price Changed Email"
+              file="subscription_price_changed.html"
               type="html"
               module="PayPal_Subscription"
               area="frontend"/>

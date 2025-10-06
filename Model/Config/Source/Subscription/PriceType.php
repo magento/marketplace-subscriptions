@@ -8,7 +8,6 @@ use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
 class PriceType extends AbstractSource
 {
-
     /**
      * Retrieve All options
      *

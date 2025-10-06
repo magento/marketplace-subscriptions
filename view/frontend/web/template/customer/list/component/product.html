@@ -1,0 +1,30 @@
+<div class="product-container">
+    <div class="product">
+        <div class="product-image">
+            <img data-bind="attr: {'src': imageUrl, 'alt': imageAlt}"/>
+        </div>
+        <div class="product-info">
+            <p>
+                <strong data-bind="text: subscription().product.name"></strong>
+            </p>
+            <p data-bind="html: subscription().product.price"></p>
+            <!-- ko if: frequencyLabel -->
+            <span data-bind="i18n: 'Order Frequency: '"></span><span data-bind="html: frequencyLabel"></span>
+            <!-- /ko -->
+            <div class="product-info__options">
+                <!-- ko foreach: { data: getSubscriptionOptions(), as: 'option' } -->
+                <div class="product-info__options-list" data-bind="if: option.items.length > 0">
+                    <p class="product-info__options-title" data-bind="text: option.label"></p>
+                    <!-- ko foreach: { data: option.items, as: 'item' } -->
+                    <p data-bind="text: parseFloat(item.quantity).toString().replace(/\.0+$/, '') + ' x ' + item.name + ' ' + item.selection_price"></p>
+                    <p data-bind="text: 'Sku: ' + item.sku"></p>
+                    <!-- /ko -->
+                </div>
+                <!-- /ko -->
+            </div>
+        </div>
+    </div>
+    <!-- ko foreach: { data: elems, as: 'element' } -->
+    <!-- ko template: element.getTemplate() --><!-- /ko -->
+    <!-- /ko -->
+</div>

@@ -22,7 +22,7 @@ define([
         return storage.put(
             url,
             JSON.stringify({nonce: response})
-        ).success(function (response) {
+        ).done(function (response) {
 
             // Return Response
             return response;

@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -8,6 +12,9 @@ use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use PayPal\Subscription\Model\ResourceModel\SubscriptionRelease as SubscriptionReleaseResource;
 use PayPal\Subscription\Model\SubscriptionRelease;
 
+/**
+ * @api
+ */
 class Collection extends AbstractCollection
 {
     /**

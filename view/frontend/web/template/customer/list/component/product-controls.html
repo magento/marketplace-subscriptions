@@ -1,0 +1,59 @@
+<div class="product-controls">
+    <div class="paypal-subscription__quantity">
+        <div class="qty__wrapper">
+            <label class="label qty__label"
+                   data-bind="attr: {'for': qtyInputId}">
+                <span data-bind="i18n: 'Qty'"></span>
+            </label>
+            <div class="qty__container"
+                 data-role="qty-control">
+                <button type="button"
+                        class="qty__button js-qty-iterator"
+                        data-iterator-type="decrement"
+                        data-bind="
+                            attr: {'aria-label': reduceQuantityLabel},
+                            click: decreaseQty
+                        ">
+                    <svg width="28" height="28" class="icon">
+                        <use xlink:href="#icon-remove"></use>
+                    </svg>
+                </button>
+                <input type="number"
+                       name="qty"
+                       class="qty__input qty"
+                       data-validate="{'required-number': true}"
+                       data-bind="attr: {
+                         'value': qty(),
+                         'title': qtyInputLabel,
+                         'id': qtyInputId
+                       }"/>
+                <button type="button"
+                        class="qty__button js-qty-iterator"
+                        data-iterator-type="increment"
+                        data-bind="attr: {'aria-label': increaseQuantityLabel},
+                        click: increaseQty
+                        ">
+                    <svg width="28" height="28" class="icon">
+                        <use xlink:href="#icon-add"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="paypal-subscription__frequency">
+        <label class="label"
+               data-bind="attr: {'for': frequencyOptionSelectId}">
+            <span data-bind="i18n: 'Deliver every: '"></span>
+        </label>
+        <select name="frequency_option"
+                required="true"
+                data-bind="
+                    attr: {'id': frequencyOptionSelectId},
+                    options: availableFrequencies,
+                    optionsText: 'name',
+                    optionsValue: 'interval',
+                    value: selectedFrequencyOption
+                ">
+        </select>
+    </div>
+</div>

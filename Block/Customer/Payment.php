@@ -1,25 +1,34 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Block\Customer;
 
-use PayPal\Braintree\Gateway\Config\Config as BraintreeConfig;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\CustomerTokenManagement;
-use Magento\Framework\Serialize\SerializerInterface;
+use PayPal\Braintree\Gateway\Config\Config as BraintreeConfig;
 use PayPal\Subscription\Api\SubscriptionRepositoryInterface;
 
+/**
+ * @api
+ * @since 100.0.2
+ */
 class Payment extends Template
 {
     /**
      * @var CustomerTokenManagement
      */
     private $customerTokenManagement;
+
     /**
      * @var BraintreeConfig
      */
@@ -61,6 +70,8 @@ class Payment extends Template
     }
 
     /**
+     * Get subscription id
+     *
      * @return int
      */
     public function getSubscriptionId(): int
@@ -69,6 +80,8 @@ class Payment extends Template
     }
 
     /**
+     * Get payment methods
+     *
      * @return PaymentTokenInterface[]
      */
     public function getPaymentMethods(): array
@@ -77,20 +90,19 @@ class Payment extends Template
     }
 
     /**
+     * Get payment methods json
+     *
      * @return string
      * @throws NoSuchEntityException
      */
     public function getPaymentMethodsJson(): string
     {
         $subscription = $this->subscriptionRepository->getById($this->getSubscriptionId());
-        if (!empty($subscription->getPaymentData())) {
-            $subscriptionPaymentData = $this->serializer->unserialize($subscription->getPaymentData());
-        }
+        $subscriptionPaymentData = $this->serializer->unserialize($subscription->getPaymentData());
 
         $methods = [];
 
         foreach ($this->getPaymentMethods() as $paymentMethod) {
-
             $tokenDetails = $this->serializer->unserialize($paymentMethod->getTokenDetails());
             $paymentType = $paymentMethod->getType();
 
@@ -104,11 +116,9 @@ class Payment extends Template
                 $value['masked'] = $tokenDetails['maskedCC'];
                 $value['cardType'] = $tokenDetails['type'];
                 $value['expires'] = $tokenDetails['expirationDate'];
-            } else {
-                $value['payerEmail'] = $tokenDetails['payerEmail'] ? $tokenDetails['payerEmail'] : '';
             }
 
-            if (!empty($subscription->getPaymentData()) && ($subscriptionPaymentData['public_hash'] === $paymentMethod->getPublicHash())) {
+            if ($subscriptionPaymentData['public_hash'] === $paymentMethod->getPublicHash()) {
                 $value['is_current_method'] = true;
             }
 
@@ -119,6 +129,8 @@ class Payment extends Template
     }
 
     /**
+     * Get braintree environment
+     *
      * @return string
      * @throws InputException
      * @throws NoSuchEntityException
@@ -129,6 +141,8 @@ class Payment extends Template
     }
 
     /**
+     * Get braintree client token
+     *
      * @return string
      */
     public function getClientToken(): string
@@ -137,6 +151,8 @@ class Payment extends Template
     }
 
     /**
+     * Get back url
+     *
      * @return string
      */
     public function getBackUrl(): string

@@ -1,8 +1,18 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Api;
+
+use Magento\Customer\Api\Data\AddressInterface;
+use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\OrderItemInterface;
+use PayPal\Subscription\Api\Data\SubscriptionInterface;
 
 /**
  * @api
@@ -10,114 +20,122 @@ namespace PayPal\Subscription\Api;
 interface SubscriptionManagementInterface
 {
     /**
-     * @param \Magento\Sales\Api\Data\OrderInterface $order
-     * @param \Magento\Sales\Api\Data\OrderItemInterface $item
+     * Create subscription with item
+     *
+     * @param OrderInterface $order
+     * @param OrderItemInterface $item
      * @param int $frequency
      * @param int|null $frequencyProfileId
      * @return mixed
-     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws AlreadyExistsException
      */
     public function createSubscriptionWithItem(
-        \Magento\Sales\Api\Data\OrderInterface $order,
-        \Magento\Sales\Api\Data\OrderItemInterface $item,
+        OrderInterface $order,
+        OrderItemInterface $item,
         int $frequency,
-        $frequencyProfileId = null
+        ?int $frequencyProfileId = null
     );
 
     /**
-     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * Create subscription
+     *
+     * @param OrderInterface $order
      * @param int $frequency
      * @param int|null $frequencyProfileId
-     * @return \PayPal\Subscription\Api\Data\SubscriptionInterface
-     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @return SubscriptionInterface
+     * @throws AlreadyExistsException
      */
     public function createSubscription(
-        \Magento\Sales\Api\Data\OrderInterface $order,
+        OrderInterface $order,
         int $frequency,
-        $frequencyProfileId = null
-    ): \PayPal\Subscription\Api\Data\SubscriptionInterface;
+        ?int $frequencyProfileId = null
+    ): SubscriptionInterface;
 
     /**
+     * Change frequency
+     *
      * @param int $customerId
      * @param int $subscriptionId
      * @param int $frequency
-     * @return \PayPal\Subscription\Api\Data\SubscriptionInterface
+     * @return SubscriptionInterface
      */
     public function changeFrequency(
         int $customerId,
         int $subscriptionId,
         int $frequency
-    ): \PayPal\Subscription\Api\Data\SubscriptionInterface;
+    ): SubscriptionInterface;
 
     /**
+     * Change subscription status
+     *
      * @param int $customerId
      * @param int $subscriptionId
      * @param int $status
-     * @return \PayPal\Subscription\Api\Data\SubscriptionInterface
+     * @return SubscriptionInterface
      */
     public function changeStatus(
         int $customerId,
         int $subscriptionId,
         int $status
-    ): \PayPal\Subscription\Api\Data\SubscriptionInterface;
-
-
-    /**
-     * @param int $customerId
-     * @param int $subscriptionId
-     * @param int $failedAttempts
-     * @return Data\SubscriptionInterface
-     */
-    public function updateCoultOfFailedAttempts(
-        int $customerId,
-        int $subscriptionId,
-        int $failedAttempts
-    ): \PayPal\Subscription\Api\Data\SubscriptionInterface;
+    ): SubscriptionInterface;
 
     /**
+     * Change existing address
+     *
      * @param int $customerId
      * @param string $addressType
      * @param int $subscriptionId
      * @param int $addressId
-     * @return \Magento\Customer\Api\Data\AddressInterface
+     * @return AddressInterface
      */
     public function changeAddressExisting(
         int $customerId,
         string $addressType,
         int $subscriptionId,
         int $addressId
-    ): \Magento\Customer\Api\Data\AddressInterface;
+    ): AddressInterface;
 
     /**
+     * Change new address
+     *
      * @param int $customerId
      * @param string $addressType
      * @param int $subscriptionId
-     * @param \Magento\Customer\Api\Data\AddressInterface $address
-     * @return \Magento\Customer\Api\Data\AddressInterface
+     * @param AddressInterface $address
+     * @return AddressInterface
      */
     public function changeAddressNew(
         int $customerId,
         string $addressType,
         int $subscriptionId,
-        \Magento\Customer\Api\Data\AddressInterface $address
-    ): \Magento\Customer\Api\Data\AddressInterface;
+        AddressInterface $address
+    ): AddressInterface;
 
     /**
+     * Change payment method
+     *
      * @param int $customerId
      * @param int $subscriptionId
      * @param string $paymentPublicHash
-     * @return \PayPal\Subscription\Api\Data\SubscriptionInterface
+     * @return SubscriptionInterface
      */
     public function changePaymentMethod(
         int $customerId,
         int $subscriptionId,
         string $paymentPublicHash
-    ): \PayPal\Subscription\Api\Data\SubscriptionInterface;
+    ): SubscriptionInterface;
 
     /**
+     * Collect releases
+     *
      * @param string $from
      * @param string $to
-     * @return \PayPal\Subscription\Api\Data\SubscriptionInterface[]
+     * @param bool|null $emailReminder
+     * @return SubscriptionInterface[]
      */
-    public function collectReleases(string $from, string $to): array;
+    public function collectReleases(
+        string $from,
+        string $to,
+        ?bool $emailReminder = null
+    ): array;
 }

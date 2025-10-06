@@ -1,0 +1,32 @@
+<?php
+/**
+ * PayPal Subscriptions
+ * Template based off Magento_Customer/templates/address/edit
+ *
+ * @var Magento\Customer\Block\Address\Edit $block
+ * @var PayPal\Subscription\ViewModel\Customer\Address $addressHelper
+ */
+
+?>
+
+<div id="ps-address-modal" data-edit-address-modal
+        class="ps-add-address-form__container" data-bind="scope: 'addressModal'">
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <?= $block->getChildHtml('paypal_subscription_new_address_form', false) ?>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "#ps-address-modal": {
+         "Magento_Ui/js/core/app": {
+            "components": {
+                "addressModal": {
+                    "component": "PayPal_Subscription/js/view/customer/addresses/address-modal",
+                    "addresses": <?= /* @noEscape */ $block->getAllAddressesJson(); ?>
+                }
+            }
+        }
+    }
+}
+
+</script>

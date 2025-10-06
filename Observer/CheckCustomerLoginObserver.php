@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Observer;
@@ -15,7 +14,7 @@ class CheckCustomerLoginObserver implements ObserverInterface
     /**
      * @var SubscriptionHelper
      */
-    private $subscriptionHelper;
+    private SubscriptionHelper $subscriptionHelper;
 
     /**
      * CheckCustomerLoginObserver constructor.
@@ -28,10 +27,12 @@ class CheckCustomerLoginObserver implements ObserverInterface
     }
 
     /**
+     * Check customer is logged in
+     *
      * @param Observer $observer
-     * @return CheckCustomerLoginObserver
+     * @return $this
      */
-    public function execute(Observer $observer): CheckCustomerLoginObserver
+    public function execute(Observer $observer): self
     {
         if (!$this->subscriptionHelper->isActive()) {
             return $this;

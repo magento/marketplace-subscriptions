@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace PayPal\Subscription\Test\Unit;
 
+use Magento\Catalog\Helper\Image;
+use Magento\Framework\Pricing\Helper\Data as PricingHelper;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Sales\Api\Data\OrderInterfaceFactory;
 use Magento\Sales\Model\ResourceModel\Order;
 use PayPal\Subscription\Api\Data\SubscriptionInterfaceFactory;
+use PayPal\Subscription\Api\FrequencyProfileRepositoryInterface;
 use PayPal\Subscription\Block\Customer\View;
 use PayPal\Subscription\Model\ResourceModel\Subscription;
 use PayPal\Subscription\Model\ResourceModel\SubscriptionRelease\CollectionFactory;
@@ -58,7 +61,22 @@ class FormatAddressTest extends TestCase
      */
     private $subscriptionReleaseCollection;
 
-    protected function setUp()
+    /**
+     * @var FrequencyProfileRepositoryInterface|MockObject
+     */
+    private $frequencyProfileRepository;
+
+    /**
+     * @var Image|MockObject
+     */
+    private $image;
+
+    /**
+     * @var PricingHelper|MockObject
+     */
+    private $pricingHelper;
+
+    protected function setUp(): void
     {
         $this->context = $this->createMock(Context::class);
         $this->subscriptionInterface = $this->createMock(SubscriptionInterfaceFactory::class);
@@ -66,8 +84,10 @@ class FormatAddressTest extends TestCase
         $this->orderInterface = $this->createMock(OrderInterfaceFactory::class);
         $this->orderResource = $this->createMock(Order::class);
         $this->subscriptionReleaseCollection = $this->createMock(CollectionFactory::class);
+        $this->frequencyProfileRepository = $this->createMock(FrequencyProfileRepositoryInterface::class);
+        $this->image = $this->createMock(Image::class);
+        $this->pricingHelper = $this->createMock(PricingHelper::class);
         $this->serializer = new Json();
-
         $this->subscriptionView = $this->getMockBuilder(View::class)
             ->setConstructorArgs([
                 $this->context,
@@ -76,7 +96,10 @@ class FormatAddressTest extends TestCase
                 $this->orderInterface,
                 $this->orderResource,
                 $this->subscriptionReleaseCollection,
-                $this->serializer
+                $this->frequencyProfileRepository,
+                $this->serializer,
+                $this->image,
+                $this->pricingHelper
             ])
             ->setMethodsExcept(['formatAddress', 'implodeNested'])
             ->getMock();
@@ -87,6 +110,9 @@ class FormatAddressTest extends TestCase
         $address = '{"street":["Church House", "1 Hanover Street"],"city":"Liverpool","region":"Merseyside","postcode":"L1 3DN","country_id":"GB"}'; // @codingStandardsIgnoreLine
         $expected = 'Church House, 1 Hanover Street, Liverpool, Merseyside, L1 3DN, GB';
         $formattedAddress = $this->subscriptionView->formatAddress($address);
-        $this->assertEquals($expected, $formattedAddress);
+        $this->assertEquals(
+            $expected,
+            $formattedAddress
+        );
     }
 }

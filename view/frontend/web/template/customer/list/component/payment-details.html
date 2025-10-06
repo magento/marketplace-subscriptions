@@ -1,0 +1,19 @@
+<div class="payment">
+    <div class="block-title block-title--small">
+        <span data-bind="i18n: 'Payment Details'"></span>
+        <!-- ko foreach: { data: elems, as: 'element' } -->
+        <!-- ko template: element.getTemplate() --><!-- /ko -->
+        <!-- /ko -->
+    </div>
+    <div class="block-content">
+        <div class="payment-details">
+            <!-- ko if: subscription().paymentDetails.type() == "card" -->
+            <p class="masked-cc-number">**** **** **** <span data-bind="text: subscription().paymentDetails.masked_card_number()"></span></p>
+            <!-- /ko -->
+            <!-- ko ifnot: subscription().paymentDetails.type() == "card" -->
+            <p class="masked-cc-number"><span data-bind="i18n: 'PayPal Account'"></span></p>
+            <!-- /ko -->
+            <p class="cc-expiry" data-bind="text: subscription().paymentDetails.expiry()"></p>
+        </div>
+    </div>
+</div>

@@ -1,21 +1,29 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Model;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use PayPal\Subscription\Api\Data\SubscriptionItemInterface;
 use PayPal\Subscription\Model\ResourceModel\SubscriptionItem as SubscriptionItemResource;
 
 class SubscriptionItem extends AbstractModel implements SubscriptionItemInterface
 {
-    protected function _construct()
+    /**
+     * Initialize subscription item resource
+     *
+     * @return void
+     * @throws LocalizedException
+     */
+    protected function _construct(): void
     {
         $this->_init(SubscriptionItemResource::class);
     }
 
     /**
+     * Get subscription ID
+     *
      * @return int
      */
     public function getSubscriptionId(): int
@@ -24,6 +32,8 @@ class SubscriptionItem extends AbstractModel implements SubscriptionItemInterfac
     }
 
     /**
+     * Set subscription ID
+     *
      * @param int $id
      * @return SubscriptionItemInterface
      */
@@ -33,6 +43,8 @@ class SubscriptionItem extends AbstractModel implements SubscriptionItemInterfac
     }
 
     /**
+     * Get SKU
+     *
      * @return string
      */
     public function getSku(): string
@@ -41,6 +53,8 @@ class SubscriptionItem extends AbstractModel implements SubscriptionItemInterfac
     }
 
     /**
+     * Set SKU
+     *
      * @param string $sku
      * @return SubscriptionItemInterface
      */
@@ -50,6 +64,8 @@ class SubscriptionItem extends AbstractModel implements SubscriptionItemInterfac
     }
 
     /**
+     * Get price
+     *
      * @return float
      */
     public function getPrice(): float
@@ -58,6 +74,8 @@ class SubscriptionItem extends AbstractModel implements SubscriptionItemInterfac
     }
 
     /**
+     * Set price
+     *
      * @param float $price
      * @return SubscriptionItemInterface
      */
@@ -67,23 +85,8 @@ class SubscriptionItem extends AbstractModel implements SubscriptionItemInterfac
     }
 
     /**
-     * @return float
-     */
-    public function getPeriodicPrice(): float
-    {
-        return (float) $this->getData(self::PERIODIC_PRICE);
-    }
-
-    /**
-     * @param float $periodicPrice
-     * @return SubscriptionItemInterface
-     */
-    public function setPeriodicPrice(float $periodicPrice): SubscriptionItemInterface
-    {
-        return $this->setData(self::PERIODIC_PRICE, $periodicPrice);
-    }
-
-    /**
+     * Get qty
+     *
      * @return int
      */
     public function getQty(): int
@@ -92,6 +95,8 @@ class SubscriptionItem extends AbstractModel implements SubscriptionItemInterfac
     }
 
     /**
+     * Set qty
+     *
      * @param int $quantity
      * @return SubscriptionItemInterface
      */
@@ -101,6 +106,8 @@ class SubscriptionItem extends AbstractModel implements SubscriptionItemInterfac
     }
 
     /**
+     * Get product ID
+     *
      * @return int
      */
     public function getProductId(): int
@@ -109,62 +116,13 @@ class SubscriptionItem extends AbstractModel implements SubscriptionItemInterfac
     }
 
     /**
+     * Set product ID
+     *
      * @param int $productId
      * @return SubscriptionItemInterface
      */
     public function setProductId(int $productId): SubscriptionItemInterface
     {
         return $this->setData(self::PRODUCT_ID, $productId);
-    }
-
-    /**
-     * @return int
-     */
-    public function getOrderId(): int
-    {
-        return (int) $this->getData(self::ORDER_ID);
-    }
-
-    /**
-     * @param int $orderId
-     * @return SubscriptionItemInterface
-     */
-    public function setOrderId(int $orderId): SubscriptionItemInterface
-    {
-        return $this->setData(self::ORDER_ID, $orderId);
-    }
-
-    /**
-     * @return int
-     */
-    public function getOrderItemId(): int
-    {
-        return (int) $this->getData(self::ITEM_ID);
-    }
-
-    /**
-     * @param int $orderItemId
-     * @return SubscriptionItemInterface
-     */
-    public function setOrderItemId(int $orderItemId): SubscriptionItemInterface
-    {
-        return $this->setData(self::ITEM_ID, $orderItemId);
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrderItemName(): string
-    {
-        return $this->getData(self::NAME);
-    }
-
-    /**
-     * @param string $orderItemName
-     * @return SubscriptionItemInterface
-     */
-    public function setOrderItemName(string $orderItemName): SubscriptionItemInterface
-    {
-        return $this->setData(self::NAME, $orderItemName);
     }
 }

@@ -1,15 +1,78 @@
 <?php
 /**
- * @var \Magento\Sales\Api\Data\OrderItemInterface $items
- * @var \PayPal\Subscription\ViewModel\Email $viewModel
+ * @var Template $block
+ * @var Escaper $escaper
+ * @var SubscriptionItemInterface[] $items
+ * @var Email $viewModel
  */
-$items = $block->getItems();
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use PayPal\Subscription\Api\Data\SubscriptionItemInterface;
+use PayPal\Subscription\ViewModel\Email;
+
+$items = $block->getItems() ?: [];
 $viewModel = $block->getViewModel();
 ?>
-
-<?php foreach ($items as $item): ?>
-    <?= $block->escapeHtml($item->getName()) ?>
-    <?= $block->escapeHtml($item->getSku()) ?>
-    <?= $block->escapeHtml($viewModel->formatPrice($item->getPrice())) ?>
-    <?= $block->escapeHtml(number_format($item->getQtyOrdered(), 2)) ?>
-<?php endforeach; ?>
+<?php if ($items !== []): ?>
+    <table class="email-items">
+        <thead>
+        <tr>
+            <th class="item-info">
+                <?= $escaper->escapeHtml(__('Item')) ?>
+            </th>
+            <th class="item-qty">
+                <?= $escaper->escapeHtml(__('Qty')) ?>
+            </th>
+            <th class="item-price">
+                <?= $escaper->escapeHtml(__('Price')) ?>
+            </th>
+        </tr>
+        </thead>
+        <?php foreach ($items as $_item): ?>
+            <tbody>
+            <?php if (!$bundleData = $viewModel->getBundleData($_item)): ?>
+                <tr>
+                    <td class="item-info">
+                        <p class="product-name"><?= $escaper->escapeHtml($viewModel->getProductName($_item)) ?></p>
+                        <p class="sku">
+                            <?= $escaper->escapeHtml(__('SKU')) ?>: <?= $escaper->escapeHtml($_item->getSku()) ?>
+                        </p>
+                    </td>
+                    <td class="item-qty"><?= (float) $_item->getQty() ?></td>
+                    <td class="item-price">
+                        <?= /* @noEscape */ $viewModel->formatPrice($_item->getPrice()); ?>
+                    </td>
+                </tr>
+            <?php else: ?>
+                <tr class="bundle-item bundle-parent">
+                    <td class="item-info">
+                        <p class="product-name"><?= $escaper->escapeHtml($viewModel->getProductName($_item)) ?></p>
+                        <p class="sku">
+                            <?= $escaper->escapeHtml(__('SKU')) ?>: <?= $escaper->escapeHtml($_item->getSku()) ?>
+                        </p>
+                    </td>
+                    <td class="item-qty"><?= (float) $_item->getQty() ?></td>
+                    <td class="item-price">
+                        <?= /* @noEscape */ $viewModel->formatPrice($_item->getPrice()); ?>
+                    </td>
+                </tr>
+                <?php foreach ($bundleData as $optionTitle => $selectionData): ?>
+                    <tr class="bundle-option-label">
+                        <td colspan="3">
+                            <strong><em><?= $escaper->escapeHtml($optionTitle) ?></em></strong>
+                        </td>
+                    </tr>
+                    <?php foreach ($selectionData as $selection): ?>
+                        <tr class="bundle-item bundle-option-value">
+                            <td class="item-info" colspan="3">
+                                <p><?= $escaper->escapeHtml($viewModel->getSelectionString($selection)) ?></p>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            </tbody>
+        <?php endforeach; ?>
+    </table>
+<?php endif; ?>

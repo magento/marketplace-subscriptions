@@ -81,7 +81,7 @@ define([
                     var address = Object.values(JSON.parse(response.billing_address));
                     addressBuilder.billingAddress(address);
 
-                }).error(function () {
+                }).fail(function () {
                     success = false;
                 })
             }
@@ -94,7 +94,7 @@ define([
                     var address  = Object.values(JSON.parse(response.shipping_address));
                     addressBuilder.shippingAddress(address);
 
-                }).error(function () {
+                }).fail(function () {
                     success = false;
                 })
             }
@@ -104,25 +104,6 @@ define([
             } else {
                 this.modalContainer.modal('closeModal');
             }
-        },
-
-        /**
-         * Open address form
-         */
-        openAddressForm: function () {
-
-            var modalContainer = this.modalContainer,
-                options = {
-                    type: 'popup',
-                    responsive: true,
-                    innerScroll: true,
-                    modalClass: 'ps-add-address-form-modal',
-                    title: $t('Add a new address'),
-                    buttons: []
-                };
-
-            modal(options, modalContainer);
-            modalContainer.modal('openModal');
         },
 
         /**

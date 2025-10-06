@@ -1,4 +1,4 @@
-# PayPal Subscription 1.0.0
+# PayPal Subscription 3.5.0
 
 Once a Braintree account has been created and the supporting Payments module installed, merchants can enable the subscription functionality on any of their products in Magento. Orders will be created within Magento on an automated basis with payments being processed though the Braintree PayPal or Card payment methods.
 

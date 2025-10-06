@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/publisher.xsd">
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/publisher.xsd">
     <publisher topic="paypal.subscription.release">
+        <connection name="amqp" exchange="paypal.subscription"/>
+    </publisher>
+    <publisher topic="paypal.subscription.release.db">
         <connection name="db" exchange="paypal.subscription"/>
     </publisher>
 </config>

@@ -1,0 +1,13 @@
+<a class="action view" href="#">
+    <span data-bind="i18n: 'Edit', click: showEditPaymentModal"></span>
+</a>
+<div
+    id="ps-edit-payment-modal"
+    afterRender="initModal"
+    data-edit-payment-modal
+    class="ps-edit-method-form__container">
+    <h2 data-bind="i18n: 'Change Payment Method'"></h2>
+    <!-- ko foreach: { data: elems, as: 'element' } -->
+        <!-- ko template: element.getTemplate() --><!-- /ko -->
+    <!-- /ko -->
+</div>

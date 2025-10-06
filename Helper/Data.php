@@ -1,10 +1,17 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Helper;
 
 use InvalidArgumentException;
+use Magento\Bundle\Model\Option;
+use Magento\Bundle\Model\Product\Type;
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterface;
@@ -23,11 +30,13 @@ use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Store\Model\ScopeInterface;
+use PayPal\Subscription\Api\Data\SubscriptionInterface;
 use PayPal\Subscription\Api\Data\SubscriptionItemInterface;
 use PayPal\Subscription\Api\SubscriptionRepositoryInterface;
 use PayPal\Subscription\Model\FrequencyProfileRepository;
 use PayPal\Subscription\Model\ResourceModel\SubscriptionItem\CollectionFactory as SubscriptionItemCollectionFactory;
 use PayPal\Subscription\Model\Subscription;
+use PayPal\Subscription\Model\Subscription\QuoteAddressResolverInterface;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 
@@ -45,8 +54,11 @@ class Data extends AbstractHelper
 
     public const SUB_PRICE_TYPE = 'subscription_price_type';
     public const SUB_PRICE_VALUE = 'subscription_price_value';
+    public const SUB_PRICE_SAVING = 'subscription_price_saving';
 
     public const SUB_FREQ_PROF = 'subscription_frequency_profile';
+    public const SUB_FREQ_REC = 'recommended_frequency';
+    public const SUB_FREQ_REASON = 'recommended_frequency_reason';
 
     // Quote Item Options
     public const IS_SUBSCRIPTION = 'is_subscription';
@@ -102,6 +114,11 @@ class Data extends AbstractHelper
     private $pricingHelper;
 
     /**
+     * @var QuoteAddressResolverInterface
+     */
+    private $quoteAddressResolver;
+
+    /**
      * Data constructor.
      *
      * @param Context $context
@@ -117,6 +134,7 @@ class Data extends AbstractHelper
      * @param QuoteResource $quoteResource
      * @param AddressInterfaceFactory $addressFactory
      * @param PricingHelper $pricingHelper
+     * @param QuoteAddressResolverInterface $quoteAddressResolver
      */
     public function __construct(
         Context $context,
@@ -131,7 +149,8 @@ class Data extends AbstractHelper
         CartRepositoryInterface $cartRepository,
         QuoteResource $quoteResource,
         AddressInterfaceFactory $addressFactory,
-        PricingHelper $pricingHelper
+        PricingHelper $pricingHelper,
+        QuoteAddressResolverInterface $quoteAddressResolver
     ) {
         parent::__construct($context);
         $this->scopeConfig = $scopeConfig;
@@ -146,9 +165,12 @@ class Data extends AbstractHelper
         $this->quoteResource = $quoteResource;
         $this->addressFactory = $addressFactory;
         $this->pricingHelper = $pricingHelper;
+        $this->quoteAddressResolver = $quoteAddressResolver;
     }
 
     /**
+     * Check subscription active
+     *
      * @return bool
      */
     public function isActive(): bool
@@ -160,28 +182,8 @@ class Data extends AbstractHelper
     }
 
     /**
-     * @return bool
-     */
-    public function getCountOfFailedAttempts(): int
-    {
-        return (int) $this->scopeConfig->getValue(
-            self::CONFIG_PREFIX . 'failed_payments',
-            ScopeInterface::SCOPE_STORE
-        );
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCronActive(): bool
-    {
-        return (bool) $this->scopeConfig->getValue(
-            self::CONFIG_PREFIX . 'cron_enabled',
-            ScopeInterface::SCOPE_STORE
-        );
-    }
-
-    /**
+     * Get serialised address
+     *
      * @param AddressInterface|OrderAddressInterface $address
      * @return string
      */
@@ -189,28 +191,34 @@ class Data extends AbstractHelper
     {
         return $this->serializer->serialize(
             [
-                'firstname' => $address->getFirstname(),
-                'lastname' => $address->getLastname(),
-                'company' => $address->getCompany(),
-                'street' => $address->getStreet(),
-                'city' => $address->getCity(),
-                'region' => $address->getRegion(),
-                'region_id' => $address->getRegionId(),
-                'postcode' => $address->getPostcode(),
-                'country_id' => $address->getCountryId(),
-                'telephone' => $address->getTelephone(),
+                'firstname' => $address !== null ? $address->getFirstname() : '',
+                'lastname' => $address !== null ? $address->getLastname() : '',
+                'company' => $address !== null ? $address->getCompany() : '',
+                'street' => $address !== null ? $address->getStreet() : '',
+                'city' => $address !== null ? $address->getCity() : '',
+                'region' => $address !== null ? $address->getRegion() : '',
+                'region_id' => $address !== null ? $address->getRegionId() : '',
+                'postcode' => $address !== null ? $address->getPostcode() : '',
+                'country_id' => $address !== null ? $address->getCountryId() : '',
+                'telephone' => $address !== null ? $address->getTelephone() : '',
             ]
         );
     }
 
     /**
-     * @param $address
+     * Get formatted address
+     *
+     * @param string $address
      * @return string
      */
-    public function getFormattedAddress($address)
+    public function getFormattedAddress(string $address)
     {
         try {
             $address = $this->serializer->unserialize($address);
+            if ($address['telephone']) {
+                $address['telephone'] = 'T: ' . $address['telephone'];
+            }
+            unset($address['region_id']);
             $formattedAddress = new RecursiveIteratorIterator(new RecursiveArrayIterator($address));
             return implode(', ', array_filter(iterator_to_array($formattedAddress, false)));
         } catch (InvalidArgumentException $e) {
@@ -219,6 +227,8 @@ class Data extends AbstractHelper
     }
 
     /**
+     * Get interval label
+     *
      * @param int $productId
      * @param int $interval
      * @return string
@@ -245,18 +255,22 @@ class Data extends AbstractHelper
 
     /**
      * Get Discounted price
+     *
      * @param float $discount
      * @param float $price
      * @return float
      */
-    public function getDiscountedPrice(float $discount, float $price): float
-    {
+    public function getDiscountedPrice(
+        float $discount,
+        float $price
+    ): float {
         return ((100 - $discount) / 100) * $price;
     }
 
     /**
      * Get Status Label from value
-     * @param $status
+     *
+     * @param int $status
      * @return string
      */
     public function getStatusLabel($status): string
@@ -271,7 +285,17 @@ class Data extends AbstractHelper
         return $statusArray[$status];
     }
 
-    public function getShipping($subscriptionId)
+    /**
+     * Get shipping
+     *
+     * @param int $subscriptionId
+     * @return array
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\InputException
+     */
+    public function getShipping(int $subscriptionId): array
     {
         /** @var Subscription $subscription */
         $subscription = $this->getSubscription($subscriptionId);
@@ -290,41 +314,86 @@ class Data extends AbstractHelper
         $quote->setCustomer($customer);
 
         $this->addProducts($subscriptionItems, $quote);
-
-        $quote->setShippingAddress($this->setAddress($subscription->getShippingAddress()));
+        $shippingAddress = $this->quoteAddressResolver->execute(
+            $subscription,
+            SubscriptionInterface::SHIPPING_ADDRESS
+        );
+        $quote->setShippingAddress($shippingAddress);
         $quote->collectTotals();
 
-        return [];
+        $address = $quote->getShippingAddress();
+        $rates = $address->collectShippingRates();
+
+        return $rates->getAllShippingRates();
     }
 
-    private function getSubscription($id)
+    /**
+     * Get subscription
+     *
+     * @param int $id
+     * @return SubscriptionInterface
+     * @throws NoSuchEntityException
+     */
+    private function getSubscription(int $id): SubscriptionInterface
     {
         return $this->subscriptionRepository->getById((int) $id);
     }
 
-    public function formatPrice($price)
+    /**
+     * Get format price
+     *
+     * @param float $price
+     * @return float|string
+     */
+    public function formatPrice(float $price)
     {
         return $this->pricingHelper->currency($price, true, false);
     }
 
-    private function setAddress(string $address)
+    /**
+     * Get bundle data
+     *
+     * @param ProductInterface $subscriptionProduct
+     * @return array
+     */
+    public function getBundleData(ProductInterface $subscriptionProduct): array
     {
-        $subscriptionAddress = $this->serializer->unserialize($address);
-        $newAddress = $this->addressFactory->create();
-        $newAddress->setFirstname($subscriptionAddress['firstname'])
-            ->setLastname($subscriptionAddress['lastname'])
-            ->setCompany($subscriptionAddress['company'] ?? null)
-            ->setStreet($subscriptionAddress['street'])
-            ->setCity($subscriptionAddress['city'])
-            ->setRegion($subscriptionAddress['region'] ?? null)
-            ->setRegionId($subscriptionAddress['region_id'] ?? null)
-            ->setCountryId($subscriptionAddress['country_id'])
-            ->setPostcode($subscriptionAddress['postcode'] ?? null)
-            ->setTelephone($subscriptionAddress['telephone']);
-        return $newAddress;
+        $optionData = [];
+        if ($subscriptionProduct->getTypeId() !== Type::TYPE_CODE) {
+            return $optionData;
+        }
+
+        /** @var Type $typeInstance */
+        $typeInstance = $subscriptionProduct->getTypeInstance();
+        $optionMap = $typeInstance->getOptions($subscriptionProduct);
+        $bundleSelections = $typeInstance->getSelectionsCollection(
+            $typeInstance->getOptionsIds($subscriptionProduct),
+            $subscriptionProduct
+        );
+
+        if (empty($bundleSelections->getItems()) || $optionMap === null) {
+            return $optionData;
+        }
+
+        foreach ($bundleSelections->getItems() as $childData) {
+            $bundleOption = $optionMap[(int)$childData->getOptionId()] ?? null;
+            if (!$bundleOption instanceof Option) {
+                continue;
+            }
+            $optionData[$bundleOption->getTitle()][] = [
+                'quantity' => $childData->getData('selection_qty') ?? '',
+                'sku' => $childData->getSku(),
+                'name' => $childData->getName(),
+                'selection_price' =>  $this->formatPrice((float)$childData->getData('selection_price_value'))
+            ];
+        }
+
+        return $optionData;
     }
 
     /**
+     * Add products to the quote
+     *
      * @param array $subscriptionItems
      * @param CartInterface $quote
      * @throws LocalizedException
@@ -336,12 +405,13 @@ class Data extends AbstractHelper
             try {
                 $product = $this->productRepository->getById($item->getProductId());
                 $product->setPrice($item->getPrice());
-                $product->setData('salable', true);
                 $quote->addProduct($product, $item->getQty());
             } catch (NoSuchEntityException $e) {
+                // @codingStandardsIgnoreStart
                 throw new LocalizedException(__('Could not find product: %1', $e->getMessage()));
             } catch (LocalizedException $e) {
                 throw new LocalizedException(__('Could not add product to quote: %1', $e->getMessage()));
+                // @codingStandardsIgnoreEnd
             }
         }
     }

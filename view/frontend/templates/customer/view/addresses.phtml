@@ -3,34 +3,34 @@
  * PayPal Subscriptions
  * @var PayPal\Subscription\Block\Customer\View $block
  * @var PayPal\Subscription\Model\Subscription $subscription
+ * @var Escaper $escaper
  * @todo Tidy up this file
  */
+
+use Magento\Framework\Escaper;
 
 $subscription = $block->getSubscription();
 $addressesUrl = $block->getUrl('subscriptions/customer/addresses/id/' . $subscription->getId());
 ?>
 
 <section class="block">
-
     <h3 class="block-title">
-        <span><?= $block->escapeHtml(__('Addresses')) ?></span>
+        <span><?= $escaper->escapeHtml(__('Addresses')) ?></span>
     </h3>
-
     <div class="block-content">
-
         <div class="box">
             <h4 class="box-title">
-                <span><?= $block->escapeHtml(__('Default Billing Address')) ?></span>
+                <span><?= $escaper->escapeHtml(__('Default Billing Address')) ?></span>
             </h4>
             <div class="box-content">
                 <address>
-                    <?= $block->escapeHtml($block->formatAddress($subscription->getBillingAddress())) ?>
+                    <?= $escaper->escapeHtml($block->formatAddress($subscription->getBillingAddress())) ?>
                 </address>
             </div>
             <div class="box-actions">
                 <a class="action edit"
-                   href="<?= $block->escapeUrl($addressesUrl) ?>">
-                    <span><?= $block->escapeHtml(__('Change Billing Address')) ?></span>
+                   href="<?= $escaper->escapeUrl($addressesUrl) ?>">
+                    <span><?= $escaper->escapeHtml(__('Change Billing Address')) ?></span>
                 </a>
             </div>
 
@@ -39,17 +39,17 @@ $addressesUrl = $block->getUrl('subscriptions/customer/addresses/id/' . $subscri
 
         <div class="box">
             <h4 class="box-title">
-                <span><?= $block->escapeHtml(__('Default Shipping Address')) ?></span>
+                <span><?= $escaper->escapeHtml(__('Default Shipping Address')) ?></span>
             </h4>
             <div class="box-content">
                 <address>
-                    <?= $block->escapeHtml($block->formatAddress($subscription->getShippingAddress())) ?>
+                    <?= $escaper->escapeHtml($block->formatAddress($subscription->getShippingAddress())) ?>
                 </address>
             </div>
             <div class="box-actions">
                 <a class="action edit"
-                   href="<?= $block->escapeUrl($addressesUrl) ?>">
-                    <span><?= $block->escapeHtml(__('Change Shipping Address')) ?></span>
+                   href="<?= $escaper->escapeUrl($addressesUrl) ?>">
+                    <span><?= $escaper->escapeHtml(__('Change Shipping Address')) ?></span>
                 </a>
             </div>
         </div>

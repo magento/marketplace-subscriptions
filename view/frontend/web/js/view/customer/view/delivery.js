@@ -57,7 +57,7 @@ define([
                 // Add error messaging
                 that.message($t('Unable to update frequency, please try again.'));
                 that.messageClass('message error');
-            }).success(function () {
+            }).done(function () {
 
                 // Stop loader
                 $('body').trigger('processStop');

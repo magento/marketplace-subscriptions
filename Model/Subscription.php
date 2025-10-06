@@ -24,8 +24,14 @@ use PayPal\Subscription\Model\ResourceModel\SubscriptionItem\CollectionFactory a
 
 class Subscription extends AbstractModel implements SubscriptionInterface
 {
+    /**
+     * @var string
+     */
     public $_eventObject = 'subscription';
 
+    /**
+     * @var string
+     */
     public $_eventPrefix = 'paypal_subscription';
 
     /**
@@ -60,6 +66,7 @@ class Subscription extends AbstractModel implements SubscriptionInterface
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
+     * @throws LocalizedException
      */
     public function __construct(
         Context $context,
@@ -68,11 +75,17 @@ class Subscription extends AbstractModel implements SubscriptionInterface
         ProductRepositoryInterface $productRepository,
         SubscriptionHistoryInterfaceFactory $subscriptionHistoryFactory,
         SubscriptionHistoryRepositoryInterface $subscriptionHistoryRepository,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        parent::__construct(
+            $context,
+            $registry,
+            $resource,
+            $resourceCollection,
+            $data
+        );
         $this->subscriptionItemCollection = $subscriptionItemCollection;
         $this->productRepository = $productRepository;
         $this->subscriptionHistoryFactory = $subscriptionHistoryFactory;
@@ -80,7 +93,10 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Initialize subscription resource
+     *
      * @return void
+     * @throws LocalizedException
      */
     protected function _construct(): void
     {
@@ -88,23 +104,34 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Get ID
+     *
      * @return int|null
      */
     public function getId(): ?int
     {
-        return $this->getData(self::SUBSCRIPTION_ID) ? (int) $this->getData(self::SUBSCRIPTION_ID) : null;
+        return $this->getData(self::SUBSCRIPTION_ID) ?
+            (int) $this->getData(self::SUBSCRIPTION_ID) :
+            null;
     }
 
     /**
+     * Set ID
+     *
      * @param mixed $id
      * @return SubscriptionInterface
      */
-    public function setId($id): SubscriptionInterface
+    public function setId(mixed $id): SubscriptionInterface
     {
-        return $this->setData(self::SUBSCRIPTION_ID, $id);
+        return $this->setData(
+            self::SUBSCRIPTION_ID,
+            $id
+        );
     }
 
     /**
+     * Get customer ID
+     *
      * @return int
      */
     public function getCustomerId(): int
@@ -113,15 +140,22 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set customer ID
+     *
      * @param int $customerId
      * @return SubscriptionInterface
      */
     public function setCustomerId(int $customerId): SubscriptionInterface
     {
-        return $this->setData(self::CUSTOMER_ID, $customerId);
+        return $this->setData(
+            self::CUSTOMER_ID,
+            $customerId
+        );
     }
 
     /**
+     * Get order ID
+     *
      * @return int
      */
     public function getOrderId(): int
@@ -130,15 +164,22 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set order ID
+     *
      * @param int $orderId
      * @return SubscriptionInterface
      */
     public function setOrderId(int $orderId): SubscriptionInterface
     {
-        return $this->setData(self::ORDER_ID, $orderId);
+        return $this->setData(
+            self::ORDER_ID,
+            $orderId
+        );
     }
 
     /**
+     * Get status
+     *
      * @return int
      */
     public function getStatus(): int
@@ -147,15 +188,22 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set status
+     *
      * @param int $statusId
      * @return SubscriptionInterface
      */
     public function setStatus(int $statusId): SubscriptionInterface
     {
-        return $this->setData(self::STATUS, $statusId);
+        return $this->setData(
+            self::STATUS,
+            $statusId
+        );
     }
 
     /**
+     * Get previous release date
+     *
      * @return string|null
      */
     public function getPreviousReleaseDate(): ?string
@@ -164,15 +212,22 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set previous release date
+     *
      * @param string $releaseDate
      * @return SubscriptionInterface
      */
     public function setPreviousReleaseDate(string $releaseDate): SubscriptionInterface
     {
-        return $this->setData(self::PREV_RELEASE_DATE, $releaseDate);
+        return $this->setData(
+            self::PREV_RELEASE_DATE,
+            $releaseDate
+        );
     }
 
     /**
+     * Get next release date
+     *
      * @return string
      */
     public function getNextReleaseDate(): string
@@ -181,32 +236,48 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set next release date
+     *
      * @param string $releaseDate
      * @return SubscriptionInterface
      */
     public function setNextReleaseDate(string $releaseDate): SubscriptionInterface
     {
-        return $this->setData(self::NEXT_RELEASE_DATE, $releaseDate);
+        return $this->setData(
+            self::NEXT_RELEASE_DATE,
+            $releaseDate
+        );
     }
 
     /**
+     * Get frequency profile ID
+     *
      * @return int|null
      */
     public function getFrequencyProfileId(): ?int
     {
-        return $this->getData(self::FREQ_PROFILE_ID) ? (int) $this->getData(self::FREQ_PROFILE_ID) : null;
+        return $this->getData(self::FREQ_PROFILE_ID) ?
+            (int) $this->getData(self::FREQ_PROFILE_ID) :
+            null;
     }
 
     /**
+     * Set frequency profile ID
+     *
      * @param int|null $frequencyProfileId
      * @return SubscriptionInterface
      */
     public function setFrequencyProfileId(?int $frequencyProfileId): SubscriptionInterface
     {
-        return $this->setData(self::FREQ_PROFILE_ID, $frequencyProfileId);
+        return $this->setData(
+            self::FREQ_PROFILE_ID,
+            $frequencyProfileId
+        );
     }
 
     /**
+     * Get frequency
+     *
      * @return int
      */
     public function getFrequency(): int
@@ -215,15 +286,22 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set frequency
+     *
      * @param int $frequency
      * @return SubscriptionInterface
      */
     public function setFrequency(int $frequency): SubscriptionInterface
     {
-        return $this->setData(self::FREQUENCY, $frequency);
+        return $this->setData(
+            self::FREQUENCY,
+            $frequency
+        );
     }
 
     /**
+     * Get billing address
+     *
      * @return string
      */
     public function getBillingAddress(): string
@@ -232,15 +310,22 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set billing address
+     *
      * @param string $billingAddress
      * @return SubscriptionInterface
      */
     public function setBillingAddress(string $billingAddress): SubscriptionInterface
     {
-        return $this->setData(self::BILLING_ADDRESS, $billingAddress);
+        return $this->setData(
+            self::BILLING_ADDRESS,
+            $billingAddress
+        );
     }
 
     /**
+     * Get shipping address
+     *
      * @return string
      */
     public function getShippingAddress(): string
@@ -249,15 +334,22 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set shipping address
+     *
      * @param string $shippingAddress
      * @return SubscriptionInterface
      */
     public function setShippingAddress(string $shippingAddress): SubscriptionInterface
     {
-        return $this->setData(self::SHIPPING_ADDRESS, $shippingAddress);
+        return $this->setData(
+            self::SHIPPING_ADDRESS,
+            $shippingAddress
+        );
     }
 
     /**
+     * Get shipping price
+     *
      * @return float
      */
     public function getShippingPrice(): float
@@ -266,15 +358,22 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set shipping price
+     *
      * @param float $shippingPrice
      * @return SubscriptionInterface
      */
     public function setShippingPrice(float $shippingPrice): SubscriptionInterface
     {
-        return $this->setData(self::SHIPPING_PRICE, $shippingPrice);
+        return $this->setData(
+            self::SHIPPING_PRICE,
+            $shippingPrice
+        );
     }
 
     /**
+     * Get shipping method
+     *
      * @return string
      */
     public function getShippingMethod(): string
@@ -283,15 +382,22 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
-     * @param string $shippingMethod
+     * Set shipping method
+     *
+     * @param string|null $shippingMethod
      * @return SubscriptionInterface
      */
-    public function setShippingMethod(string $shippingMethod): SubscriptionInterface
+    public function setShippingMethod($shippingMethod): SubscriptionInterface
     {
-        return $this->setData(self::SHIPPING_METHOD, $shippingMethod);
+        return $this->setData(
+            self::SHIPPING_METHOD,
+            $shippingMethod
+        );
     }
 
     /**
+     * Get payment method
+     *
      * @return string
      */
     public function getPaymentMethod(): string
@@ -300,15 +406,22 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set payment method
+     *
      * @param string $paymentMethod
      * @return SubscriptionInterface
      */
     public function setPaymentMethod(string $paymentMethod): SubscriptionInterface
     {
-        return $this->setData(self::PAYMENT_METHOD, $paymentMethod);
+        return $this->setData(
+            self::PAYMENT_METHOD,
+            $paymentMethod
+        );
     }
 
     /**
+     * Get payment data
+     *
      * @return string|null
      */
     public function getPaymentData(): ?string
@@ -317,32 +430,22 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set payment data
+     *
      * @param string $paymentData
      * @return SubscriptionInterface
      */
     public function setPaymentData(string $paymentData): SubscriptionInterface
     {
-        return $this->setData(self::PAYMENT_DATA, $paymentData);
+        return $this->setData(
+            self::PAYMENT_DATA,
+            $paymentData
+        );
     }
 
     /**
-     * @return int
-     */
-    public function getCountOfFailedAttempts(): int
-    {
-        return (int) $this->getData(self::COUNT_OF_FAILED_ATTEMPTS);
-    }
-
-    /**
-     * @param int $countOfFailedAttempts
-     * @return SubscriptionInterface
-     */
-    public function setCountOfFailedAttempts(int $countOfFailedAttempts): SubscriptionInterface
-    {
-        return $this->setData(self::COUNT_OF_FAILED_ATTEMPTS, $countOfFailedAttempts);
-    }
-
-    /**
+     * Get created at
+     *
      * @return string|null
      */
     public function getCreatedAt(): ?string
@@ -351,15 +454,46 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
+     * Set created at
+     *
      * @param string $createdAt
      * @return SubscriptionInterface
      */
     public function setCreatedAt(string $createdAt): SubscriptionInterface
     {
-        return $this->setData(self::CREATED_AT, $createdAt);
+        return $this->setData(
+            self::CREATED_AT,
+            $createdAt
+        );
     }
 
     /**
+     * Get updated at
+     *
+     * @return string|null
+     */
+    public function getUpdatedAt(): ?string
+    {
+        return $this->getData(self::UPDATED_AT);
+    }
+
+    /**
+     * Set updated at
+     *
+     * @param string $updatedAt
+     * @return SubscriptionInterface
+     */
+    public function setUpdatedAt(string $updatedAt): SubscriptionInterface
+    {
+        return $this->setData(
+            self::UPDATED_AT,
+            $updatedAt
+        );
+    }
+
+    /**
+     * Get subscription item
+     *
      * @return SubscriptionItemInterface
      */
     public function getSubscriptionItem(): SubscriptionItemInterface
@@ -373,9 +507,11 @@ class Subscription extends AbstractModel implements SubscriptionInterface
     }
 
     /**
-     * @return ProductInterface|void
+     * Get product
+     *
+     * @return ProductInterface|null
      */
-    public function getProduct()
+    public function getProduct(): ?ProductInterface
     {
         $subscriptionId = $this->getId();
         $subscriptionItemCollection = $this->subscriptionItemCollection->create();
@@ -387,14 +523,16 @@ class Subscription extends AbstractModel implements SubscriptionInterface
         try {
             return $this->productRepository->getById($productId);
         } catch (NoSuchEntityException $e) {
-            return;
+            return null;
         }
     }
 
     /**
-     * @param $action
-     * @param $actionType
-     * @param $description
+     * Add subscription history
+     *
+     * @param string $action
+     * @param string $actionType
+     * @param string $description
      * @param bool $isVisibleToCustomer
      * @param bool $customerNotified
      * @return SubscriptionHistoryInterface
@@ -423,5 +561,77 @@ class Subscription extends AbstractModel implements SubscriptionInterface
         }
 
         return $history;
+    }
+
+    /**
+     * Get failed payments
+     *
+     * @return int
+     */
+    public function getFailedPayments(): int
+    {
+        return (int) $this->getData(self::FAILED_PAYMENTS);
+    }
+
+    /**
+     * Set failed payments
+     *
+     * @param int $failedPayments
+     * @return SubscriptionInterface
+     */
+    public function setFailedPayments(int $failedPayments): SubscriptionInterface
+    {
+        return $this->setData(
+            self::FAILED_PAYMENTS,
+            $failedPayments
+        );
+    }
+
+    /**
+     * Get stock failures
+     *
+     * @return int
+     */
+    public function getStockFailures(): int
+    {
+        return (int) $this->getData(self::STOCK_FAILURES);
+    }
+
+    /**
+     * Set stock failures
+     *
+     * @param int $stockFailures
+     * @return SubscriptionInterface
+     */
+    public function setStockFailures(int $stockFailures): SubscriptionInterface
+    {
+        return $this->setData(
+            self::STOCK_FAILURES,
+            $stockFailures
+        );
+    }
+
+    /**
+     * Get reminder email sent
+     *
+     * @return bool
+     */
+    public function getReminderEmailSent(): bool
+    {
+        return (bool) $this->getData(self::REMINDER_EMAIL_SENT);
+    }
+
+    /**
+     * Set reminder email sent
+     *
+     * @param bool $emailSent
+     * @return SubscriptionInterface
+     */
+    public function setReminderEmailSent(bool $emailSent): SubscriptionInterface
+    {
+        return $this->setData(
+            self::REMINDER_EMAIL_SENT,
+            $emailSent
+        );
     }
 }

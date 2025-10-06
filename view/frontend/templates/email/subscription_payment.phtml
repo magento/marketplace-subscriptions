@@ -1,0 +1,13 @@
+<?php
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Vault\Api\Data\PaymentTokenInterface $paymentToken
+ * @var \PayPal\Subscription\ViewModel\Email $viewModel
+ */
+$paymentToken = $block->getPayment() ?: null;
+$viewModel = $block->getViewModel();
+?>
+<?php if ($paymentToken !== null): ?>
+    <p><strong><?= 'Payment Details' ?>:</strong></p>
+    <?= $viewModel->getTokenHtml($paymentToken); ?>
+<?php endif; ?>

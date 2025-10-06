@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -8,10 +12,15 @@ use PayPal\Subscription\Block\Customer\View;
 use Magento\Theme\Block\Html\Pager;
 use Magento\Framework\Exception\LocalizedException;
 
+/**
+ * @api
+ * @since 100.0.2
+ */
 class Releases extends View
 {
-
     /**
+     * Prepare layout for subscription releases
+     *
      * @return self
      * @throws LocalizedException
      */
@@ -37,6 +46,8 @@ class Releases extends View
     }
 
     /**
+     * Get pager html
+     *
      * @return string
      */
     public function getPagerHtml()

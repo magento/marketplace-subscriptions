@@ -3,7 +3,10 @@
  * PayPal Subscriptions
  * @var PayPal\Subscription\Block\Customer\View $block
  * @var PayPal\Subscription\Model\Subscription $subscription
+ * @var Escaper $escaper
  */
+
+use Magento\Framework\Escaper;
 
 $subscription = $block->getSubscription();
 $billingAddress = $subscription->getShippingAddress();
@@ -11,9 +14,8 @@ $shippingAddress = $subscription->getShippingAddress();
 ?>
 
 <section class="block">
-
     <h3 class="block-title">
-        <strong><?= $block->escapeHtml(__('Addresses')) ?></strong>
+        <strong><?= $escaper->escapeHtml(__('Addresses')) ?></strong>
     </h3>
 
     <div class="block-content" data-bind="scope: 'defaultAddresses'">
@@ -22,18 +24,17 @@ $shippingAddress = $subscription->getShippingAddress();
 </section>
 
 <script type="text/x-magento-init">
-{
-    "*": {
-         "Magento_Ui/js/core/app": {
-            "components": {
-                "defaultAddresses": {
-                    "component": "PayPal_Subscription/js/view/customer/addresses/default",
-                    "billingAddress": "<?= $block->escapeJs($block->formatAddress($billingAddress)) ?>",
-                    "shippingAddress": "<?= $block->escapeJs($block->formatAddress($shippingAddress)) ?>"
+    {
+        "*": {
+             "Magento_Ui/js/core/app": {
+                "components": {
+                    "defaultAddresses": {
+                        "component": "PayPal_Subscription/js/view/customer/addresses/default",
+                        "billingAddress": "<?= $escaper->escapeJs($block->formatAddress($billingAddress)) ?>",
+                        "shippingAddress": "<?= $escaper->escapeJs($block->formatAddress($shippingAddress)) ?>"
+                    }
                 }
             }
         }
     }
-}
-
 </script>

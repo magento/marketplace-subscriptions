@@ -1,14 +1,12 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Api;
-
-use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\NoSuchEntityException;
-use PayPal\Subscription\Api\Data\SubscriptionHistoryInterface;
-use PayPal\Subscription\Api\Data\SubscriptionHistorySearchResultInterface;
 
 /**
  * Interface SubscriptionHistoryRepositoryInterface
@@ -16,28 +14,36 @@ use PayPal\Subscription\Api\Data\SubscriptionHistorySearchResultInterface;
 interface SubscriptionHistoryRepositoryInterface
 {
     /**
+     * Get subscription history by Id
+     *
      * @param int $subscriptionHistoryId
-     * @return SubscriptionHistoryInterface
-     * @throws NoSuchEntityException
+     * @return \PayPal\Subscription\Api\Data\SubscriptionHistoryInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getById(int $subscriptionHistoryId): SubscriptionHistoryInterface;
+    public function getById(int $subscriptionHistoryId);
 
     /**
-     * @param SearchCriteriaInterface $searchCriteria
-     * @return SubscriptionHistorySearchResultInterface
+     * Get subscription history list
+     *
+     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
+     * @return \PayPal\Subscription\Api\Data\SubscriptionHistorySearchResultInterface
      */
-    public function getList(SearchCriteriaInterface $searchCriteria): SubscriptionHistorySearchResultInterface;
+    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
 
     /**
-     * @param SubscriptionHistoryInterface $subscriptionHistory
-     * @return SubscriptionHistoryInterface
-     * @throws CouldNotSaveException
+     * Save subscription history
+     *
+     * @param \PayPal\Subscription\Api\Data\SubscriptionHistoryInterface $subscriptionHistory
+     * @return \PayPal\Subscription\Api\Data\SubscriptionHistoryInterface
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function save(SubscriptionHistoryInterface $subscriptionHistory): SubscriptionHistoryInterface;
+    public function save(\PayPal\Subscription\Api\Data\SubscriptionHistoryInterface $subscriptionHistory);
 
     /**
-     * @param SubscriptionHistoryInterface $subscriptionHistory
+     * Delete subscription history
+     *
+     * @param \PayPal\Subscription\Api\Data\SubscriptionHistoryInterface $subscriptionHistory
      * @return void
      */
-    public function delete(SubscriptionHistoryInterface $subscriptionHistory): void;
+    public function delete(\PayPal\Subscription\Api\Data\SubscriptionHistoryInterface $subscriptionHistory);
 }

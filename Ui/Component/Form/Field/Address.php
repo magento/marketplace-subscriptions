@@ -1,20 +1,17 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Ui\Component\Form\Field;
 
 use InvalidArgumentException;
 use Magento\Framework\Serialize\SerializerInterface;
-use Magento\Framework\View\Element\UiComponent\ContextInterface;
-use Magento\Framework\View\Element\UiComponentFactory;
 
 class Address
 {
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     /**
      * Address constructor.
@@ -27,24 +24,32 @@ class Address
     }
 
     /**
-     * @param $address
-     * @return string
+     * Format address
+     *
+     * @param string $address
+     * @return string|array
      */
-    public function format($address)
+    public function format($address): string|array
     {
         return $this->unserializeAndFormatAddress($address);
     }
 
     /**
-     * @param $address
-     * @return string
+     * Un-serialize and format the address
+     *
+     * @param string $address
+     * @return string|array
      */
-    private function unserializeAndFormatAddress($address)
+    private function unserializeAndFormatAddress($address): string|array
     {
         try {
             $addressArray = $this->serializer->unserialize($address);
-            $addressArray = array_filter($addressArray);
 
+            $addressArray = array_filter($addressArray);
+            if (count($addressArray) == 0) {
+
+                return [];
+            }
             $addressArray = [
                 'name' => sprintf('%s %s', $addressArray['firstname'], $addressArray['lastname'])
                 ] + $addressArray;

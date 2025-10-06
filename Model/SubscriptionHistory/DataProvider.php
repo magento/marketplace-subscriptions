@@ -13,7 +13,7 @@ class DataProvider extends AbstractDataProvider
     /**
      * @var RequestInterface
      */
-    private $request;
+    private RequestInterface $request;
 
     /**
      * DataProvider constructor.
@@ -41,6 +41,8 @@ class DataProvider extends AbstractDataProvider
     }
 
     /**
+     * Get data
+     *
      * @return array
      */
     public function getData(): array

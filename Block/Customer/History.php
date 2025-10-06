@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -13,6 +17,10 @@ use PayPal\Subscription\Api\Data\SubscriptionHistoryInterface;
 use PayPal\Subscription\Model\ResourceModel\SubscriptionHistory\Collection;
 use PayPal\Subscription\Model\ResourceModel\SubscriptionHistory\CollectionFactory as SubscriptionHistoryCollection;
 
+/**
+ * @api
+ * @since 100.0.2
+ */
 class History extends Template
 {
     /**
@@ -37,6 +45,8 @@ class History extends Template
     }
 
     /**
+     * Prepare layout for subscription history page
+     *
      * @return $this|Template
      * @throws LocalizedException
      */
@@ -60,6 +70,8 @@ class History extends Template
     }
 
     /**
+     * Get pager html
+     *
      * @return string
      */
     public function getPagerHtml()
@@ -68,6 +80,8 @@ class History extends Template
     }
 
     /**
+     * Get subscription history collection
+     *
      * @return Collection
      */
     public function getSubscriptionHistory(): Collection

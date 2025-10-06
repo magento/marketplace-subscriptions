@@ -1,10 +1,10 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\ViewModel\Customer;
 
 use Magento\Framework\App\Request\Http;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Customer\Helper\Address as AddressHelper;
 use Magento\Directory\Helper\Data as DirectoryHelper;
@@ -43,7 +43,8 @@ class Address implements ArgumentInterface
     }
 
     /**
-     * Get Subscription id
+     * Get Subscription ID
+     *
      * @return int
      */
     public function getSubscriptionId(): int
@@ -52,27 +53,33 @@ class Address implements ArgumentInterface
     }
 
     /**
-     * @param $value
+     * Get validation class
+     *
+     * @param string $value
      * @return string
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
-    public function getValidationClass($value)
+    public function getValidationClass($value): string
     {
         return $this->addressHelper->getAttributeValidationClass($value);
     }
 
     /**
+     * Get customer address
+     *
      * @return AddressHelper
      */
-    public function getCustomerAddress()
+    public function getCustomerAddress(): AddressHelper
     {
         return $this->addressHelper;
     }
 
     /**
+     * Get directory
+     *
      * @return DirectoryHelper
      */
-    public function getDirectory()
+    public function getDirectory(): DirectoryHelper
     {
         return $this->directoryHelper;
     }

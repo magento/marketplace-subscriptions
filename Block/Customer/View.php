@@ -1,20 +1,22 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Block\Customer;
 
+use Magento\Catalog\Model\Product;
 use Magento\Framework\Api\SortOrder;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Pricing\Helper\Data as PricingHelper;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Sales\Api\Data\OrderInterfaceFactory;
-use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
-use Magento\Theme\Block\Html\Pager;
 use PayPal\Subscription\Api\Data\SubscriptionInterface;
 use PayPal\Subscription\Api\Data\SubscriptionInterfaceFactory;
 use PayPal\Subscription\Api\Data\SubscriptionReleaseInterface;
@@ -27,6 +29,10 @@ use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 use Magento\Catalog\Helper\Image;
 
+/**
+ * @api
+ * @since 100.0.2
+ */
 class View extends Template
 {
     private const IMAGE_TYPE = 'paypal_subscription_page';
@@ -78,6 +84,7 @@ class View extends Template
 
     /**
      * View constructor.
+     *
      * @param Context $context
      * @param SubscriptionInterfaceFactory $subscriptionInterfaceFactory
      * @param SubscriptionResource $subscriptionResource
@@ -116,6 +123,8 @@ class View extends Template
     }
 
     /**
+     * Get pager html
+     *
      * @return string
      */
     public function getPagerHtml()
@@ -124,6 +133,8 @@ class View extends Template
     }
 
     /**
+     * Get subscription id
+     *
      * @return int
      */
     public function getSubscriptionId(): int
@@ -132,7 +143,9 @@ class View extends Template
     }
 
     /**
-     * @return SubscriptionInterface|void
+     * Get subscription
+     *
+     * @return SubscriptionInterface
      */
     public function getSubscription()
     {
@@ -144,10 +157,12 @@ class View extends Template
     }
 
     /**
-     * @param $address
+     * Format address
+     *
+     * @param string $address
      * @return string
      */
-    public function formatAddress($address): string
+    public function formatAddress(string $address): string
     {
         $address = $this->serializer->unserialize($address);
         $formattedAddress = new RecursiveIteratorIterator(new RecursiveArrayIterator($address));
@@ -155,10 +170,12 @@ class View extends Template
     }
 
     /**
-     * @param $subscriptionId
+     * Get subscription releases
+     *
+     * @param int $subscriptionId
      * @return Collection
      */
-    public function getSubscriptionReleases($subscriptionId): Collection
+    public function getSubscriptionReleases(int $subscriptionId): Collection
     {
         $page = $this->getRequest()->getParam('release-page') ?: 1;
         $pageSize = $this->getRequest()->getParam('release-limit') ?: 5;
@@ -174,10 +191,12 @@ class View extends Template
     }
 
     /**
-     * @param $frequencyProfileId
+     * Get frequency profile options
+     *
+     * @param int $frequencyProfileId
      * @return array
      */
-    public function getFrequencyProfileOptions($frequencyProfileId): array
+    public function getFrequencyProfileOptions(int $frequencyProfileId): array
     {
         try {
             $frequencyProfile = $this->frequencyProfile->getById((int) $frequencyProfileId);
@@ -188,11 +207,12 @@ class View extends Template
     }
 
     /**
-     * @param $frequencyProfileId
-     * @param $frequency
+     * Get frequency profile options json
+     *
+     * @param int $frequencyProfileId
      * @return string
      */
-    public function getFrequencyProfileOptionsJson($frequencyProfileId): string
+    public function getFrequencyProfileOptionsJson(int $frequencyProfileId): string
     {
         return $this->serializer->serialize($this->getFrequencyProfileOptions($frequencyProfileId));
     }
@@ -209,12 +229,15 @@ class View extends Template
     }
 
     /**
+     * Get available status
+     *
      * @return bool|string
      */
     public function getAvailableStatus()
     {
         $statusArray = [
             1 => 'Active',
+            2 => 'Pause',
             3 => 'Cancel'
         ];
 
@@ -222,34 +245,39 @@ class View extends Template
     }
 
     /**
-     * @param $price
+     * Format price
+     *
+     * @param float $price
      * @return string
      */
-    public function formatPrice($price): string
+    public function formatPrice(float $price): string
     {
         return $this->pricingHelper->currency($price);
     }
 
     /**
-     * @param $product
+     * Get image url
+     *
+     * @param Product $product
      * @param array $attributes
      * @return string
      */
-    /**
-     * @param $product
-     * @param array $attributes
-     * @return string
-     */
-    public function getImageUrl($product, $attributes = []): string
+    public function getImageUrl(Product $product, $attributes = []): string
     {
-        $imagePath = $product->getImage();
-        if (!empty($imagePath) && $imagePath !== 'no_selection') {
-            $url = $this->imageHelper
-                ->init($product, self::IMAGE_TYPE, $attributes)
+        $imageType = self::IMAGE_TYPE;
+        $imagePath = $product->getProductUrl();
+
+        if ($imagePath && $imagePath !== '' && $imagePath !== 'no_selection') {
+
+            // Get Image Url
+            $image = $this->imageHelper
+                ->init($product, $imageType, $attributes)
                 ->setImageFile($imagePath)
                 ->getUrl();
-            return $url;
+
+            return $image;
         }
+
         return '';
     }
 }

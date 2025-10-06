@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <paypal_subscriptions>
             <configuration>
-                <active>1</active>
                 <failed_payments>5</failed_payments>
-                <cron_enabled>1</cron_enabled>
-                <cron_schedule>0 0 * * *</cron_schedule>
+                <stock_failures_allowed>5</stock_failures_allowed>
+                <allowed_payment_methods>braintree,braintree_paypal,braintree_paypal_vault,braintree_cc_vault</allowed_payment_methods>
+                <auto_update_price>0</auto_update_price>
             </configuration>
+            <email_configuration>
+                <release_reminder_timing>0</release_reminder_timing>
+            </email_configuration>
+            <developer_configuration>
+                <message_broker>1</message_broker>
+                <cron_schedule>0 0 * * *</cron_schedule>
+            </developer_configuration>
         </paypal_subscriptions>
     </default>
 </config>

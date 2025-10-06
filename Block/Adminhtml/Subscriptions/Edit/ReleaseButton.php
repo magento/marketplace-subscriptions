@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -7,6 +11,8 @@ namespace PayPal\Subscription\Block\Adminhtml\Subscriptions\Edit;
 class ReleaseButton extends GenericButton
 {
     /**
+     * Get button data
+     *
      * @return array
      */
     public function getButtonData(): array
@@ -23,6 +29,8 @@ class ReleaseButton extends GenericButton
     }
 
     /**
+     * Get manual release url
+     *
      * @return string
      */
     private function getManualReleaseUrl()

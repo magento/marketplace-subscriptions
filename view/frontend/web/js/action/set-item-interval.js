@@ -29,8 +29,9 @@ define([
 
         return storage.put(
             url,
-            JSON.stringify(urlParams)
-        ).success(
+            JSON.stringify(urlParams),
+            false
+        ).done(
             function (response) {
                 customerData.reload(['cart'], false);
                 // Return Response

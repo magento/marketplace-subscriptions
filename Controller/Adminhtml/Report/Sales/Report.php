@@ -1,15 +1,24 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Controller\Adminhtml\Report\Sales;
 
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\ActionInterface;
 use Magento\Reports\Controller\Adminhtml\Report\Sales;
 use PayPal\Subscription\Model\Flag;
 
-class Report extends Sales
+class Report extends Sales implements ActionInterface, HttpGetActionInterface, HttpPostActionInterface
 {
     /**
+     * Subscription report
+     *
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|void
      */
     public function execute()

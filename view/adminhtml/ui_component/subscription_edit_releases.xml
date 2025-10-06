@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">subscription_edit_releases.subscription_edit_releases_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>columns</spinner>
+        <deps>
+            <dep>subscription_edit_releases.subscription_edit_releases_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="subscription_edit_releases_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <updateUrl path="mui/index/render"/>
+            <storageConfig>
+                <param name="cacheRequests" xsi:type="boolean">false</param>
+            </storageConfig>
+        </settings>
+        <aclResource>PayPal_Subscription::subscriptions_edit</aclResource>
+        <dataProvider class="PayPal\Subscription\Model\SubscriptionRelease\DataProvider" name="subscription_edit_releases_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <filters name="listing_filters"/>
+        <paging name="listing_paging" />
+    </listingToolbar>
+    <columns name="columns">
+        <column name="id">
+            <settings>
+                <draggable>false</draggable>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+            </settings>
+        </column>
+        <column name="customer_id">
+            <settings>
+                <draggable>false</draggable>
+                <filter>text</filter>
+                <label translate="true">Customer Id</label>
+            </settings>
+        </column>
+        <column name="order_id">
+            <settings>
+                <draggable>false</draggable>
+                <filter>text</filter>
+                <label translate="true">Order Id</label>
+            </settings>
+        </column>
+        <actionsColumn name="order_id" class="PayPal\Subscription\Ui\Component\Listing\Column\OrderActions">
+            <settings>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <filter>text</filter>
+                <label translate="true">Order Id</label>
+            </settings>
+        </actionsColumn>
+        <column name="created_at">
+            <settings>
+                <draggable>false</draggable>
+                <filter>text</filter>
+                <label translate="true">Created</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+    </columns>
+</listing>

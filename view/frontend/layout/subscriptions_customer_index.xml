@@ -4,8 +4,7 @@
  * PayPal Subscriptions
  */
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
 
     <update handle="customer_account"/>
 
@@ -20,11 +19,28 @@
 
         <referenceContainer name="content">
 
+            <!-- Add address modal -->
+            <block class="PayPal\Subscription\Block\Customer\Addresses\UpdateAddress" name="paypal.subscription.customer.index.addresses" template="PayPal_Subscription::customer/addresses/addresses.phtml" cacheable="false">
+                <arguments>
+                    <argument name="address_helper" xsi:type="object">PayPal\Subscription\ViewModel\Customer\Address</argument>
+                </arguments>
+            </block>
+
             <!-- Add Grid -->
-            <block class="PayPal\Subscription\Block\Customer\Index"
-                   name="paypal.subscription.customer.index"
-                   template="PayPal_Subscription::customer/index.phtml"
-                   cacheable="false">
+            <block class="PayPal\Subscription\Block\Customer\Index" name="paypal.subscription.customer.index" template="PayPal_Subscription::customer/index.phtml" cacheable="false">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">PayPal\Subscription\ViewModel\Customer\SubscriptionList</argument>
+                </arguments>
+
+                <!-- Add new address form -->
+                <block class="Magento\Customer\Block\Address\Edit" name="paypal.subscription.customer.index.new.address.form" as="paypal_subscription_new_address_form" template="PayPal_Subscription::customer/addresses/new-address-form.phtml" cacheable="false">
+                    <arguments>
+                        <argument name="address_helper" xsi:type="object">PayPal\Subscription\ViewModel\Customer\Address</argument>
+                        <argument name="attribute_data" xsi:type="object">Magento\Customer\Block\DataProviders\AddressAttributeData</argument>
+                        <argument name="post_code_config" xsi:type="object">Magento\Customer\Block\DataProviders\PostCodesPatternsAttributeData</argument>
+                    </arguments>
+                </block>
+
             </block>
 
         </referenceContainer>

@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Observer;
@@ -56,6 +55,8 @@ class CartProductAddAfterObserver implements ObserverInterface
     }
 
     /**
+     * Cart product add after observer
+     *
      * @param Observer $observer
      * @return void
      * @throws LocalizedException
@@ -68,8 +69,22 @@ class CartProductAddAfterObserver implements ObserverInterface
 
         $frequencyProfileId = $this->request->getPost('frequency_profile');
         $interval = $this->request->getPost('frequency_option');
+        /** @var Item $item */
+        $item = $observer->getEvent()->getData('quote_item');
+        $item = $item->getParentItem() ?? $item;
+        if (!$frequencyProfileId && !$interval) {
+            return;
+        }
 
-        if ((!$frequencyProfileId && !$interval) || (int) $interval === 0) {
+        if ((int) $interval === 0) {
+            $item->addOption(
+                [
+                    'product_id' => $item->getProductId(),
+                    'code' => 'product-without-subscription',
+                    'value' => 1
+                ]
+            );
+
             return;
         }
 
@@ -78,10 +93,6 @@ class CartProductAddAfterObserver implements ObserverInterface
         $validInterval = array_search($interval, array_column($frequencyOptions, 'interval'), true);
 
         if ($validInterval !== null) {
-            /** @var Item $item */
-            $item = $observer->getEvent()->getData('quote_item');
-            $item = $item->getParentItem() ?? $item;
-
             // Product subscription pricing
             $product = $item->getProduct();
             $priceType = $product->getData(SubscriptionHelper::SUB_PRICE_TYPE) !== null

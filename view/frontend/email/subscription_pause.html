@@ -1,0 +1,21 @@
+<!--@subject {{trans "%store_name Subscription Pause" store_name=$store.frontend_name}} @-->
+<!--@vars {
+"var customer_name":"Customer Name",
+"var subscription.getNextReleaseDate()":"Next Release Date",
+"var formattedBillingAddress":"Billing Address",
+"var formattedShippingAddress":"Shipping Address",
+"var subscription.getShippingPrice()":"Shipping Price",
+"layout handle=\"subscription_items\" subscription=$subscription area=\"frontend\"":"Subscription Items Grid",
+"var subscription":"Subscription"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "Hi %customer_name" customer_name=$customer_name}},</p>
+
+<p>{{trans "Great news, your Subscription has been successfully paused!"}}</p>
+
+<br />
+<br />
+<p>{{trans "You can easily manage your subscriptions by going to My Account > Subscriptions If you have any questions, please contact us"}}.</p>
+
+{{template config_path="design/email/footer_template"}}

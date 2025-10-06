@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Ui\DataProvider\Product\Form\Modifier;
@@ -14,13 +13,15 @@ class SubscriptionOnly extends AbstractModifier
         SubscriptionHelper::SUB_ONLY,
         SubscriptionHelper::SUB_PRICE_TYPE,
         SubscriptionHelper::SUB_PRICE_VALUE,
-        SubscriptionHelper::SUB_FREQ_PROF
+        SubscriptionHelper::SUB_FREQ_PROF,
+        SubscriptionHelper::SUB_FREQ_REC,
+        SubscriptionHelper::SUB_FREQ_REASON
     ];
 
     /**
      * @var ArrayManager
      */
-    private $arrayManager;
+    private ArrayManager $arrayManager;
 
     /**
      * SubscriptionOnly constructor.
@@ -34,6 +35,8 @@ class SubscriptionOnly extends AbstractModifier
     }
 
     /**
+     * Modify data
+     *
      * @param array $data
      * @return array
      */
@@ -43,6 +46,8 @@ class SubscriptionOnly extends AbstractModifier
     }
 
     /**
+     * Modify meta
+     *
      * @param array $meta
      * @return array
      */
@@ -55,6 +60,8 @@ class SubscriptionOnly extends AbstractModifier
     }
 
     /**
+     * Customize field
+     *
      * @param array $meta
      * @param string $option
      * @return array
@@ -72,11 +79,18 @@ class SubscriptionOnly extends AbstractModifier
 
             $mergeArray = [
                 'imports' => [
-                    'visible' => 'ns = ${ $.ns }, index = ' . SubscriptionHelper::SUB_AVAILABLE . ':checked'
+                    'visible' => 'ns = ${ $.ns }, index = ' . SubscriptionHelper::SUB_AVAILABLE . ':checked',
+                    '__disableTmpl' => ['visible' => false],
                 ]
             ];
 
             if ($option === SubscriptionHelper::SUB_FREQ_PROF) {
+                $mergeArray['validation'] = [
+                    'required-entry' => 'ns = ${ $.ns }, index = ' . SubscriptionHelper::SUB_AVAILABLE . ':checked',
+                ];
+            }
+
+            if ($option === SubscriptionHelper::SUB_PRICE_VALUE) {
                 $mergeArray['validation'] = [
                     'required-entry' => 'ns = ${ $.ns }, index = ' . SubscriptionHelper::SUB_AVAILABLE . ':checked',
                 ];

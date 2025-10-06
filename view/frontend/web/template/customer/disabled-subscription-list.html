@@ -1,0 +1,16 @@
+<div class="block block__subscription block__cancelled" id="paypal-subscription-cancelled">
+    <div class="block-title">
+        <strong data-bind="i18n: 'Cancelled Subscriptions'"></strong>
+    </div>
+    <!-- ko if: cancelledMessage -->
+        <div data-bind="html: cancelledMessage"></div>
+    <!-- /ko -->
+    <!-- ko if: cancelledSubscriptions().length === 0 -->
+        <p data-bind="i18n: 'You currently have no cancelled subscriptions'"></p>
+    <!-- /ko -->
+    <!-- ko if: cancelledSubscriptions().length > 0 -->
+        <!-- ko foreach: { data: elems, as: 'element' } -->
+            <!-- ko template: element.getTemplate() --><!-- /ko -->
+        <!-- /ko -->
+    <!-- /ko -->
+</div>

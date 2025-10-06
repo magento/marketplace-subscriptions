@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Observer;
@@ -52,10 +51,13 @@ class CartProductUpdateAfterObserver implements ObserverInterface
     }
 
     /**
+     * Cart product update after
+     *
      * @param Observer $observer
      * @throws LocalizedException
+     * @return void
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         if (!$this->subscriptionHelper->isActive()) {
             return;
@@ -75,12 +77,15 @@ class CartProductUpdateAfterObserver implements ObserverInterface
             $options = $item->getOptions();
             foreach ($options as $option) {
                 if ($option->getCode() === SubscriptionHelper::FREQ_OPT_INTERVAL) {
-                    $option->setValue($data[$item->getItemId()]['frequency_option']);
-                    try {
-                        $this->optionResource->save($option);
-                        break;
-                    } catch (AlreadyExistsException | Exception $e) {
-                        throw new LocalizedException(__('Unable to update subscription'));
+                    $newFrequencyOptionValue = $data[$item->getItemId()]['frequency_option'] ?? null;
+                    if ($newFrequencyOptionValue !== null) {
+                        $option->setValue($data[$item->getItemId()]['frequency_option']);
+                        try {
+                            $this->optionResource->save($option);
+                            break;
+                        } catch (AlreadyExistsException | Exception $e) {
+                            throw new LocalizedException(__('Unable to update subscription'));
+                        }
                     }
                 }
             }

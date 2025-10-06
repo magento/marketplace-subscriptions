@@ -22,7 +22,8 @@ define([
 
         defaults: {
             addresses: ko.observable(),
-            message: ko.observable()
+            message: ko.observable(),
+            template: 'PayPal_Subscription/customer/addresses/existing-addresses'
         },
 
         /**
@@ -30,7 +31,6 @@ define([
          */
         initialize: function () {
             this._super();
-            this.template = 'PayPal_Subscription/customer/addresses/existing-addresses';
 
             // Set Existing Addresses
             addressBuilder.existingAddresses(this.addresses);
@@ -57,7 +57,7 @@ define([
                 var address = Object.values(JSON.parse(response.billing_address));
                 addressBuilder.billingAddress(address);
 
-            }).error(function () {
+            }).fail(function () {
 
                 $('body').trigger('processStop');
                 that.message($t('Unable to update billing address, please try again.'));
@@ -81,10 +81,10 @@ define([
             setShippingAddress(subscriptionId, addressId).success(function (response) {
 
                 $('body').trigger('processStop');
-                var address  = Object.values(JSON.parse(response.shipping_address));
+                var address  = Object.values(response);
                 addressBuilder.shippingAddress(address);
 
-            }).error(function () {
+            }).fail(function () {
 
                 $('body').trigger('processStop');
                 that.message($t('Unable to update shipping address, please try again.'));
@@ -96,22 +96,6 @@ define([
          */
         getExistingAddresses: function () {
             return addressBuilder.existingAddresses();
-        },
-
-        /**
-         * Format address
-         * @param element
-         * @returns {*}
-         */
-        formatAddress: function(address) {
-
-            // Remove Null fields
-            var filteredAddress = address.filter(function (addressLine) {
-                return addressLine !== null;
-            });
-
-            // Return formatted addresses
-            return filteredAddress.join(',<br>');
         }
     })
 });

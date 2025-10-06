@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -11,17 +15,17 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Pricing\Helper\Data as PricingHelper;
-use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Quote\Api\Data\AddressInterfaceFactory;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
+use PayPal\Subscription\Api\Data\SubscriptionInterface;
 use PayPal\Subscription\Api\Data\SubscriptionItemInterface;
 use PayPal\Subscription\Api\SubscriptionRepositoryInterface;
 use PayPal\Subscription\Model\ResourceModel\SubscriptionItem\CollectionFactory as SubscriptionItemCollectionFactory;
 use PayPal\Subscription\Model\Subscription;
+use PayPal\Subscription\Model\Subscription\QuoteAddressResolverInterface;
 
 class ShippingMethods extends Template
 {
@@ -65,20 +69,31 @@ class ShippingMethods extends Template
     private $quoteResource;
 
     /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @var AddressInterfaceFactory
-     */
-    private $addressFactory;
-
-    /**
      * @var PricingHelper
      */
     private $pricingHelper;
 
+    /**
+     * @var QuoteAddressResolverInterface
+     */
+    private $quoteAddressResolver;
+
+    /**
+     * ShippingMethods constructor
+     *
+     * @param Template\Context $context
+     * @param RequestInterface $request
+     * @param SubscriptionRepositoryInterface $subscriptionRepository
+     * @param SubscriptionItemCollectionFactory $subscriptionItemCollectionFactory
+     * @param ProductRepositoryInterface $productRepository
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param CartManagementInterface $cartManagement
+     * @param CartRepositoryInterface $cartRepository
+     * @param QuoteResource $quoteResource
+     * @param PricingHelper $pricingHelper
+     * @param QuoteAddressResolverInterface $quoteAddressResolver
+     * @param array $data
+     */
     public function __construct(
         Template\Context $context,
         RequestInterface $request,
@@ -89,9 +104,8 @@ class ShippingMethods extends Template
         CartManagementInterface $cartManagement,
         CartRepositoryInterface $cartRepository,
         QuoteResource $quoteResource,
-        SerializerInterface $serializer,
-        AddressInterfaceFactory $addressFactory,
         PricingHelper $pricingHelper,
+        QuoteAddressResolverInterface $quoteAddressResolver,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -103,12 +117,13 @@ class ShippingMethods extends Template
         $this->cartManagement = $cartManagement;
         $this->cartRepository = $cartRepository;
         $this->quoteResource = $quoteResource;
-        $this->serializer = $serializer;
-        $this->addressFactory = $addressFactory;
+        $this->quoteAddressResolver = $quoteAddressResolver;
         $this->pricingHelper = $pricingHelper;
     }
 
     /**
+     * Get subscription id
+     *
      * @return mixed
      */
     public function getSubscriptionId()
@@ -117,22 +132,26 @@ class ShippingMethods extends Template
     }
 
     /**
-     * @param $id
-     * @return \PayPal\Subscription\Api\Data\SubscriptionInterface
+     * Get subscription
+     *
+     * @param int $id
+     * @return SubscriptionInterface
      * @throws NoSuchEntityException
      */
-    public function getSubscription($id)
+    public function getSubscription(int $id): SubscriptionInterface
     {
         return $this->subscriptionRepository->getById((int) $id);
     }
 
     /**
-     * @param $subscriptionId
+     * Get shipping
+     *
+     * @param int $subscriptionId
      * @return array
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    public function getShipping($subscriptionId)
+    public function getShipping(int $subscriptionId): array
     {
         /** @var Subscription $subscription */
         $subscription = $this->getSubscription($subscriptionId);
@@ -151,8 +170,11 @@ class ShippingMethods extends Template
         $quote->setCustomer($customer);
 
         $this->addProducts($subscriptionItems, $quote);
-
-        $quote->setShippingAddress($this->setAddress($subscription->getShippingAddress()));
+        $shippingAddress = $this->quoteAddressResolver->execute(
+            $subscription,
+            SubscriptionInterface::SHIPPING_ADDRESS
+        );
+        $quote->setShippingAddress($shippingAddress);
         $quote->collectTotals();
         $this->quoteResource->save($quote);
 
@@ -163,36 +185,19 @@ class ShippingMethods extends Template
     }
 
     /**
-     * @param $price
+     * Format price
+     *
+     * @param float $price
      * @return float|string
      */
-    public function formatPrice($price)
+    public function formatPrice(float $price)
     {
         return $this->pricingHelper->currency($price);
     }
 
     /**
-     * @param string $address
-     * @return \Magento\Quote\Api\Data\AddressInterface
-     */
-    private function setAddress(string $address)
-    {
-        $subscriptionAddress = $this->serializer->unserialize($address);
-        $newAddress = $this->addressFactory->create();
-        $newAddress->setFirstname($subscriptionAddress['firstname'])
-            ->setLastname($subscriptionAddress['lastname'])
-            ->setCompany($subscriptionAddress['company'] ?? null)
-            ->setStreet($subscriptionAddress['street'])
-            ->setCity($subscriptionAddress['city'])
-            ->setRegion($subscriptionAddress['region'] ?? null)
-            ->setRegionId($subscriptionAddress['region_id'] ?? null)
-            ->setCountryId($subscriptionAddress['country_id'])
-            ->setPostcode($subscriptionAddress['postcode'] ?? null)
-            ->setTelephone($subscriptionAddress['telephone']);
-        return $newAddress;
-    }
-
-    /**
+     * Add products to the quote
+     *
      * @param array $subscriptionItems
      * @param CartInterface $quote
      * @throws LocalizedException
@@ -206,9 +211,11 @@ class ShippingMethods extends Template
                 $product->setPrice($item->getPrice());
                 $quote->addProduct($product, $item->getQty());
             } catch (NoSuchEntityException $e) {
+                // @codingStandardsIgnoreStart
                 throw new LocalizedException(__('Could not find product: %1', $e->getMessage()));
             } catch (LocalizedException $e) {
                 throw new LocalizedException(__('Could not add product to quote: %1', $e->getMessage()));
+                // @codingStandardsIgnoreEnd
             }
         }
     }

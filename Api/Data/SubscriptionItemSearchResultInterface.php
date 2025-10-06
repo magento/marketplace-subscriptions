@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -12,12 +16,16 @@ use Magento\Framework\Api\SearchResultsInterface;
 interface SubscriptionItemSearchResultInterface extends SearchResultsInterface
 {
     /**
-     * @return SubscriptionItemInterface[]
+     * Get items
+     *
+     * @return \PayPal\Subscription\Api\Data\SubscriptionItemInterface[]
      */
     public function getItems(): array;
 
     /**
-     * @param SubscriptionItemInterface[] $items
+     * Set items
+     *
+     * @param \PayPal\Subscription\Api\Data\SubscriptionItemInterface[] $items
      * @return void
      */
     public function setItems(array $items): void;

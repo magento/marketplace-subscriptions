@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Ui\Component\Listing\Column;
@@ -16,7 +15,7 @@ class SubscriptionActions extends Column
     /**
      * @var UrlInterface
      */
-    private $urlBuilder;
+    private UrlInterface $urlBuilder;
 
     /**
      * FrequencyProfileActions constructor.
@@ -39,6 +38,8 @@ class SubscriptionActions extends Column
     }
 
     /**
+     * Prepare data source
+     *
      * @param array $dataSource
      * @return array
      */

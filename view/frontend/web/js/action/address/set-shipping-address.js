@@ -10,11 +10,13 @@ define([
     'use strict';
 
     return function (subscriptionId, addressId) {
-
-        var url = urlBuilder.createUrl('/subscription/mine/shipping/:subscriptionId/:addressId', {
-            subscriptionId: subscriptionId,
-            addressId: addressId
-        });
+        var url = urlBuilder.createUrl(
+            '/subscription/mine/shipping/:subscriptionId/:addressId',
+            {
+                subscriptionId: subscriptionId,
+                addressId: addressId
+            }
+        );
 
         /**
          * Adds error message
@@ -22,12 +24,9 @@ define([
          * @param {String} message
          */
 
-        return storage.put(
-            url
-        ).success(function (response) {
-
+        return storage.put(url, {}, false).done(function (response) {
             // Return Response
             return response;
-        })
+        });
     };
 });

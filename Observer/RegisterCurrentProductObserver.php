@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Observer;
@@ -15,12 +14,12 @@ class RegisterCurrentProductObserver implements ObserverInterface
     /**
      * @var CurrentProduct
      */
-    private $currentProduct;
+    private CurrentProduct $currentProduct;
 
     /**
      * @var SubscriptionHelper
      */
-    private $subscriptionHelper;
+    private SubscriptionHelper $subscriptionHelper;
 
     /**
      * RegisterCurrentProductObserver constructor.
@@ -37,6 +36,8 @@ class RegisterCurrentProductObserver implements ObserverInterface
     }
 
     /**
+     * Execute observer to register current product
+     *
      * @param Observer $observer
      * @return void
      */

@@ -1,109 +1,56 @@
 <?php
 /**
- * PayPal Subscriptions
+ * PayPal_Subscription Customer Subscription List
  * @var PayPal\Subscription\Block\Customer\Index $block
- * @var PayPal\Subscription\Model\Subscription $subscription
+ * @var Magento\Framework\Escaper $escaper
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
  */
+/** @var \PayPal\Subscription\ViewModel\Customer\SubscriptionList $viewModel */
+$viewModel = $block->getViewModel();
+$serializedCheckoutConfig = $viewModel->getSubscriptionListJsonConfig();
+$newAddressForm = $escaper->escapeJs($block->getChildHtml('paypal_subscription_new_address_form'));
 
-$subscriptionCollection = $block->getCollection();
+$scriptString = <<<script
+    window.subscriptionsData = {$serializedCheckoutConfig};
+    window.subscriptionNewAddressForm = "$newAddressForm";
+script;
 
-if ($subscriptionCollection && count($subscriptionCollection)): ?>
+// @codingStandardsIgnoreFile
+?>
 
-    <div class="table-wrapper ps-customer-list">
-        <table class="data table ps-orders">
-            <caption class="table-caption"><?= $block->escapeHtml(__('Subscriptions')); ?></caption>
-            <thead>
-                <tr>
-                    <th class="col"><?= $block->escapeHtml(__('Product')) ?></th>
-                    <th class="col"><?= $block->escapeHtml(__('Frequency')) ?></th>
-                    <th class="col"><?= $block->escapeHtml(__('Status')) ?></th>
-                    <th class="col"><?= $block->escapeHtml(__('Next Dispatch Date')) ?></th>
-                    <th class="col"><?= $block->escapeHtml(__('Order Total')) ?></th>
-                    <th class="col"><?= $block->escapeHtml(__('Actions')) ?></th>
-                </tr>
-            </thead>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
 
-            <?php foreach ($subscriptionCollection as $subscription): ?>
-                <?php
-                $product = $subscription->getProduct();
-                $subscriptionItem = $subscription->getSubscriptionItem();
-
-                $frequency = $subscription->getFrequency();
-
-                $status = $subscription->getStatus();
-                ?>
-
-                <tr>
-
-                    <td class="col">
-                        <div class="ps-customer-list__item">
-                            <h4 class="ps-customer-list__title"><?= $block->escapeHtml($product->getName()) ?></h4>
-                            <div class="ps-customer-list__image">
-                                <img src="<?= $block->escapeUrl($block->getImageUrl($product)) ?>"
-                                     alt="<?= $block->escapeHtml($product->getName()) ?>"/>
-                            </div>
-                        </div>
-                    </td>
-
-                    <td class="col">
-                        <?php if ($frequencyLabel = $block->getFrequencyLabel($product->getId(), $frequency)): ?>
-                            <span class="ps-customer-list__label">
-
-                                <?= $block->escapeHtml($frequencyLabel) ?>
-                            </span>
-                            <small>
-                                <?= $block->escapeHtml(__('Order is dispatched every %1 days. ', $frequency)) ?>
-                            </small>
-                        <?php endif; ?>
-                    </td>
-
-                    <td class="col">
-                        <?php if ($statusLabel = $block->getStatusLabel($status)): ?>
-                            <span class="ps-status ps-status--<?= $block->escapeHtmlAttr($statusLabel) ?>">
-                                <?= $block->escapeHtml(ucwords(__($statusLabel))) ?>
-                            </span>
-                        <?php endif; ?>
-                    </td>
-
-                    <td data-th="<?= $block->escapeHtml(__('Next Dispatch Date')); ?>"
-                        class="col">
-                        <?php if ($date = $subscription->getNextReleaseDate()): ?>
-                            <span>
-                                <?= $block->escapeHtml($status === 1 ? $block->formatDate($date) : __('N/A')) ?>
-                            </span>
-                        <?php endif; ?>
-                    </td>
-
-                    <td data-th="<?= $block->escapeHtml(__('Order Total')) ?>"
-                        class="col">
-                        <?php if ($price = $subscriptionItem->getPrice()): ?>
-                            <span class="ps-customer-list__strong">
-                                <?= $block->escapeHtml($block->formatPrice($price), ['span']) ?>
-                            </span>
-                        <?php endif; ?>
-                    </td>
-
-                    <td class="col">
-                        <?php if ($url = $block->getUrl('*/*/view', ['id' => $subscription->getId()])): ?>
-                            <a href="<?= $block->escapeUrl($url) ?>">
-                                <?= $block->escapeHtml(__('View & Edit')) ?><br>
-                            </a>
-                        <?php endif; ?>
-                    </td>
-
-                </tr>
-            <?php endforeach; ?>
-        </table>
+<div class="subscriptions-container" data-locale="<?= $escaper->escapeHtmlAttr($block->getLocale()) ?>">
+    <div id="subscriptions-list" class="subscriptions-list" data-bind="scope:'subscriptionsList'">
+        <!-- ko template: getTemplate() --><!-- /ko -->
     </div>
+    <div id="cancelled-subscriptions-list"
+         class="cancelled-subscriptions-list"
+         data-bind="scope:'disabledSubscriptionsList'">
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    </div>
+</div>
 
-    <?php if ($block->getPagerHtml()): ?>
-        <div class="toolbar bottom">
-            <?= $block->getPagerHtml() ?>
-        </div>
-    <?php endif ?>
-
-<?php else: ?>
-    <p class="message info empty">
-        <?= $block->escapeHtml(__('You have no subscriptions yet.')) ?>
-    </p>
-<?php endif ?>
+<script type="text/x-magento-init">
+    {
+        "#subscriptions-list": {
+            "Magento_Ui/js/core/app": {
+               "components": {
+                    "subscriptionsList": {
+                        "component": "customerSubscriptionList"
+                    }
+                }
+            }
+        },
+        "#cancelled-subscriptions-list": {
+            "Magento_Ui/js/core/app": {
+               "components": {
+                    "disabledSubscriptionsList": {
+                        "component": "customerDisabledSubscriptionList",
+                        "cancelledMessage":"<?= $escaper->escapeJs($block->getChildHtml('paypal.subscription.cancelled.content')); ?>"
+                    }
+                }
+            }
+        }
+    }
+</script>

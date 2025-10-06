@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Observer;
@@ -28,17 +27,19 @@ class ContainsSubscriptionObserver implements ObserverInterface
     }
 
     /**
+     * Check whether product is subscription or not
+     *
      * @param Observer $observer
      * @throws \Exception
+     * @return void
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         /** @var Order $order */
         $order = $observer->getEvent()->getOrder();
-
         /** @var Item $item */
         foreach ($order->getItems() as $item) {
-            $options = $item->getProductOptions();
+            $options = $item->getProductOptions() ?: [];
             if (array_key_exists('is_subscription', $options)) {
                 $order->setContainsSubscription(true);
                 $this->orderRepository->save($order);

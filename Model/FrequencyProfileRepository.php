@@ -1,11 +1,11 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Model;
 
 use Exception;
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Api\SearchResults;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -20,26 +20,6 @@ use PayPal\Subscription\Model\ResourceModel\FrequencyProfile\Collection;
 class FrequencyProfileRepository implements FrequencyProfileRepositoryInterface
 {
     /**
-     * @var FrequencyProfileFactory
-     */
-    private $frequencyProfileFactory;
-
-    /**
-     * @var FrequencyProfileResource
-     */
-    private $frequencyProfileResource;
-
-    /**
-     * @var ResourceModel\FrequencyProfile\CollectionFactory
-     */
-    private $collectionFactory;
-
-    /**
-     * @var FrequencyProfileSearchResultInterfaceFactory
-     */
-    private $searchResultFactory;
-
-    /**
      * FrequencyProfileRepository constructor.
      * @param FrequencyProfileFactory $frequencyProfileFactory
      * @param FrequencyProfileResource $frequencyProfileResource
@@ -47,18 +27,16 @@ class FrequencyProfileRepository implements FrequencyProfileRepositoryInterface
      * @param FrequencyProfileSearchResultInterfaceFactory $searchResultFactory
      */
     public function __construct(
-        FrequencyProfileFactory $frequencyProfileFactory,
-        FrequencyProfileResource $frequencyProfileResource,
-        CollectionFactory $collectionFactory,
-        FrequencyProfileSearchResultInterfaceFactory $searchResultFactory
+        private readonly FrequencyProfileFactory $frequencyProfileFactory,
+        private readonly FrequencyProfileResource $frequencyProfileResource,
+        private readonly CollectionFactory $collectionFactory,
+        private readonly FrequencyProfileSearchResultInterfaceFactory $searchResultFactory
     ) {
-        $this->frequencyProfileFactory = $frequencyProfileFactory;
-        $this->frequencyProfileResource = $frequencyProfileResource;
-        $this->collectionFactory = $collectionFactory;
-        $this->searchResultFactory = $searchResultFactory;
     }
 
     /**
+     * Get by ID
+     *
      * @param int $frequencyProfileId
      * @return FrequencyProfileInterface
      * @throws NoSuchEntityException
@@ -77,6 +55,8 @@ class FrequencyProfileRepository implements FrequencyProfileRepositoryInterface
     }
 
     /**
+     * Get List
+     *
      * @param SearchCriteriaInterface $searchCriteria
      * @return FrequencyProfileSearchResultInterface
      */
@@ -92,6 +72,8 @@ class FrequencyProfileRepository implements FrequencyProfileRepositoryInterface
     }
 
     /**
+     * Save frequency profile
+     *
      * @param FrequencyProfileInterface $frequencyProfile
      * @return FrequencyProfileInterface
      * @throws AlreadyExistsException
@@ -104,6 +86,8 @@ class FrequencyProfileRepository implements FrequencyProfileRepositoryInterface
     }
 
     /**
+     * Delete frequency profile
+     *
      * @param FrequencyProfileInterface $frequencyProfile
      * @return void
      * @throws Exception
@@ -114,11 +98,15 @@ class FrequencyProfileRepository implements FrequencyProfileRepositoryInterface
     }
 
     /**
+     * Add filters to collection
+     *
      * @param SearchCriteriaInterface $searchCriteria
      * @param Collection $collection
      */
-    private function addFiltersToCollection(SearchCriteriaInterface $searchCriteria, Collection $collection)
-    {
+    private function addFiltersToCollection(
+        SearchCriteriaInterface $searchCriteria,
+        Collection $collection
+    ): void {
         foreach ($searchCriteria->getFilterGroups() as $filterGroup) {
             $fields = $conditions = [];
             foreach ($filterGroup->getFilters() as $filter) {
@@ -130,11 +118,15 @@ class FrequencyProfileRepository implements FrequencyProfileRepositoryInterface
     }
 
     /**
+     * Add sort orders to collection
+     *
      * @param SearchCriteriaInterface $searchCriteria
      * @param Collection $collection
      */
-    private function addSortOrdersToCollection(SearchCriteriaInterface $searchCriteria, Collection $collection)
-    {
+    private function addSortOrdersToCollection(
+        SearchCriteriaInterface $searchCriteria,
+        Collection $collection
+    ): void {
         foreach ($searchCriteria->getSortOrders() as $sortOrder) {
             $direction = $sortOrder->getDirection() === SortOrder::SORT_ASC ? 'asc' : 'desc';
             $collection->addOrder($sortOrder->getField(), $direction);
@@ -142,22 +134,30 @@ class FrequencyProfileRepository implements FrequencyProfileRepositoryInterface
     }
 
     /**
+     * Add paging to collection
+     *
      * @param SearchCriteriaInterface $searchCriteria
      * @param Collection $collection
      */
-    private function addPagingToCollection(SearchCriteriaInterface $searchCriteria, Collection $collection)
-    {
+    private function addPagingToCollection(
+        SearchCriteriaInterface $searchCriteria,
+        Collection $collection
+    ): void {
         $collection->setPageSize($searchCriteria->getPageSize());
         $collection->setCurPage($searchCriteria->getCurrentPage());
     }
 
     /**
+     * Build search result
+     *
      * @param SearchCriteriaInterface $searchCriteria
      * @param Collection $collection
-     * @return mixed
+     * @return SearchResults
      */
-    private function buildSearchResult(SearchCriteriaInterface $searchCriteria, Collection $collection)
-    {
+    private function buildSearchResult(
+        SearchCriteriaInterface $searchCriteria,
+        Collection $collection
+    ): SearchResults {
         $searchResults = $this->searchResultFactory->create();
         $searchResults->setSearchCriteria($searchCriteria);
         $searchResults->setItems($collection->getItems());

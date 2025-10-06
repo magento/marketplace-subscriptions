@@ -1,0 +1,40 @@
+<!--
+/**
+ * PayPal Subscriptions Existing Payment Methods
+ */
+-->
+
+<!-- ko if: $parent.getExistingMethods() -->
+<div class="ps-existing-methods">
+    <label
+        for="ps-update-method"
+        data-bind="i18n: 'Find your payment method'"
+    ></label>
+
+    <select
+        id="ps-update-method"
+        style="margin: 15px 0"
+        name="ps-update-method"
+        data-bind="
+            value: $parent.selectedPaymentMethod,
+            options: $parent.getExistingMethods(),
+            optionsValue: 'public_hash',
+            optionsText: function(item) {
+               if (item.details.payerEmail) {
+                   return `PayPal: ${item.details.payerEmail}`;
+               } else {
+                   return `${item.details.type} - **** **** **** ${item.details.maskedCC} - ${item.details.expirationDate}`;
+               }
+            },
+        ">
+    </select>
+
+    <div class="ps__content">
+        <button
+            class="action primary"
+            data-bind="click: function(element) {$parent.setExistingPaymentMethod(element, $parent.selectedPaymentMethod())}">
+            <span data-bind="i18n: 'Save'"></span>
+        </button>
+    </div>
+</div>
+<!--/ko-->

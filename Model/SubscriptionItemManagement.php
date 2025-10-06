@@ -1,10 +1,8 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Model;
 
-use Magento\Quote\Model\Quote\Item;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use PayPal\Subscription\Api\Data\SubscriptionInterface;
 use PayPal\Subscription\Api\Data\SubscriptionItemInterfaceFactory;
@@ -38,7 +36,7 @@ class SubscriptionItemManagement implements SubscriptionItemManagementInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function createSubscriptionItem(SubscriptionInterface $subscription, OrderItemInterface $item)
     {
@@ -46,13 +44,9 @@ class SubscriptionItemManagement implements SubscriptionItemManagementInterface
         $subscriptionItem = $this->subscriptionItem->create();
         $subscriptionItem->setSubscriptionId((int) $subscription->getId());
         $subscriptionItem->setSku($item->getSku());
-        $subscriptionItem->setPrice((float) $item->getPrice());
-        $subscriptionItem->setPeriodicPrice((float) $item->getMmExtPeriodicPrice());
+        $subscriptionItem->setPrice((float) $item->getPriceInclTax());
         $subscriptionItem->setQty((int) $item->getQtyOrdered());
         $subscriptionItem->setProductId((int) $item->getProductId());
-        $subscriptionItem->setOrderId((int) $item->getOrderId());
-        $subscriptionItem->setOrderItemId((int) $item->getItemId());
-        $subscriptionItem->setOrderItemName($item->getName());
         $this->subscriptionItemRepository->save($subscriptionItem);
 
         return $subscriptionItem;

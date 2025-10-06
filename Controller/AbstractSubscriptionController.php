@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -6,6 +10,8 @@ namespace PayPal\Subscription\Controller;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Controller\ResultInterface;
@@ -15,7 +21,7 @@ use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 use PayPal\Subscription\Helper\Data as SubscriptionHelper;
 
-abstract class AbstractSubscriptionController extends Action
+class AbstractSubscriptionController extends Action implements HttpGetActionInterface, HttpPostActionInterface
 {
     /**
      * @var string
@@ -74,6 +80,8 @@ abstract class AbstractSubscriptionController extends Action
     }
 
     /**
+     * Execute subscription controller actions
+     *
      * @return ResponseInterface|ResultInterface|Page
      * @throws LocalizedException
      */

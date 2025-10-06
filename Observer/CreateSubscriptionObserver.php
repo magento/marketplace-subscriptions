@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Observer;
@@ -52,10 +51,13 @@ class CreateSubscriptionObserver implements ObserverInterface
     }
 
     /**
+     * Create subscription
+     *
      * @param Observer $observer
      * @throws LocalizedException
+     * @return void
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         if (!$this->subscriptionHelper->isActive()) {
             return;
@@ -63,14 +65,33 @@ class CreateSubscriptionObserver implements ObserverInterface
 
         /** @var Payment $payment */
         $payment = $observer->getEvent()->getPayment();
-
-        if (!$payment) {
+        $additionalData = $payment->getAdditionalInformation() ?: '';
+        if (!is_array($additionalData)) {
+            $additionalData = json_decode($additionalData, true);
+        }
+        $resultCode = $additionalData['resultCode'] ?? null;
+        if (!$payment ||
+            !$payment->getLastTransId() ||
+            in_array(
+                $resultCode,
+                [
+                    'IdentifyShopper',
+                    'Refused',
+                    'RedirectShopper'
+                ]
+            )
+        ) {
             return;
         }
 
         /** @var Order $order */
         $order = $payment->getOrder();
-
+        $isSubscriptionRelease = $order->getData('is_subscription_release') ?
+            (bool) $order->getData('is_subscription_release') :
+            false;
+        if ($isSubscriptionRelease === true) {
+            return;
+        }
         try {
             $this->subscriptionRepository->getByOrderId((int)$order->getId());
             return;
