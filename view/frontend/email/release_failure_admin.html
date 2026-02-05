@@ -1,0 +1,20 @@
+<!--@subject {{trans "Subscription Release Failed" store_name=$store.frontend_name}} @-->
+<!--@vars {
+"var customer_name":"Customer Name",
+"var failure_reason":"Failure Reason",
+"layout handle=\"subscription_payment\" payment=$payment area=\"frontend\"":"Subscription Payment",
+"var subscription":"Subscription",
+"var store":"Store",
+"var formatted_next_release":"Formatted Next Release Date"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "Unfortunately when we tried to release Subscription # %subscription_getId it failed, this could've been down to a stock issue, a payment issue or an error in the code, see below for the reason." subscription_getId=$subscription.getId()}}</p>
+<br/>
+<p><strong>{{trans "Reason/Error:"}}</strong></p>
+<p>{{var failure_reason}}</p>
+
+{{layout handle="subscription_payment" payment=$payment area="frontend"}}
+<br/>
+
+{{template config_path="design/email/footer_template"}}

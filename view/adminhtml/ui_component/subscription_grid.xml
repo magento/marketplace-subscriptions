@@ -12,31 +12,25 @@
             <dep>subscription_grid.subscription_grid_data_source</dep>
         </deps>
     </settings>
-
-    <dataSource name="subscription_grid_data_source">
-        <argument name="dataProvider" xsi:type="configurableObject">
-            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
-            <argument name="name" xsi:type="string">subscription_grid_data_source</argument>
-            <argument name="primaryFieldName" xsi:type="string">id</argument>
-            <argument name="requestFieldName" xsi:type="string">id</argument>
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
-                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
-                    <item name="storageConfig" xsi:type="array">
-                        <item name="indexField" xsi:type="string">id</item>
-                    </item>
-                </item>
-            </argument>
-        </argument>
+    <dataSource name="subscription_grid_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render" />
+        </settings>
+        <aclResource>PayPal_Subscription::subscriptions</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="subscription_grid_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
     </dataSource>
-
     <listingToolbar name="listing_top">
-        <argument name="data" xsi:type="array">
-            <item name="config" xsi:type="array">
-                <item name="sticky" xsi:type="boolean">true</item>
-            </item>
-        </argument>
+        <settings>
+            <sticky>true</sticky>
+        </settings>
         <filterSearch name="fulltext" />
         <filters name="listing_filters" />
         <paging name="listing_paging" />
@@ -56,88 +50,96 @@
                 <sorting>desc</sorting>
             </settings>
         </column>
+        <column name="customer_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Customer ID</label>
+            </settings>
+        </column>
+        <column name="email">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Customer Email</label>
+            </settings>
+        </column>
+        <column name="firstname">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Customer Firstname</label>
+            </settings>
+        </column>
+        <column name="lastname">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Customer Lastname</label>
+            </settings>
+        </column>
         <column name="increment_id">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string">Original Order</item>
-                </item>
-            </argument>
+            <settings>
+                <label translate="true">Original Order</label>
+            </settings>
         </column>
         <column name="frequency">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string">Frequency</item>
-                </item>
-            </argument>
+            <settings>
+                <label translate="true">Frequency (Days)</label>
+            </settings>
         </column>
         <column name="status" class="PayPal\Subscription\Ui\Component\Listing\Column\SubscriptionStatus">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string">Status</item>
-                </item>
-            </argument>
+            <settings>
+                <label translate="true">Status</label>
+            </settings>
         </column>
-        <column name="next_release_date" class="Magento\Ui\Component\Listing\Columns\Date">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">dateRange</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
-                    <item name="dataType" xsi:type="string">date</item>
-                    <item name="label" xsi:type="string" translate="true">Next Release</item>
-                </item>
-            </argument>
+        <column name="next_release_date" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <timezone>false</timezone>
+                <dateFormat>MMM d, y</dateFormat>
+                <dataType>date</dataType>
+                <label translate="true">Next Release</label>
+            </settings>
         </column>
-        <column name="previous_release_date" class="Magento\Ui\Component\Listing\Columns\Date">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">dateRange</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
-                    <item name="dataType" xsi:type="string">date</item>
-                    <item name="label" xsi:type="string" translate="true">Previous Release</item>
-                </item>
-            </argument>
+        <column name="previous_release_date" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <timezone>false</timezone>
+                <dateFormat>MMM d, y</dateFormat>
+                <dataType>date</dataType>
+                <label translate="true">Previous Release</label>
+            </settings>
         </column>
         <column name="shipping_method">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string">Shipping Method</item>
-                </item>
-            </argument>
+            <settings>
+                <label translate="true">Shipping Method</label>
+            </settings>
         </column>
         <column name="payment_method">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string">Payment Method</item>
-                </item>
-            </argument>
+            <settings>
+                <label translate="true">Payment Method</label>
+            </settings>
         </column>
-        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">dateRange</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
-                    <item name="dataType" xsi:type="string">date</item>
-                    <item name="label" xsi:type="string" translate="true">Created</item>
-                </item>
-            </argument>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <timezone>false</timezone>
+                <dateFormat>MMM d, y</dateFormat>
+                <dataType>date</dataType>
+                <label translate="true">Created</label>
+            </settings>
         </column>
-        <column name="updated_at" class="Magento\Ui\Component\Listing\Columns\Date">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">dateRange</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
-                    <item name="dataType" xsi:type="string">date</item>
-                    <item name="label" xsi:type="string" translate="true">Modified</item>
-                </item>
-            </argument>
+        <column name="updated_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <timezone>false</timezone>
+                <dateFormat>MMM d, y</dateFormat>
+                <dataType>date</dataType>
+                <label translate="true">Modified</label>
+            </settings>
         </column>
         <actionsColumn name="actions" class="PayPal\Subscription\Ui\Component\Listing\Column\SubscriptionActions">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="resizeEnabled" xsi:type="boolean">false</item>
-                    <item name="indexField" xsi:type="string">id</item>
-                </item>
-            </argument>
+            <settings>
+                <resizeEnabled>false</resizeEnabled>
+                <indexField>id</indexField>
+            </settings>
         </actionsColumn>
     </columns>
 </listing>

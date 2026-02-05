@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Observer;
@@ -11,7 +10,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use PayPal\Subscription\Api\SubscriptionRepositoryInterface;
 use PayPal\Subscription\Model\Email\Subscription as SubscriptionEmail;
-use PayPal\Subscription\Model\Subscription;
 use PayPal\Subscription\Model\SubscriptionHistory;
 
 class SubscriptionHistoryObserver implements ObserverInterface
@@ -49,15 +47,17 @@ class SubscriptionHistoryObserver implements ObserverInterface
     }
 
     /**
+     * Update subscription email and history
+     *
      * @param Observer $observer
      * @throws LocalizedException
+     * @return void
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         try {
             /** @var SubscriptionHistory $subscriptionHistory */
             $subscriptionHistory = $observer->getEvent()->getData('subscriptionHistory');
-
             if ($subscriptionHistory->getCustomerNotified()) {
                 $subscriptionId = $subscriptionHistory->getSubscriptionId();
                 $subscription = $this->subscriptionRepository->getById($subscriptionId);
@@ -65,7 +65,12 @@ class SubscriptionHistoryObserver implements ObserverInterface
                 $this->subscriptionEmail->update($subscription, $customer, $subscriptionHistory->toArray());
             }
         } catch (NoSuchEntityException $e) {
-            throw new LocalizedException(__('Cannot find customer with ID %1', $subscription->getCustomerId()));
+            throw new LocalizedException(
+                __(
+                    'Cannot find customer with ID %1',
+                    $subscription->getCustomerId()
+                )
+            );
         }
     }
 }

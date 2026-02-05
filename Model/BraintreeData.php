@@ -10,33 +10,43 @@ use PayPal\Subscription\Api\Data\BraintreeDataInterface;
 class BraintreeData extends AbstractModel implements BraintreeDataInterface
 {
     /**
-     * @inheritDoc
+     * Get token
+     *
+     * @return string
      */
-    public function getToken()
+    public function getToken(): string
     {
         return $this->getData('token');
     }
 
     /**
-     * @inheritDoc
+     * Set token
+     *
+     * @param string $token
+     * @return BraintreeDataInterface
      */
-    public function setToken($token)
+    public function setToken($token): BraintreeDataInterface
     {
         return $this->setData('token', $token);
     }
 
     /**
-     * @inheritDoc
+     * Get error
+     *
+     * @return string
      */
-    public function getError()
+    public function getError(): string
     {
         return $this->getData('error');
     }
 
     /**
-     * @inheritDoc
+     * Set error
+     *
+     * @param string $error
+     * @return BraintreeDataInterface
      */
-    public function setError($error)
+    public function setError($error): BraintreeDataInterface
     {
         return $this->setData('error', $error);
     }

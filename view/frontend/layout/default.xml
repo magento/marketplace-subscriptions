@@ -10,10 +10,10 @@
 
         <!-- Add Link to account area -->
         <referenceBlock name="customer_account_navigation">
-            <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-subscriptions">
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-subscriptions" ifconfig="paypal/subscriptions/active">
                 <arguments>
                     <argument name="path" xsi:type="string">subscriptions/customer/index</argument>
-                    <argument name="label" xsi:type="string" translate="true">Your Subscriptions</argument>
+                    <argument name="label" xsi:type="string" translate="true">My Subscriptions</argument>
                     <argument name="sortOrder" xsi:type="number">100</argument>
                 </arguments>
             </block>

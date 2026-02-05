@@ -1,0 +1,23 @@
+<div class="totals">
+    <div class="block-title block-title--small">
+        <span data-bind="i18n: 'Order Total'"></span>
+    </div>
+    <div class="block-content">
+        <p class="paypal-subscription-red">
+            <span data-bind="i18n: 'Savings'"></span>
+            <span data-bind="html: subscription().totals.saving" class="total"></span>
+        </p>
+        <p>
+            <span data-bind="i18n: 'Subtotal'"></span>
+            <span data-bind="html: subscription().totals.subtotal" class="total"></span>
+        </p>
+        <p>
+            <span data-bind="i18n: 'Delivery'"></span>
+            <span data-bind="html: subscription().totals.shipping" class="total"></span>
+        </p>
+        <p>
+            <span data-bind="i18n: 'Total'"></span>
+            <span data-bind="html: subscription().totals.total" class="total"></span>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="address">
+    <div class="block-title block-title--small">
+        <span data-bind="i18n: 'Delivery Address'"></span>
+        <!-- ko foreach: { data: elems, as: 'element' } -->
+            <!-- ko template: element.getTemplate() --><!-- /ko -->
+        <!-- /ko -->
+    </div>
+    <div class="block-content">
+        <address data-bind="html: address"></address>
+    </div>
+</div>

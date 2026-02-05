@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Model;
@@ -61,6 +60,8 @@ class SubscriptionItemRepository implements SubscriptionItemRepositoryInterface
     }
 
     /**
+     * Get by ID
+     *
      * @param int $subscriptionItemId
      * @return SubscriptionItemInterface
      * @throws NoSuchEntityException
@@ -69,20 +70,23 @@ class SubscriptionItemRepository implements SubscriptionItemRepositoryInterface
     {
         /** @var SubscriptionItem $subscriptionItem */
         $subscriptionItem = $this->subscriptionItem->create();
-        $this->subscriptionItem->load($subscriptionItem, $subscriptionItemId);
-
+        $this->subscriptionItemResource->load(
+            $subscriptionItem,
+            $subscriptionItemId
+        );
         if ($subscriptionItem->getId() === null) {
             throw new NoSuchEntityException(__('Unable to find Subscription Item with ID "%1"', $subscriptionItemId));
         }
-
         return $subscriptionItem;
     }
 
     /**
+     * Get list
+     *
      * @param SearchCriteriaInterface $searchCriteria
      * @return SubscriptionItemSearchResultInterface
      */
-    public function getList(SearchCriteriaInterface $searchCriteria)
+    public function getList(SearchCriteriaInterface $searchCriteria): SubscriptionItemSearchResultInterface
     {
         $collection = $this->collection->create();
         $this->addFiltersToCollection($searchCriteria, $collection);
@@ -94,6 +98,8 @@ class SubscriptionItemRepository implements SubscriptionItemRepositoryInterface
     }
 
     /**
+     * Save subscription item
+     *
      * @param SubscriptionItemInterface $subscriptionItem
      * @return SubscriptionItemInterface
      * @throws AlreadyExistsException
@@ -106,6 +112,8 @@ class SubscriptionItemRepository implements SubscriptionItemRepositoryInterface
     }
 
     /**
+     * Delete subscription item
+     *
      * @param SubscriptionItemInterface $subscriptionItem
      * @return void
      * @throws Exception
@@ -116,6 +124,8 @@ class SubscriptionItemRepository implements SubscriptionItemRepositoryInterface
     }
 
     /**
+     * Add filters to collection
+     *
      * @param SearchCriteriaInterface $searchCriteria
      * @param Collection $collection
      */
@@ -132,6 +142,8 @@ class SubscriptionItemRepository implements SubscriptionItemRepositoryInterface
     }
 
     /**
+     * Add sort orders to collection
+     *
      * @param SearchCriteriaInterface $searchCriteria
      * @param Collection $collection
      */
@@ -144,6 +156,8 @@ class SubscriptionItemRepository implements SubscriptionItemRepositoryInterface
     }
 
     /**
+     * Add paging to collection
+     *
      * @param SearchCriteriaInterface $searchCriteria
      * @param Collection $collection
      */
@@ -154,6 +168,8 @@ class SubscriptionItemRepository implements SubscriptionItemRepositoryInterface
     }
 
     /**
+     * Build search result
+     *
      * @param SearchCriteriaInterface $searchCriteria
      * @param Collection $collection
      * @return mixed

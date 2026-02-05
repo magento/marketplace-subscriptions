@@ -6,6 +6,7 @@ namespace PayPal\Subscription\Model\Config\Source\Subscription;
 
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\OptionSourceInterface;
+use Magento\Framework\Exception\LocalizedException;
 use PayPal\Subscription\Helper\Data as SubscriptionHelper;
 
 class ShippingMethod implements OptionSourceInterface
@@ -35,9 +36,11 @@ class ShippingMethod implements OptionSourceInterface
     }
 
     /**
-     * @inheritDoc
+     * Shipping method options array
+     *
+     * @return array
      */
-    public function toOptionArray()
+    public function toOptionArray(): array
     {
         $data = [
             ['label' => "-- Please Select --", 'value' => '']
@@ -45,13 +48,13 @@ class ShippingMethod implements OptionSourceInterface
 
         $methods = $this->getShippingMethods();
 
-        foreach ($methods as $method) {
+        foreach ($methods ?? [] as $method) {
             $data[] = [
                 'label' => sprintf(
                     '%s - %s %s',
                     $method->getCarrierTitle(),
                     $method->getMethodTitle(),
-                    $this->subscriptionHelper->formatPrice($method->getPrice())
+                    $this->subscriptionHelper->formatPrice((float) $method->getPrice())
                 ),
                 'value' => $method->getCode()
             ];
@@ -59,9 +62,18 @@ class ShippingMethod implements OptionSourceInterface
         return $data;
     }
 
-    protected function getShippingMethods()
+    /**
+     * Get list of shipping methods
+     *
+     * @return array
+     */
+    private function getShippingMethods(): array
     {
         $id = $this->request->getParam('id');
-        return $this->subscriptionHelper->getShipping($id);
+        try {
+            return $this->subscriptionHelper->getShipping((int)$id);
+        } catch (LocalizedException $e) {
+            return [];
+        }
     }
 }

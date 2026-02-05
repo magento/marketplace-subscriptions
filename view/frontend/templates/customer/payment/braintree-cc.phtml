@@ -3,7 +3,10 @@
  * PayPal Subscriptions
  * @var PayPal\Subscription\Block\Customer\Payment $block
  * @var Magento\Vault\Api\Data\PaymentTokenInterface $paymentMethod
+ * @var Escaper $escaper
  */
+
+use Magento\Framework\Escaper;
 
 $clientTokenUrl = $block->getClientToken();
 
@@ -11,7 +14,7 @@ $clientTokenUrl = $block->getClientToken();
 
 <div class="payment-form" data-bind="scope: 'addBraintreeCC'">
     <h4 class="box-title">
-        <span><?= $block->escapeHtml(__('Add a new Credit or Debit Card')) ?></span>
+        <span><?= $escaper->escapeHtml(__('Add a new Credit or Debit Card')) ?></span>
     </h4>
 
     <form id="co-transparent-form-braintree"
@@ -74,16 +77,16 @@ $clientTokenUrl = $block->getClientToken();
 </div>
 
 <script type="text/x-magento-init">
-{
-    "*": {
-        "Magento_Ui/js/core/app": {
-            "components": {
-                "addBraintreeCC": {
-                    "component": "PayPal_Subscription/js/view/customer/payment/add-braintree-card",
-                    "subscriptionId": "<?= $block->escapeHtml($block->getSubscriptionId()) ?>"
+    {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "addBraintreeCC": {
+                        "component": "PayPal_Subscription/js/view/customer/payment/add-braintree-card",
+                        "subscriptionId": "<?= $escaper->escapeHtml($block->getSubscriptionId()) ?>"
+                    }
                 }
             }
         }
     }
-}
 </script>

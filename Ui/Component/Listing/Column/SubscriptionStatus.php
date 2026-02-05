@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Ui\Component\Listing\Column;
@@ -9,6 +8,8 @@ use Magento\Ui\Component\Listing\Columns\Column;
 class SubscriptionStatus extends Column
 {
     /**
+     * Prepare data source
+     *
      * @param array $dataSource
      * @return array
      */

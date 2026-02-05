@@ -82,7 +82,7 @@ define([
                 onPaymentMethodReceived: function (response) {
                     updatePayment(response.nonce, that.subscriptionId).success(function () {
                         location.reload();
-                    }).error(function () {
+                    }).fail(function () {
                         that.message($t('Sorry, but something went wrong when taking the payment.'))
                     });
                 },
@@ -131,7 +131,7 @@ define([
             loadClientToken().done(function(response) {
                 that.clientToken = response.token;
                 that.setup();
-            }).error(function () {
+            }).fail(function () {
                 that.message($t('Sorry, but something went wrong when connecting to Braintree.'))
             });
         },

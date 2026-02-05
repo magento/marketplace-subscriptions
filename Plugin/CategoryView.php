@@ -29,11 +29,11 @@ class CategoryView
     }
 
     /**
-     * Products that are configured as `subscription_only` should not have the `Add to Cart` button shown
-     * in products listings.
+     * Products that are configured as `subscription_only` should not have the
+     * Add to Cart button shown in products listings.
      *
      * @param Product $subject
-     * @param $result
+     * @param bool $result
      * @return bool
      */
     public function afterIsSaleable(Product $subject, $result): bool
@@ -45,6 +45,8 @@ class CategoryView
     }
 
     /**
+     * Is appropriate action
+     *
      * @return bool
      */
     private function isAppropriateAction(): bool

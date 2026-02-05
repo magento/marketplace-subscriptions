@@ -1,40 +1,46 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Api;
 
-use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\NoSuchEntityException;
-use PayPal\Subscription\Api\Data\SubscriptionReleaseInterface;
-use PayPal\Subscription\Api\Data\SubscriptionReleaseSearchResultInterface;
-
 interface SubscriptionReleaseRepositoryInterface
 {
     /**
+     * Get subscription release by Id
+     *
      * @param int $subscriptionReleaseId
-     * @return SubscriptionReleaseInterface
-     * @throws NoSuchEntityException
+     * @return \PayPal\Subscription\Api\Data\SubscriptionReleaseInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getById(int $subscriptionReleaseId): SubscriptionReleaseInterface;
+    public function getById(int $subscriptionReleaseId);
 
     /**
-     * @param SearchCriteriaInterface $searchCriteria
-     * @return SubscriptionReleaseSearchResultInterface
+     * Get subscription release list
+     *
+     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
+     * @return \PayPal\Subscription\Api\Data\SubscriptionReleaseSearchResultInterface
      */
-    public function getList(SearchCriteriaInterface $searchCriteria): SubscriptionReleaseSearchResultInterface;
+    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
 
     /**
-     * @param SubscriptionReleaseInterface $subscription
-     * @return SubscriptionReleaseInterface
-     * @throws CouldNotSaveException
+     * Save subscription release
+     *
+     * @param \PayPal\Subscription\Api\Data\SubscriptionReleaseInterface $subscription
+     * @return \PayPal\Subscription\Api\Data\SubscriptionReleaseInterface
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function save(SubscriptionReleaseInterface $subscription): SubscriptionReleaseInterface;
+    public function save(\PayPal\Subscription\Api\Data\SubscriptionReleaseInterface $subscription);
 
     /**
-     * @param SubscriptionReleaseInterface $subscription
+     * Delete subscription release
+     *
+     * @param \PayPal\Subscription\Api\Data\SubscriptionReleaseInterface $subscription
      * @return void
      */
-    public function delete(SubscriptionReleaseInterface $subscription): void;
+    public function delete(\PayPal\Subscription\Api\Data\SubscriptionReleaseInterface $subscription): void;
 }

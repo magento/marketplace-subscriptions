@@ -3,27 +3,28 @@
  * PayPal Subscriptions
  * @var PayPal\Subscription\Block\Customer\View\Releases $block
  * @var PayPal\Subscription\Model\Subscription $subscription
+ * @var Escaper $escaper
  * @todo Tidy up this file
  */
+
+use Magento\Framework\Escaper;
 
 $subscription = $block->getSubscription();
 $releases = $block->getSubscriptionReleases($subscription->getId());
 ?>
 
 <section class="block ps-customer-releases">
-
     <h3 class="block-title ps-customer-releases__title">
-        <span><?= $block->escapeHtml(__('Past Deliveries')) ?></span>
+        <span><?= $escaper->escapeHtml(__('Past Deliveries')) ?></span>
     </h3>
-
     <div class="block-content">
         <?php if ($releases && count($releases)): ?>
-            <p><?= $block->escapeHtml(__('Your previous subscription deliveries')) ?></p>
+            <p><?= $escaper->escapeHtml(__('Your previous subscription deliveries')) ?></p>
 
             <table class="data table ps-customer-releases-table">
                 <thead>
                     <tr>
-                        <th><?= $block->escapeHtml(__('Subscription Date')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Subscription Date')) ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,16 +33,14 @@ $releases = $block->getSubscriptionReleases($subscription->getId());
                         <tr>
                             <?php if ($date = $release->getCreatedAt()): ?>
                                 <td class="col ps-customer-releases-table__date">
-                                    <?= $block->escapeHtml($block->formatDate($date)) ?>
+                                    <?= $escaper->escapeHtml($block->formatDate($date)) ?>
                                 </td>
                             <?php endif; ?>
-                            <?php if ($orderId = $orderId): ?>
-                                <td class="col ps-customer-releases-table__action">
-                                    <a href="<?= $block->escapeHtml($block->getOrderViewUrl($orderId)) ?>">
-                                        <?= $block->escapeHtml(__('View Order')) ?>
-                                    </a>
-                                </td>
-                            <?php endif; ?>
+                            <td class="col ps-customer-releases-table__action">
+                                <a href="<?= $escaper->escapeHtml($block->getOrderViewUrl($orderId)) ?>">
+                                    <?= $escaper->escapeHtml(__('View Order')) ?>
+                                </a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -51,11 +50,11 @@ $releases = $block->getSubscriptionReleases($subscription->getId());
                 <div class="toolbar bottom">
                     <?= $block->getPagerHtml() ?>
                 </div>
-            <?php endif ?>
+            <?php endif; ?>
 
         <?php else: ?>
             <p class="message info empty">
-                <?= $block->escapeHtml(__('No releases.')) ?>
+                <?= $escaper->escapeHtml(__('No releases.')) ?>
             </p>
         <?php endif; ?>
 </section>

@@ -1,25 +1,27 @@
-<!--@subject {{trans "Your Subscription Release Failure"}} @-->
+<!--@subject {{trans "Payment Has Been Declined for Your %store_name Subscription Order" store_name=$store.frontend_name}} @-->
 <!--@vars {
 "var customer_name":"Customer Name",
-"var item":"Subscription item"
+"var failure_reason":"Failure Reason",
+"layout handle=\"subscription_payment\" payment=$payment area=\"frontend\"":"Subscription Payment",
+"var subscription":"Subscription",
+"var store":"Store",
+"var formatted_next_release":"Formatted Next Release Date"
 } @-->
 {{template config_path="design/email/header_template"}}
-<tr>
-    <td colspan="2" style="padding-left:15px;">
 
-        <p>Hello, {{var customer_name}}</p>
-        <p>We were unable to receive payment for your subscription for product "{{var item.getName()}}".</p>
-        <p>Please check your current payment method or add a new one in your account.</p>
-        </br>
-        <p>Best Regards,</p>
-        <p>The team at Adobe.</p><br>
-    </td>
-</tr>
-<tr>
-    <td colspan="2">
-        {{template config_path="design/email/footer_template"}}
-    </td>
-</tr>
-</table>
-</body>
-</html>
+<p>{{trans "Hi %customer_name" customer_name=$customer_name}},</p>
+
+<p>{{trans "Unfortunately, when we tried to take a payment for your %formatted_next_release subscription order it was unsuccessful." formatted_next_release=$formatted_next_release}}</p>
+
+<p><strong>{{trans "Failure Reason: "}}</strong>{{trans "%failure_reason" failure_reason=$failure_reason}}</p>
+
+<br/>
+<p><strong>{{trans "What to Do Next:"}}</strong></p>
+<p>{{trans "If Product Out of stock, please wait until the next release date or contact us via email."}}</p>
+<p>{{trans "Please check that we have your correct payment details and make any necessary changes by going to My Account > Subscriptions > Update Payment Details."}}</p>
+<p>{{trans "We will attempt to release this order again on %subscription_getNextReleaseDate" subscription_getNextReleaseDate=$subscription.getNextReleaseDate()}}.</p>
+<p>{{trans "You can update your payment details from your account area within the next 2 days, and if successful, your order will be dispatched immediately."}}</p>
+<p>{{trans "If your payment details are not updated or payment cannot be taken, we will deactivate your subscription. You can manage reactivation and payment details from within your account."}}</p>
+<p>{{trans "If you have any questions, please contact us"}}.</p>
+
+{{template config_path="design/email/footer_template"}}

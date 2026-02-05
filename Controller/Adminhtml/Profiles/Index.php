@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -6,6 +10,9 @@ namespace PayPal\Subscription\Controller\Adminhtml\Profiles;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\View\Result\Page;
@@ -14,7 +21,7 @@ use Magento\Framework\View\Result\PageFactory;
 /**
  * Controller for Admin Frequency Profiles
  */
-class Index extends Action
+class Index extends Action implements ActionInterface, HttpGetActionInterface, HttpPostActionInterface
 {
     public const ADMIN_RESOURCE = 'PayPal_Subscription::subscription_frequency_profiles';
 
@@ -38,6 +45,8 @@ class Index extends Action
     }
 
     /**
+     * Render frequency profiles
+     *
      * @return ResponseInterface|ResultInterface|Page
      */
     public function execute()
@@ -51,7 +60,7 @@ class Index extends Action
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function _isAllowed(): bool
     {

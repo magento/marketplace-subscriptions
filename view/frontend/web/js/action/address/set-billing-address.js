@@ -23,8 +23,10 @@ define([
          */
 
         return storage.put(
-            url
-        ).success(function (response) {
+            url,
+            {},
+            false
+        ).done(function (response) {
 
             // Return Response
             return response;

@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -6,18 +10,22 @@ namespace PayPal\Subscription\Controller\Adminhtml\Subscriptions;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
+use PayPal\Braintree\Model\Ui\ConfigProvider;
 use PayPal\Subscription\Api\BraintreePaymentInterface;
 use PayPal\Subscription\Api\SubscriptionRepositoryInterface;
 
 /**
  * Controller for editing Frequency Profiles
  */
-class AddPaymentMethod extends Action
+class AddPaymentMethod extends Action implements ActionInterface, HttpGetActionInterface, HttpPostActionInterface
 {
     public const ADMIN_RESOURCE = 'PayPal_Subscription::subscriptions_edit';
 
@@ -38,6 +46,7 @@ class AddPaymentMethod extends Action
 
     /**
      * AddPaymentMethod constructor.
+     *
      * @param Context $context
      * @param PageFactory $resultPageFactory
      * @param SubscriptionRepositoryInterface $subscriptionRepository
@@ -56,6 +65,8 @@ class AddPaymentMethod extends Action
     }
 
     /**
+     * Add new payment method
+     *
      * @return ResponseInterface|ResultInterface|Page
      */
     public function execute()
@@ -68,7 +79,7 @@ class AddPaymentMethod extends Action
                 $subscription->getCustomerId(),
                 $subscription->getId(),
                 $this->getRequest()->getParam('payment_method_nonce'),
-                \PayPal\Braintree\Model\Ui\ConfigProvider::CODE
+                ConfigProvider::CODE
             );
             return $this->_redirect('*/*/edit', ['id' => $id]);
         } catch (LocalizedException $e) {
@@ -81,7 +92,7 @@ class AddPaymentMethod extends Action
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function _isAllowed(): bool
     {

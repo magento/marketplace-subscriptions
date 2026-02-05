@@ -1,21 +1,29 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Model;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use PayPal\Subscription\Api\Data\SubscriptionReleaseInterface;
 use PayPal\Subscription\Model\ResourceModel\SubscriptionRelease as SubscriptionReleaseResource;
 
 class SubscriptionRelease extends AbstractModel implements SubscriptionReleaseInterface
 {
-    protected function _construct()
+    /**
+     * Initialize subscription release resource
+     *
+     * @return void
+     * @throws LocalizedException
+     */
+    protected function _construct(): void
     {
         $this->_init(SubscriptionReleaseResource::class);
     }
 
     /**
+     * Get subscription ID
+     *
      * @return int
      */
     public function getSubscriptionId(): int
@@ -24,6 +32,8 @@ class SubscriptionRelease extends AbstractModel implements SubscriptionReleaseIn
     }
 
     /**
+     * Set subscription ID
+     *
      * @param int $subscriptionId
      * @return SubscriptionReleaseInterface
      */
@@ -33,6 +43,8 @@ class SubscriptionRelease extends AbstractModel implements SubscriptionReleaseIn
     }
 
     /**
+     * Get customer ID
+     *
      * @return int
      */
     public function getCustomerId(): int
@@ -41,6 +53,8 @@ class SubscriptionRelease extends AbstractModel implements SubscriptionReleaseIn
     }
 
     /**
+     * Set customer ID
+     *
      * @param int $customerId
      * @return SubscriptionReleaseInterface
      */
@@ -50,6 +64,8 @@ class SubscriptionRelease extends AbstractModel implements SubscriptionReleaseIn
     }
 
     /**
+     * Get order ID
+     *
      * @return int
      */
     public function getOrderId(): int
@@ -58,6 +74,8 @@ class SubscriptionRelease extends AbstractModel implements SubscriptionReleaseIn
     }
 
     /**
+     * Set order ID
+     *
      * @param int $orderId
      * @return SubscriptionReleaseInterface
      */
@@ -67,6 +85,8 @@ class SubscriptionRelease extends AbstractModel implements SubscriptionReleaseIn
     }
 
     /**
+     * Get status
+     *
      * @return int
      */
     public function getStatus(): int
@@ -75,6 +95,8 @@ class SubscriptionRelease extends AbstractModel implements SubscriptionReleaseIn
     }
 
     /**
+     * Set status
+     *
      * @param int $status
      * @return SubscriptionReleaseInterface
      */
@@ -84,6 +106,8 @@ class SubscriptionRelease extends AbstractModel implements SubscriptionReleaseIn
     }
 
     /**
+     * Get created at
+     *
      * @return string|null
      */
     public function getCreatedAt(): ?string

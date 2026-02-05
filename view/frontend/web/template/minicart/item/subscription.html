@@ -11,7 +11,7 @@
     <button class="ps-minicart-item__edit"
             type="button"
             data-bind="i18n: 'Your Subscription Summary', click: $parent.setShowSubscriptionEdit(item.item_id)"></button>
-    
+
     <div class="ps-minicart-item__content"
          data-bind="visible: $parent.items[item.item_id]()">
 
@@ -36,15 +36,6 @@
                 <span data-bind="i18n: 'Your next delivery will be dispatched in '"></span>
                 <span data-bind="text: item.frequency_option_interval, attr: { 'data-item-frequency': $parent.getItemId(item) }"></span>
                 <span data-bind="i18n: ' days.'"></span>
-            </p>
-        <!-- /ko -->
-
-        <!--  ko if: item.subscription_price_value -->
-            <p>
-                <strong class="ps-minicart-item__price">
-                    <span data-bind="i18n: 'Total: '"></span>
-                    <span data-bind="text: item.subscription_price_value"></span>
-                </strong>
             </p>
         <!-- /ko -->
     </div>

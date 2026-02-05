@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -9,6 +13,9 @@ use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\MessageQueue\PublisherInterface;
 use PayPal\Subscription\Api\SubscriptionRepositoryInterface;
+use PayPal\Subscription\Cron\Release as ReleaseCron;
+use PayPal\Subscription\Model\Config\Source\Subscription\MessageBroker;
+use PayPal\Subscription\Model\ConfigurationInterface;
 
 class Release extends Action implements HttpGetActionInterface
 {
@@ -25,20 +32,28 @@ class Release extends Action implements HttpGetActionInterface
     private $publisher;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * Release constructor.
      *
      * @param Action\Context $context
      * @param SubscriptionRepositoryInterface $subscriptionRepository
      * @param PublisherInterface $publisher
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         Action\Context $context,
         SubscriptionRepositoryInterface $subscriptionRepository,
-        PublisherInterface $publisher
+        PublisherInterface $publisher,
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($context);
         $this->subscriptionRepository = $subscriptionRepository;
         $this->publisher = $publisher;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -50,7 +65,14 @@ class Release extends Action implements HttpGetActionInterface
 
         try {
             $subscription = $this->subscriptionRepository->getById((int)$id);
-            $this->publisher->publish(\PayPal\Subscription\Cron\Release::TOPIC_NAME, $subscription);
+            $configuredMessageBroker = $this->configuration->getMessageBroker();
+            $topic = $configuredMessageBroker === MessageBroker::RABBIT_MQ_BROKER_CONFIG_VALUE ?
+                ReleaseCron::TOPIC_NAME :
+                ReleaseCron::TOPIC_NAME_DB;
+            $this->publisher->publish(
+                $topic,
+                $subscription
+            );
             $this->messageManager->addSuccessMessage("Subscription {$id} released.");
         } catch (NoSuchEntityException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
@@ -60,7 +82,7 @@ class Release extends Action implements HttpGetActionInterface
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     protected function _isAllowed(): bool
     {

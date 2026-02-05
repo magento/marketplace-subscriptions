@@ -1,4 +1,4 @@
-<!--@subject {{trans "%store_name New Subscription" store_name=$store.frontend_name}} @-->
+<!--@subject {{trans "Your %store_name Subscription has been created" store_name=$store.frontend_name}} @-->
 <!--@vars {
 "var customer_name":"Customer Name",
 "var subscription.getFrequency()":"Subscription Frequency (in days)",
@@ -6,17 +6,29 @@
 "var formattedBillingAddress":"Billing Address",
 "var formattedShippingAddress":"Shipping Address",
 "var subscription.getShippingPrice()":"Shipping Price",
-"layout handle=\"subscription_items\" order=$items area=\"frontend\"":"Subscription Items Grid"
+"layout handle=\"subscription_items\" subscription=$subscription area=\"frontend\"":"Subscription Items Grid",
+"var subscription":"Subscription",
+"var formatted_next_release":"Formatted Next Release Date"
 } @-->
 {{template config_path="design/email/header_template"}}
+<p>{{trans "Hi %customer_name" customer_name=$customer_name}},</p>
 
-<p>{{var customer_name}}</p>
-<p>{{var subscription.getFrequency()}}</p>
-<p>{{var subscription.getNextReleaseDate()}}</p>
-<p>{{var formattedBillingAddress}}</p>
-<p>{{var formattedShippingAddress}}</p>
-<p>{{var subscription.getShippingPrice()}}</p>
+<p>{{trans "Great news, your Subscription has been successfully created!"}}</p>
 
+<p>{{trans "Here are your Subscription details:"}}</p>
+
+<p><strong>{{trans "Products:"}}</strong></p>
 {{layout handle="subscription_items" items=$items area="frontend"}}
+<br/>
+<p><strong>{{trans "Next Dispatch Date is:"}}</strong> {{var formatted_next_release}}</p>
+<p><strong>{{trans "Order Frequency:"}}</strong> {{var subscription.getFrequency()}} Days</p>
+
+<p><strong>{{trans "Shipping Address:"}}</strong></p>
+{{var formattedShippingAddress}}
+<br/>
+<br/>
+
+<p>{{trans "You can easily manage your subscriptions by going to My Account > Subscriptions If you have any questions, please contact us"}}.</p>
+
 
 {{template config_path="design/email/footer_template"}}

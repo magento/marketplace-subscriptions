@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Registry;
@@ -12,19 +11,24 @@ class CurrentProduct
     /**
      * @var ProductInterface
      */
-    private $product;
+    private ProductInterface $product;
 
     /**
      * @var ProductFactory
      */
-    private $productFactory;
+    private ProductFactory $productFactory;
 
+    /**
+     * @param ProductFactory $productFactory
+     */
     public function __construct(ProductFactory $productFactory)
     {
         $this->productFactory = $productFactory;
     }
 
     /**
+     * Set product
+     *
      * @param ProductInterface $product
      */
     public function set(ProductInterface $product): void
@@ -33,6 +37,8 @@ class CurrentProduct
     }
 
     /**
+     * Get product
+     *
      * @return ProductInterface
      */
     public function get(): ProductInterface
@@ -41,6 +47,8 @@ class CurrentProduct
     }
 
     /**
+     * Create null product
+     *
      * @return ProductInterface
      */
     private function createNullProduct(): ProductInterface

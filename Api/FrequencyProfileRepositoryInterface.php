@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -16,6 +20,8 @@ use PayPal\Subscription\Api\Data\FrequencyProfileSearchResultInterface;
 interface FrequencyProfileRepositoryInterface
 {
     /**
+     * Get frequency profile by ID
+     *
      * @param int $frequencyProfileId
      * @return FrequencyProfileInterface
      * @throws NoSuchEntityException
@@ -23,12 +29,16 @@ interface FrequencyProfileRepositoryInterface
     public function getById(int $frequencyProfileId): FrequencyProfileInterface;
 
     /**
+     * Get list of frequency profile
+     *
      * @param SearchCriteriaInterface $searchCriteria
      * @return FrequencyProfileSearchResultInterface
      */
     public function getList(SearchCriteriaInterface $searchCriteria): FrequencyProfileSearchResultInterface;
 
     /**
+     * Save frequency profile
+     *
      * @param FrequencyProfileInterface $frequencyProfile
      * @return FrequencyProfileInterface
      * @throws CouldNotSaveException
@@ -36,6 +46,8 @@ interface FrequencyProfileRepositoryInterface
     public function save(FrequencyProfileInterface $frequencyProfile): FrequencyProfileInterface;
 
     /**
+     * Delete frequency profile
+     *
      * @param FrequencyProfileInterface $frequencyProfile
      * @return void
      */

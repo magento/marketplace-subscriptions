@@ -1,11 +1,12 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Plugin;
 
 use Magento\Checkout\CustomerData\Cart;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\QuoteIdToMaskedQuoteIdInterface;
 
 /**
@@ -13,20 +14,18 @@ use Magento\Quote\Model\QuoteIdToMaskedQuoteIdInterface;
  */
 class CartData
 {
-
     /**
      * @var Session
      */
-    private $checkoutSession;
+    private Session $checkoutSession;
 
     /**
      * @var QuoteIdToMaskedQuoteIdInterface
      */
-    private $maskedQuote;
+    private QuoteIdToMaskedQuoteIdInterface $maskedQuote;
 
     /**
      * CartData constructor.
-     * @param Cart $cart
      * @param Session $checkoutSession
      * @param QuoteIdToMaskedQuoteIdInterface $maskedQuote
      */
@@ -39,23 +38,28 @@ class CartData
     }
 
     /**
+     * Get section data
+     *
      * @param Cart $subject
      * @param $result
      * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function afterGetSectionData(Cart $subject, $result): array
     {
         $quote = $this->checkoutSession->getQuote();
-
-        // Using `getCustomerId()` to circumvent https://github.com/magento/magento2/issues/24736
-        if ($quote && !$quote->getCustomerId()) {
-            // `$quote->getId()` should return an int, but it doesn't, so we type cast it
+        $quoteId = $quote ?
+            (int) $quote->getId() :
+            null;
+        if ($quote &&
+            !$quote->getCustomerId() &&
+            $quoteId != null
+        ) {
             $maskedId = $this->maskedQuote->execute((int) $quote->getId());
             $result['guest_masked_id'] = $maskedId;
         }
-
         return $result;
     }
 }
+

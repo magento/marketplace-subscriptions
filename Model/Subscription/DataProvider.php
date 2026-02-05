@@ -15,6 +15,7 @@ use Magento\Vault\Model\PaymentTokenManagement;
 use Magento\Vault\Model\ResourceModel\PaymentToken\CollectionFactory as PaymentTokenCollectionFactory;
 use PayPal\Subscription\Api\FrequencyProfileRepositoryInterface;
 use PayPal\Subscription\Model\FrequencyProfile;
+use PayPal\Subscription\Model\Payment\PaymentMethodTypeResolverInterface;
 use PayPal\Subscription\Model\ResourceModel\Subscription\Collection;
 use PayPal\Subscription\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use PayPal\Subscription\Model\Subscription;
@@ -54,6 +55,11 @@ class DataProvider extends AbstractDataProvider
     private $paymentTokenManagement;
 
     /**
+     * @var PaymentMethodTypeResolverInterface
+     */
+    private $paymentMethodTypeResolver;
+
+    /**
      * @var AddressFormatter
      */
     private $addressFormatter;
@@ -81,6 +87,7 @@ class DataProvider extends AbstractDataProvider
      * @param SerializerInterface $serializer
      * @param AddressFormatter $addressFormatter
      * @param SubscriptionHelper $subscriptionHelper
+     * @param PaymentMethodTypeResolverInterface $paymentMethodTypeResolver
      * @param array $meta
      * @param array $data
      */
@@ -96,6 +103,7 @@ class DataProvider extends AbstractDataProvider
         SerializerInterface $serializer,
         AddressFormatter $addressFormatter,
         SubscriptionHelper $subscriptionHelper,
+        PaymentMethodTypeResolverInterface $paymentMethodTypeResolver,
         array $meta = [],
         array $data = []
     ) {
@@ -108,9 +116,12 @@ class DataProvider extends AbstractDataProvider
         $this->serializer = $serializer;
         $this->addressFormatter = $addressFormatter;
         $this->subscriptionHelper = $subscriptionHelper;
+        $this->paymentMethodTypeResolver = $paymentMethodTypeResolver;
     }
 
     /**
+     * Get data
+     *
      * @return array
      * @throws NoSuchEntityException
      */
@@ -135,7 +146,7 @@ class DataProvider extends AbstractDataProvider
                 Subscription::FREQUENCY => $subscription->getFrequency()
             ];
 
-            $shippingPrice = $this->subscriptionHelper->formatPrice($subscription->getShippingPrice());
+            $shippingPrice = $this->subscriptionHelper->formatPrice((float) $subscription->getShippingPrice());
             $this->loadedData[$subscription->getId()]['shipping'] = [
                 Subscription::BILLING_ADDRESS => $this->addressFormatter->format($subscription->getBillingAddress()),
                 Subscription::SHIPPING_ADDRESS => $this->addressFormatter->format($subscription->getShippingAddress()),
@@ -156,7 +167,8 @@ class DataProvider extends AbstractDataProvider
             }
 
             // Get customer addresses on file
-            $addresses = [];
+            $addresses = $this->addressCollectionFactory->create()
+                ->getItemsByColumnValue('parent_id', $subscription->getCustomerId());
             /** @var Address $address */
             foreach ($addresses as $address) {
                 $addressParts = array_filter([
@@ -203,18 +215,27 @@ class DataProvider extends AbstractDataProvider
                 ];
             }
         }
-
         return $this->loadedData;
     }
 
-    private function getFriendlyPaymentMethod($method, $details)
-    {
-        if ($method === 'braintree') {
+    /**
+     * Return Friendly Customer label for Payment method
+     *
+     * @param string $method
+     * @param array $details
+     * @return string
+     */
+    private function getFriendlyPaymentMethod(
+        string $method,
+        array $details
+    ): string {
+        $methodType = $this->paymentMethodTypeResolver->execute($method);
+        $label = '';
+        if ($methodType === PaymentMethodTypeResolverInterface::TYPE_CARD) {
             $label = sprintf('Credit Card: %s ending %s', $details['type'], $details['maskedCC']);
-        } elseif ($method === 'braintree_paypal') {
+        } elseif ($methodType === PaymentMethodTypeResolverInterface::TYPE_PAYPAL) {
             $label = sprintf('PayPal: %s', $details['payerEmail']);
         }
-
         return $label;
     }
 }

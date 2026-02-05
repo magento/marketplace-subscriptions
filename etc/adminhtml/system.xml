@@ -1,38 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="paypal_subscriptions" translate="label" type="text" sortOrder="420" showInDefault="1" showInWebsite="1" showInStore="1">
+        <section id="paypal_subscriptions" translate="label" type="text" sortOrder="420"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Subscriptions</label>
             <tab>sales</tab>
             <resource>PayPal_Subscription::config</resource>
             <group id="configuration" translate="label" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Configuration</label>
-                <field id="active" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="active" translate="label" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Subscriptions</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>paypal/subscriptions/active</config_path>
                 </field>
-                <field id="subscription_new" translate="label comment" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>New Subscription Email Template</label>
-                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
-                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
-                </field>
-                <field id="subscription_renew" translate="label comment" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Renew Subscription Email Template</label>
-                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
-                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
-                </field>
-                <field id="subscription_update" translate="label comment" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Update Subscription Email Template</label>
-                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
-                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
-                </field>
-                <field id="release_failure" translate="label comment" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Release Failure Email Template</label>
-                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
-                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
-                </field>
-                <field id="failed_payments" translate="label comment" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="failed_payments" translate="label comment" type="text"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Number of Failed Payments Allowed</label>
                     <comment>After the number of failed payments has been reached, the subscription will be cancelled.</comment>
                     <config_path>paypal/subscriptions/failed_payments</config_path>
@@ -41,23 +31,139 @@
                         <field id="active">1</field>
                     </depends>
                 </field>
-                <field id="cron_enabled" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enable CRON</label>
-                    <comment>Under most circumstances, you should keep CRON enabled.</comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>paypal/subscriptions/cron_enabled</config_path>
+                <field id="stock_failures_allowed" translate="label comment" type="text"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Number of Stock Failures Allowed</label>
+                    <comment>The number of stock failures allowed before a subscription is cancelled.</comment>
+                    <config_path>paypal/subscriptions/stock_failures_allowed</config_path>
+                    <validate>validate-number</validate>
                     <depends>
                         <field id="active">1</field>
                     </depends>
                 </field>
-                <field id="cron_schedule" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="release_shipping_method" translate="label comment" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Subscription Release Shipping Method</label>
+                    <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+                    <comment>Defines the shipping method for any Subscription Releases, if not set the shipping method used on the original order will be used.</comment>
+                    <config_path>paypal/subscriptions/release_shipping_method</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="allowed_payment_methods" translate="label comment" type="multiselect"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed Payment Methods</label>
+                    <source_model>PayPal\Subscription\Model\Config\Source\Subscription\BraintreeMethods</source_model>
+                    <comment>Defines available payment methods for order with subscription product, all other payment methods will be disabled.</comment>
+                    <config_path>paypal/subscriptions/allowed_payment_methods</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="auto_update_price" translate="label" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Automatically Update Product Prices</label>
+                    <comment>If enabled, subscription orders will always use the current price information set to the product. If disabled, subscription orders will always use the original subscription price value</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>paypal/subscriptions/auto_update_price</config_path>
+                </field>
+            </group>
+            <group id="email_configuration" translate="label"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Email Configuration</label>
+                <field id="subscription_new" translate="label comment" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>New Subscription Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="subscription_update" translate="label comment" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Update Subscription Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="subscription_pause" translate="label comment" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Pause Subscription Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="subscription_cancel" translate="label comment" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Cancel Subscription Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="release_failure" translate="label comment" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Release Failure Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="release_failure_admin" translate="label comment" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Release Failure Admin Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="release_reminder" translate="label comment" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Release Reminder Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="price_changed" translate="label comment" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Price Changed Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="release_reminder_timing" translate="label comment" type="text"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Release Reminder Email Timing</label>
+                    <comment>In days before release. If set to 0 the release reminder will be sent as the release is created. Any other number will be taken as days before the next release date.</comment>
+                    <validate>validate-number</validate>
+                </field>
+                <field id="release_skipped" translate="label comment" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Release Skipped Email Template</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="error_logging_emails_enabled" translate="label comment" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Error Logging Emails</label>
+                    <comment>If Yes error logging emails will be sent out to inform of any exceptions that occur during a Subscription release.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="error_logging_emails_recipients" translate="label comment" type="text"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Error Logging Recipients</label>
+                    <comment>Comma-separated.</comment>
+                    <validate>validate-emails</validate>
+                    <depends>
+                        <field id="error_logging_emails_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="developer_configuration" translate="label"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Developer Configuration</label>
+                <field id="message_broker" translate="label" type="select"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Message Broker</label>
+                    <comment>Only change this if you know what you're doing.</comment>
+                    <source_model>PayPal\Subscription\Model\Config\Source\Subscription\MessageBroker</source_model>
+                    <config_path>paypal/subscriptions/message_broker</config_path>
+                </field>
+                <field id="cron_schedule" translate="label" type="text"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>CRON Schedule</label>
                     <config_path>paypal/subscriptions/cron_schedule</config_path>
                     <validate>validate-cron</validate>
-                    <depends>
-                        <field id="active">1</field>
-                        <field id="cron_enabled">1</field>
-                    </depends>
+                    <comment>Cron should run daily, please change only specific time, but not the frequency</comment>
                 </field>
             </group>
         </section>

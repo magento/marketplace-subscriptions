@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
     <!-- Guest Cart -->
     <route url="/V1/subscription/carts/frequency/:quoteItemId/:frequency" method="PUT">
         <service class="PayPal\Subscription\Api\GuestQuoteManagementInterface" method="changeFrequency" />
@@ -122,5 +129,35 @@
         <resources>
             <resource ref="anonymous"/>
         </resources>
+    </route>
+    <!-- Update Subscription Item Qty -->
+    <route url="/V1/subscription/mine/updateQty/:subscriptionItemId/:quantity" method="PUT">
+        <service class="PayPal\Subscription\Api\UpdateSubscriptionItemQtyInterface" method="execute"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <!-- Skip Upcoming Subscription Order -->
+    <route url="/V1/subscription/mine/skipOrder/:subscriptionId" method="PUT">
+        <service class="PayPal\Subscription\Api\SkipNextSubscriptionOrderInterface" method="execute"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <!-- Send Upcoming Subscription Order Now -->
+    <route url="/V1/subscription/mine/sendOrderNow/:subscriptionId" method="PUT">
+        <service class="PayPal\Subscription\Api\SendOrderNowInterface" method="execute"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
     </route>
 </routes>

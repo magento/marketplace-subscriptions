@@ -1,0 +1,17 @@
+<?php
+/**
+ * PayPal Subscriptions
+ * Template based off Magento_Customer/templates/address/edit
+ *
+ * @var PayPal\Subscription\Block\Customer\Addresses\UpdateAddress $block
+ */
+
+$addresses = $block->getAllAddressesJson();
+
+$scriptString = <<<script
+    window.subscriptionAddresses = {$addresses};
+script;
+
+?>
+
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>

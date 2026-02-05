@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Plugin\Controller\Customer;
@@ -19,7 +18,7 @@ class Authenticate
     /**
      * @var Session
      */
-    protected $customerSession;
+    private $customerSession;
 
     /**
      * @param Url $customerUrl

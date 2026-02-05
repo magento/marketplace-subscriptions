@@ -1,9 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Model;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use PayPal\Subscription\Api\Data\FrequencyProfileInterface;
 use PayPal\Subscription\Model\ResourceModel\FrequencyProfile as FrequencyResource;
@@ -12,13 +12,18 @@ class FrequencyProfile extends AbstractModel implements FrequencyProfileInterfac
 {
     /**
      * Initialise the Resource Model.
+     *
+     * @return void
+     * @throws LocalizedException
      */
-    public function _construct()
+    public function _construct(): void
     {
         $this->_init(FrequencyResource::class);
     }
 
     /**
+     * Get name
+     *
      * @return string
      */
     public function getName(): string
@@ -27,6 +32,8 @@ class FrequencyProfile extends AbstractModel implements FrequencyProfileInterfac
     }
 
     /**
+     * Set name
+     *
      * @param string $name
      * @return FrequencyProfileInterface
      */
@@ -36,6 +43,8 @@ class FrequencyProfile extends AbstractModel implements FrequencyProfileInterfac
     }
 
     /**
+     * Get frequency options
+     *
      * @return string
      */
     public function getFrequencyOptions(): string
@@ -44,6 +53,8 @@ class FrequencyProfile extends AbstractModel implements FrequencyProfileInterfac
     }
 
     /**
+     * Set frequency options
+     *
      * @param string $frequencyOptions
      * @return FrequencyProfileInterface
      */
@@ -53,6 +64,8 @@ class FrequencyProfile extends AbstractModel implements FrequencyProfileInterfac
     }
 
     /**
+     * Get minimum releases
+     *
      * @return int
      */
     public function getMinReleases(): int
@@ -61,6 +74,8 @@ class FrequencyProfile extends AbstractModel implements FrequencyProfileInterfac
     }
 
     /**
+     * Set minimum releases
+     *
      * @param int $minReleases
      * @return FrequencyProfileInterface
      */
@@ -70,6 +85,8 @@ class FrequencyProfile extends AbstractModel implements FrequencyProfileInterfac
     }
 
     /**
+     * Get maximum releases
+     *
      * @return int
      */
     public function getMaxReleases(): int
@@ -78,6 +95,8 @@ class FrequencyProfile extends AbstractModel implements FrequencyProfileInterfac
     }
 
     /**
+     * Set maximum releases
+     *
      * @param int $maxReleases
      * @return FrequencyProfileInterface
      */

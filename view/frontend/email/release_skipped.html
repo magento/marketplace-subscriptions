@@ -1,0 +1,26 @@
+<!--@subject {{trans "You've Skipped Your %store_name Subscription Order" store_name=$store.frontend_name}} @-->
+<!--@vars {
+"var customer_name":"Customer Name",
+"var failure_reason":"Failure Reason",
+"layout handle=\"subscription_items\" subscription=$subscription area=\"frontend\"":"Subscription Items Grid",
+"var subscription":"Subscription",
+"var formatted_next_release":"Formatted Next Release Date"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "Hi %customer_name" customer_name=$customer_name}},</p>
+
+<p>{{trans "We’ve skipped this release of your subscription order as requested."}}</p>
+
+<p><strong>Products:</strong></p>
+{{layout handle="subscription_items" items=$items area="frontend"}}
+<br/>
+
+<p><strong>Your Order has been skipped.</strong></p>
+{{layout handle="subscription_items" items=$items area="frontend"}}
+<br/>
+
+<p>{{trans "Your next release date is: %formatted_next_release" formatted_next_release=$formatted_next_release}}.</p>
+<p>{{trans "You can easily manage your subscriptions by going to My Account > Subscriptions If you have any questions, please contact us"}}.</p>
+
+{{template config_path="design/email/footer_template"}}

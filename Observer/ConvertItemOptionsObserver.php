@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Observer;
@@ -27,6 +26,7 @@ class ConvertItemOptionsObserver implements ObserverInterface
      * @var array
      */
     private $quoteItems = [];
+
     /**
      * @var SubscriptionHelper
      */
@@ -43,10 +43,12 @@ class ConvertItemOptionsObserver implements ObserverInterface
     }
 
     /**
+     * Convert item options
+     *
      * @param Observer $observer
      * @return void
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         if (!$this->subscriptionHelper->isActive()) {
             return;
@@ -71,7 +73,9 @@ class ConvertItemOptionsObserver implements ObserverInterface
     }
 
     /**
-     * @param $id
+     * Get quote item by ID
+     *
+     * @param int $id
      * @return Item|null
      */
     private function getQuoteItemById($id): ?Item

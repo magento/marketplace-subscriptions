@@ -29,9 +29,11 @@
             "shipping_method": true,
             "payment_method": true,
             "payment_data": true,
-            "count_of_failed_attempts": true,
             "created_at": true,
-            "updated_at": true
+            "updated_at": true,
+            "stock_failures": true,
+            "failed_payments": true,
+            "reminder_email_sent": true
         },
         "constraint": {
             "PRIMARY": true,
@@ -47,12 +49,8 @@
             "subscription_id": true,
             "sku": true,
             "price": true,
-            "periodic_price": true,
             "qty": true,
             "product_id": true,
-            "order_id": true,
-            "order_item_id": true,
-            "order_item_name": true,
             "created_at": true,
             "updated_at": true
         },

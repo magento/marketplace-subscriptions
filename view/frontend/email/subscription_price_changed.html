@@ -1,0 +1,27 @@
+<!--@subject {{trans "The Price Has Changed For Your %store_name Subscription" store_name=$store.frontend_name}} @-->
+<!--@vars {
+"var customer_name":"Customer Name",
+"layout handle=\"subscription_items\" subscription=$subscription area=\"frontend\"":"Subscription Items Grid",
+"var subscription":"Subscription",
+"var store":"Store",
+"var formatted_next_release":"Formatted Next Release Date",
+"var original_order_total":"Original Order Total",
+"var new_order_total":"New Order Total"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "Hi %customer_name" customer_name=$customer_name}},</p>
+
+<p>{{trans "The price for your %formatted_next_release subscription order has changed." formatted_next_release=$formatted_next_release}}</p>
+
+<p><strong>{{trans "Products:"}}</strong></p>
+{{layout handle="subscription_items" items=$items area="frontend"}}
+<br/>
+
+<p><strong>{{trans "Previous order total: "}}</strong>{{var original_order_total}}</p>
+<p><strong>{{trans "New order total: "}}</strong>{{var new_order_total}}</p>
+
+<br/>
+<p>{{trans "You can easily manage your subscriptions by going to My Account > Subscriptions If you have any questions, please contact us"}}.</p>
+
+{{template config_path="design/email/footer_template"}}

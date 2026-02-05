@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Model;
@@ -7,6 +6,7 @@ namespace PayPal\Subscription\Model;
 use Exception;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\CartItemInterfaceFactory;
 use Magento\Quote\Model\Quote;
@@ -53,6 +53,11 @@ class QuoteManagement implements QuoteManagementInterface
     private $quoteResource;
 
     /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
      * QuoteManagement constructor.
      *
      * @param CartItemInterfaceFactory $itemFactory
@@ -61,6 +66,7 @@ class QuoteManagement implements QuoteManagementInterface
      * @param OptionResource $optionResource
      * @param QuoteFactory $quoteFactory
      * @param QuoteResource $quoteResource
+     * @param SerializerInterface $serializer
      */
     public function __construct(
         CartItemInterfaceFactory $itemFactory,
@@ -68,7 +74,8 @@ class QuoteManagement implements QuoteManagementInterface
         QuoteItemOptionCollection $itemOptionCollection,
         OptionResource $optionResource,
         QuoteFactory $quoteFactory,
-        QuoteResource $quoteResource
+        QuoteResource $quoteResource,
+        SerializerInterface $serializer
     ) {
         $this->itemFactory = $itemFactory;
         $this->itemResource = $itemResource;
@@ -76,39 +83,57 @@ class QuoteManagement implements QuoteManagementInterface
         $this->optionResource = $optionResource;
         $this->quoteFactory = $quoteFactory;
         $this->quoteResource = $quoteResource;
+        $this->serializer = $serializer;
     }
 
     /**
-     * @param int|string $cartId
+     * Change frequency
+     *
+     * @param int $cartId
      * @param int $quoteItemId
      * @param int $frequency
      * @return CartInterface
      * @throws LocalizedException
      */
-    public function changeFrequency($cartId, int $quoteItemId, int $frequency): CartInterface
+    public function changeFrequency(int $cartId, int $quoteItemId, int $frequency): CartInterface
     {
         /** @var Item $quoteItem */
         $quoteItem = $this->itemFactory->create();
-        $this->itemResource->load($quoteItem, $quoteItemId);
-
+        $this->itemResource->load(
+            $quoteItem,
+            $quoteItemId
+        );
         if (!$quoteItem->getId()) {
             throw new LocalizedException(__('Unable to fetch quote item.'));
         }
-
         /** @var Quote $quote */
         $quote = $this->quoteFactory->create();
         $this->quoteResource->loadByIdWithoutStore($quote, $cartId);
-
         $itemOptions = $this->itemOptionCollection->create()->getOptionsByItem($quoteItem);
-
         /** @var Option $option */
         foreach ($itemOptions as $option) {
+            $needsSaving = false;
             if ($option->getCode() === SubscriptionHelper::FREQ_OPT_INTERVAL) {
                 $option->setValue((string) $frequency);
+                $needsSaving = true;
+            } elseif ($option->getCode() === 'info_buyRequest') {
+                $buyRequest = $option->getValue();
+                $buyRequestData = $this->serializer->unserialize($buyRequest) ?: [];
+                $buyRequestData['frequency_option'] = (string) $frequency;
+                $option->setValue(
+                    $this->serializer->serialize(
+                        $buyRequestData
+                    )
+                );
+                $needsSaving = true;
+            }
+            if ($needsSaving === true) {
                 try {
                     $this->optionResource->save($option);
                 } catch (AlreadyExistsException | Exception $e) {
-                    throw new LocalizedException(__('Unable to save quote item.'));
+                    throw new LocalizedException(
+                        __('Unable to save quote item.')
+                    );
                 }
             }
         }

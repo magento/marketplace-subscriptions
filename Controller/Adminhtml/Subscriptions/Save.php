@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -19,6 +23,9 @@ use PayPal\Subscription\Api\SubscriptionRepositoryInterface;
 use PayPal\Subscription\Helper\Data as SubscriptionHelper;
 use PayPal\Subscription\Model\Subscription;
 
+/**
+ * Controller for saving the subscriptions
+ */
 class Save extends Action implements HttpPostActionInterface
 {
     /**
@@ -73,6 +80,8 @@ class Save extends Action implements HttpPostActionInterface
     }
 
     /**
+     * Save the subscription
+     *
      * @return ResponseInterface|ResultInterface|void
      * @throws LocalizedException
      */
@@ -104,8 +113,12 @@ class Save extends Action implements HttpPostActionInterface
 
         if (!empty($data['shipping']['available_shipping_method'])) {
             $subscription->setShippingMethod($data['shipping']['available_shipping_method']);
-            $methods = $this->subscriptionHelper->getShipping($id);
-            foreach ($methods as $method) {
+            try {
+                $methods = $this->subscriptionHelper->getShipping($id);
+            } catch (LocalizedException $e) {
+                $methods = [];
+            }
+            foreach ($methods ?? [] as $method) {
                 if ($method->getCode() == $subscription->getShippingMethod()) {
                     $subscription->setShippingPrice($method->getPrice());
                     break;
@@ -131,12 +144,23 @@ class Save extends Action implements HttpPostActionInterface
 
         $subscription->setFrequency((int) $data['overview']['frequency']);
         $subscription->setStatus((int) $data['overview']['status']);
+        if ($subscription->getId() && $subscription->getOrigData('frequency') != $subscription->getData('frequency')) {
+            $frequency = (int) $subscription->getData('frequency');
+            $oldFrequency = (int) $subscription->getOrigData('frequency');
+            $difference = $frequency - $oldFrequency;
+            $nextRelease = $subscription->getNextReleaseDate();
+            $date = new \DateTime($nextRelease);
+            $date->modify($difference . "days");
+            $today = new \DateTime();
+            if ($date < $today) {
+                $date = $today->modify('1 day');
+            }
+            $subscription->setNextReleaseDate($date->format("Y-m-d H:i:s"));
+        }
 
         try {
             $this->subscriptionRepository->save($subscription);
-
             $changes = array_diff_assoc($subscription->getData(), $subscription->getOrigData());
-
             $subscription->addHistory(
                 'Subscription Changes',
                 'admin',
@@ -147,7 +171,6 @@ class Save extends Action implements HttpPostActionInterface
                 (bool) $data['overview']['visible_to_customer'],
                 (bool) $data['overview']['notify_customer']
             );
-
             $this->messageManager->addSuccessMessage(
                 __('Subscription "%1" has been saved successfully', $data['id'])
             );

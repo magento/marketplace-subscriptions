@@ -1,0 +1,47 @@
+<div class="subscription" data-bind="attr: {id: 'ps-subscription-' + subscription().subscriptionId}">
+    <div class="container container--grey container--rounded">
+        <div class="subscription-info">
+            <div>
+                <strong data-bind="i18n: 'Estimated Dispatch Date: '"></strong>
+                <p data-bind="text: subscription().nextReleaseDate()"></p>
+            </div>
+            <div>
+                <strong data-bind="text: subscriptionIdText"></strong>
+            </div>
+        </div>
+        <div class="reschedule">
+            <span class="reschedule-description" data-bind="i18n: 'Need to reschedule this order?'"></span>
+            <div class="reschedule-buttons">
+                <button class="button action secondary"
+                        data-bind="click: skipOrder"
+                        type="button">
+                    <span data-bind="i18n: 'Skip Order'"></span>
+                </button>
+                <button class="button action primary"
+                        data-bind="click: sendNow"
+                        type="button">
+                    <span data-bind="i18n: 'Send Now'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- ko foreach: { data: elems, as: 'element' } -->
+    <!-- ko template: element.getTemplate() --><!-- /ko -->
+    <!-- /ko -->
+    <div class="actions">
+        <p>
+        <!-- ko if: subscription().previousReleaseDate() -->
+            <strong data-bind="i18n: 'Last Dispatched'"></strong>
+            <span data-bind="text: subscription().previousReleaseDate()"></span>
+        <!-- /ko -->
+        <!-- ko ifnot: subscription().previousReleaseDate() -->
+            <span data-bind="i18n: 'No previous releases'"></span>
+        <!-- /ko -->
+        </p>
+        <a class="ps-cancel-subscription"
+           data-bind="click: cancelSubscription"
+           type="button">
+            <span data-bind="i18n: 'Cancel Subscription'"></span>
+        </a>
+    </div>
+</div>

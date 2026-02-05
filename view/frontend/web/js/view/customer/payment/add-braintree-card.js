@@ -4,7 +4,7 @@ define([
     'underscore',
     'PayPal_Braintree/js/view/payment/adapter',
     'mage/translate',
-    'PayPal_Subscription/js/model/url-builder',
+    'PayPal_Subscription/js/action/customer/payment/update-braintree-cc-payment',
     'PayPal_Subscription/js/action/customer/payment/load-client-token',
     'ko'
 ], function(
@@ -13,7 +13,7 @@ define([
     _,
     braintree,
     $t,
-    urlBuilder,
+    updatePayment,
     loadClientToken,
     ko
 ) {
@@ -103,17 +103,9 @@ define([
                 },
 
                 onPaymentMethodReceived: function (response) {
-                    $.ajax({
-                        method: "PUT",
-                        url: '/rest/V1/subscription/mine/payment/creditcard/' + that.subscriptionId,
-                        data: JSON.stringify({nonce: response.nonce}),
-                        contentType: "application/json",
-                        dataType: "json"
-                    })
-                    .done(function(response) {
+                    updatePayment(response.nonce, that.subscriptionId).success(function () {
                         location.reload();
-                    })
-                    .fail(function(jqXHR, textStatus, errorThrown) {
+                    }).fail(function () {
                         that.message($t('Sorry, but something went wrong when taking the payment.'))
                     });
                 }
@@ -128,15 +120,12 @@ define([
          */
         loadClientToken: function () {
             var that = this;
-            $.ajax({
-                method: "GET",
-                url: '/rest/V1/subscription/braintree/token/client'
-            })
-            .done(function(response) {
+
+            // Get Client token
+            loadClientToken().done(function(response) {
                 that.clientToken = response.token;
                 that.setup();
-            })
-            .fail(function(jqXHR, textStatus, errorThrown) {
+            }).fail(function () {
                 that.message($t('Sorry, but something went wrong when connecting to Braintree.'))
             });
         },
@@ -154,14 +143,13 @@ define([
          */
         tokenizeHostedFields: function () {
             var that = this;
-            $('body').trigger('processStart');
+
             // Reset Message
             that.message();
 
             // Tokenize
             this.hostedFieldsInstance.tokenize({}, function (tokenizeErr, payload) {
                 if (tokenizeErr) {
-                    $('body').trigger('processStop');
                     switch (tokenizeErr.code) {
                         case 'HOSTED_FIELDS_FIELDS_EMPTY':
                             that.message($t('All fields are empty! Please fill out the form.'));
@@ -179,7 +167,6 @@ define([
                             that.message($t('Something went wrong.'));
                     }
                 } else {
-                    $('body').trigger('processStop');
                     this.config.onPaymentMethodReceived(payload);
                 }
             }.bind(this));

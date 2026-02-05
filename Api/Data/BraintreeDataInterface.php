@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -10,24 +14,32 @@ namespace PayPal\Subscription\Api\Data;
 interface BraintreeDataInterface
 {
     /**
+     * Get braintree token
+     *
      * @return string
      */
-    public function getToken();
+    public function getToken(): string;
 
     /**
-     * @param $token
+     * Set braintree token
+     *
+     * @param string $token
      * @return $this
      */
-    public function setToken($token);
+    public function setToken(string $token): self;
 
     /**
+     * Get braintree error
+     *
      * @return string
      */
-    public function getError();
+    public function getError(): string;
 
     /**
-     * @param $error
+     * Set braintree error
+     *
+     * @param string $error
      * @return $this
      */
-    public function setError($error);
+    public function setError(string $error): self;
 }

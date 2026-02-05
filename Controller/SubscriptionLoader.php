@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -34,6 +38,14 @@ class SubscriptionLoader
      */
     private $url;
 
+    /**
+     * SubscriptionLoader constructor.
+     *
+     * @param SubscriptionRepositoryInterface $subscriptionRepository
+     * @param SubscriptionViewAuthorisation $subscriptionViewAuthorisation
+     * @param RedirectFactory $redirectFactory
+     * @param UrlInterface $url
+     */
     public function __construct(
         SubscriptionRepositoryInterface $subscriptionRepository,
         SubscriptionViewAuthorisation $subscriptionViewAuthorisation,
@@ -47,6 +59,8 @@ class SubscriptionLoader
     }
 
     /**
+     * Load the subscriptions
+     *
      * @param RequestInterface $request
      * @return bool|Redirect
      * @throws LocalizedException

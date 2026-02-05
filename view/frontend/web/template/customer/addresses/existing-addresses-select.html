@@ -1,0 +1,40 @@
+<!--
+/**
+ * PayPal Subscriptions Existing Addresses
+ */
+-->
+
+<!-- ko if: $parent.getExistingAddresses() -->
+<div class="ps-existing-addresses">
+    <label
+        for="ps-update-address"
+        data-bind="i18n: 'Find your delivery address'"
+    ></label>
+
+    <select
+        id="ps-update-address"
+        name="ps-update-address"
+        style="margin: 15px 0"
+        data-bind="
+            value: $parent.selectedAddress,
+            options: $parent.getExistingAddresses(),
+            optionsText: 'address',
+            optionsValue: 'id'"
+        ></select>
+    </select>
+
+    <div class="ps__content">
+        <button
+            class="action secondary"
+        >
+            <span data-bind="click: $parent.showNewAddress, i18n: 'Add new delivery address'"></span>
+        </button>
+        <button
+            class="action primary"
+            data-bind="click: function(element) {$parent.setShippingAddress(element, $parent.selectedAddress())}"
+        >
+            <span data-bind="i18n: 'Save changes'"></span>
+        </button>
+    </div>
+</div>
+<!--/ko-->

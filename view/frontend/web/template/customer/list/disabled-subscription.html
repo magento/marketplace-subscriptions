@@ -1,0 +1,14 @@
+<div class="paypal-subscription__container">
+    <!-- ko foreach: { data: elems, as: 'element' } -->
+        <!-- ko template: element.getTemplate() --><!-- /ko -->
+    <!-- /ko -->
+    <div class="product-controls">
+        <button class="button action primary" data-bind="click: reactivateSubscription">
+            <span data-bind="i18n: 'Reactivate Subscription'"></span>
+        </button>
+        <p>
+            <span data-bind="i18n: 'Subscription cancelled on:'"></span>
+            <span data-bind="text: subscription().updatedAt()"></span>
+        </p>
+    </div>
+</div>

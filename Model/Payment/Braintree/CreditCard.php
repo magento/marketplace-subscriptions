@@ -7,6 +7,8 @@ namespace PayPal\Subscription\Model\Payment\Braintree;
 class CreditCard extends AbstractBraintreePayment
 {
     /**
+     * Get payment method code
+     *
      * @return string
      */
     public function getPaymentMethodCode(): string
@@ -15,10 +17,12 @@ class CreditCard extends AbstractBraintreePayment
     }
 
     /**
-     * @param $paymentData
+     * Get additional information
+     *
+     * @param array $paymentData
      * @return array
      */
-    public function getAdditionalInformation($paymentData): array
+    public function getAdditionalInformation(array $paymentData): array
     {
         return [
             'is_active_payment_token_enabler' => true,

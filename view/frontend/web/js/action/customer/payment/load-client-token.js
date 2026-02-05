@@ -20,7 +20,7 @@ define([
 
         return storage.get(
             url
-        ).success(function (response) {
+        ).done(function (response) {
 
             // Return Response
             return response;

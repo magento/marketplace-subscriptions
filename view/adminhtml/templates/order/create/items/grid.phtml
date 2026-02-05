@@ -1,11 +1,27 @@
 <?php
 /**
- * Core template override to show subscription options.
- *
- * @codingStandardsIgnoreFile
- * @var \PayPal\Subscription\Block\Adminhtml\Order\Create\Items\Grid $block
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
  */
+
+use Magento\Catalog\Helper\Data;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
+use Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid;
+
 ?>
+<?php
+/**
+ * @var Grid $block
+ * @var SecureHtmlRenderer $secureRenderer
+ * @var Escaper $escaper
+ */
+
+/** @var Data $catalogHelper */
+$catalogHelper = $block->getData('catalogHelper');
+$viewModel = $block->getViewModel();
+?>
+
 <?php $items = $block->getItems() ?>
 <?php if (empty($items)): ?>
     <div id="order-items_grid">
@@ -13,18 +29,18 @@
             <table class="data-table admin__table-primary order-tables">
                 <thead>
                 <tr class="headings">
-                    <th class="col-product"><span><?= $block->escapeHtml(__('Product')) ?></span></th>
-                    <th class="col-price"><span><?= $block->escapeHtml(__('Price')) ?></span></th>
-                    <th class="col-qty"><span><?= $block->escapeHtml(__('Qty')) ?></span></th>
-                    <th class="col-subtotal"><span><?= $block->escapeHtml(__('Subtotal')) ?></span></th>
-                    <th class="col-discount"><span><?= $block->escapeHtml(__('Discount')) ?></span></th>
-                    <th class="col-row-total"><span><?= $block->escapeHtml(__('Row Subtotal')) ?></span></th>
-                    <th class="col-action"><span><?= $block->escapeHtml(__('Action')) ?></span></th>
+                    <th class="col-product"><span><?= $escaper->escapeHtml(__('Product')) ?></span></th>
+                    <th class="col-price"><span><?= $escaper->escapeHtml(__('Price')) ?></span></th>
+                    <th class="col-qty"><span><?= $escaper->escapeHtml(__('Qty')) ?></span></th>
+                    <th class="col-subtotal"><span><?= $escaper->escapeHtml(__('Subtotal')) ?></span></th>
+                    <th class="col-discount"><span><?= $escaper->escapeHtml(__('Discount')) ?></span></th>
+                    <th class="col-row-total"><span><?= $escaper->escapeHtml(__('Row Subtotal')) ?></span></th>
+                    <th class="col-action"><span><?= $escaper->escapeHtml(__('Action')) ?></span></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr class="even">
-                    <td class="empty-text" colspan="100"><?= $block->escapeHtml(__('No ordered items')) ?></td>
+                    <td class="empty-text" colspan="100"><?= $escaper->escapeHtml(__('No ordered items')) ?></td>
                 </tr>
                 </tbody>
             </table>
@@ -44,22 +60,28 @@
         <table class="data-table admin__table-primary order-tables">
             <thead>
             <tr class="headings">
-                <th class="col-product"><span><?= $block->escapeHtml(__('Product')) ?></span></th>
-                <th class="col-price"><span><?= $block->escapeHtml(__('Price')) ?></span></th>
-                <th class="col-qty"><span><?= $block->escapeHtml(__('Qty')) ?></span></th>
-                <th class="col-subtotal"><span><?= $block->escapeHtml(__('Subtotal')) ?></span></th>
-                <th class="col-discount"><span><?= $block->escapeHtml(__('Discount')) ?></span></th>
-                <th class="col-row-total"><span><?= $block->escapeHtml(__('Row Subtotal')) ?></span></th>
-                <th class="col-action"><span><?= $block->escapeHtml(__('Action')) ?></span></th>
+                <th class="col-product"><span><?= $escaper->escapeHtml(__('Product')) ?></span></th>
+                <th class="col-price"><span><?= $escaper->escapeHtml(__('Price')) ?></span></th>
+                <th class="col-qty"><span><?= $escaper->escapeHtml(__('Qty')) ?></span></th>
+                <th class="col-subtotal"><span><?= $escaper->escapeHtml(__('Subtotal')) ?></span></th>
+                <th class="col-discount"><span><?= $escaper->escapeHtml(__('Discount')) ?></span></th>
+                <th class="col-row-total"><span><?= $escaper->escapeHtml(__('Row Subtotal')) ?></span></th>
+                <th class="col-action"><span><?= $escaper->escapeHtml(__('Action')) ?></span></th>
             </tr>
             </thead>
             <tfoot>
             <tr>
-                <td class="col-total"><?= $block->escapeHtml(__('Total %1 product(s)', count($items))) ?></td>
-                <td colspan="2" class="col-subtotal"><?= $block->escapeHtml(__('Subtotal:')) ?></td>
-                <td class="col-price"><strong><?= /* @noEscape */ $block->formatPrice($block->getSubtotal()) ?></strong></td>
-                <td class="col-price"><strong><?= /* @noEscape */ $block->formatPrice($block->getDiscountAmount()) ?></strong></td>
-                <td class="col-price"><strong><?= /* @noEscape */ $block->formatPrice($block->getSubtotalWithDiscount()); ?></strong></td>
+                <td class="col-total"><?= $escaper->escapeHtml(__('Total %1 product(s)', count($items))) ?></td>
+                <td colspan="2" class="col-subtotal"><?= $escaper->escapeHtml(__('Subtotal:')) ?></td>
+                <td class="col-price">
+                    <strong><?= /* @noEscape */ $block->formatPrice($block->getSubtotal()) ?></strong>
+                </td>
+                <td class="col-price">
+                    <strong><?= /* @noEscape */ $block->formatPrice($block->getDiscountAmount()) ?></strong>
+                </td>
+                <td class="col-price">
+                    <strong><?= /* @noEscape */ $block->formatPrice($block->getSubtotalWithDiscount()); ?></strong>
+                </td>
                 <td colspan="2">&nbsp;</td>
             </tr>
             </tfoot>
@@ -68,73 +90,88 @@
                 <tbody class="<?= /* @noEscape */ ($i%2) ? 'even' : 'odd' ?>">
                 <tr>
                     <td class="col-product">
-                        <span id="order_item_<?= (int) $item->getId() ?>_title">
-                            <?= $block->escapeHtml($item->getName()) ?>
-                        </span>
+                            <span id="order_item_<?= (int) $item->getId() ?>_title">
+                                <?= $escaper->escapeHtml($item->getName()) ?>
+                            </span>
                         <div class="product-sku-block">
-                            <span><?= $block->escapeHtml(__('SKU')) ?>:</span>
+                            <span><?= $escaper->escapeHtml(__('SKU')) ?>:</span>
                             <?= /* @noEscape */ implode(
                                 '<br />',
-                                    $this->helper(\Magento\Catalog\Helper\Data::class)
-                                        ->splitSku($block->escapeHtml($item->getSku()))
+                                $catalogHelper->splitSku($escaper->escapeHtml($item->getSku()))
                             ) ?>
                         </div>
                         <div class="product-configure-block">
                             <?= $block->getConfigureButtonHtml($item) ?>
                         </div>
-                        <?php if ($block->isSubscriptionAvailable($item)): ?>
-                            <div>
-                                Subscription Available
-                            </div>
-                            <?php if ($block->isSubscriptionOnly($item)): ?>
-                                <div>
-                                    Subscription Only
-                                </div>
+                        <?php if ($viewModel->isSubscriptionAvailable($item)): ?>
+                            <div><?= $escaper->escapeHtml(__('Subscription Available')) ?></div>
+                            <?php if ($viewModel->isSubscriptionOnly($item)): ?>
+                                <div><?= $escaper->escapeHtml(__('Subscription Only')) ?></div>
                             <?php endif; ?>
-
-                            <?= $block->escapeHtml($block->getSubscriptionPrice($item)) ?>
-
-                            <?= $block->getFrequencyProfileOptionsHtml($item) ?>
-
+                            <?= $escaper->escapeHtml($viewModel->getSubscriptionPrice($item)) ?>
+                            <?= $viewModel->getFrequencyProfileOptionsHtml($item) ?>
                         <?php endif; ?>
                     </td>
                     <td class="col-price">
 
                         <?= $block->getItemUnitPriceHtml($item) ?>
 
-                        <?php $_isCustomPrice = $block->usedCustomPriceForItem($item) ?>
-                        <?php if ($_tier = $block->getTierHtml($item)) : ?>
-                            <div id="item_tier_block_<?= (int) $item->getId() ?>"<?php if ($_isCustomPrice) : ?> style="display:none"<?php endif; ?>>
-                                <a href="#" onclick="$('item_tier_<?= (int) $item->getId() ?>').toggle();return false;"><?= $block->escapeHtml(__('Tier Pricing')) ?></a>
-                                <div style="display:none" id="item_tier_<?= (int) $item->getId() ?>"><?= /* @noEscape */ $_tier ?></div>
+                        <?php $isCustomPrice = $block->usedCustomPriceForItem($item) ?>
+                        <?php if ($tier = $block->getTierHtml($item)): ?>
+                            <div id="item_tier_block_<?= (int) $item->getId() ?>">
+                                <a href="#"><?= $escaper->escapeHtml(__('Tier Pricing')) ?></a>
+                                <div id="item_tier_<?= (int) $item->getId() ?>"><?= /* @noEscape */ $tier ?></div>
+                                <?= /* @noEscape */ $secureRenderer->renderStyleAsTag(
+                                    "display:none",
+                                    'div#item_tier_' . (int) $item->getId()
+                                ) ?>
                             </div>
+                            <?php if ($isCustomPrice): ?>
+                                <?= /* @noEscape */ $secureRenderer->renderStyleAsTag(
+                                    "display:none",
+                                    'div#item_tier_block_' . (int) $item->getId()
+                                ) ?>
+                            <?php endif; ?>
+                            <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+                                'onclick',
+                                "$('item_tier_" . (int) $item->getId() ."').toggle();event.preventDefault();",
+                                'div#item_tier_block_' . (int) $item->getId() . ' a'
+                            ) ?>
                         <?php endif; ?>
-                        <?php if ($block->canApplyCustomPrice($item)) : ?>
+                        <?php if ($block->canApplyCustomPrice($item)): ?>
                             <div class="custom-price-block">
                                 <input type="checkbox"
                                        class="admin__control-checkbox"
                                        id="item_use_custom_price_<?= (int) $item->getId() ?>"
-                                    <?php if ($_isCustomPrice) : ?> checked="checked"<?php endif; ?>
-                                       onclick="order.toggleCustomPrice(this, 'item_custom_price_<?= (int) $item->getId() ?>', 'item_tier_block_<?= (int) $item->getId() ?>');"/>
+                                    <?php if ($isCustomPrice): ?> checked="checked"<?php endif; ?> />
                                 <label
-                                        class="normal admin__field-label"
-                                        for="item_use_custom_price_<?= (int) $item->getId() ?>">
-                                    <span><?= $block->escapeHtml(__('Custom Price')) ?>*</span></label>
+                                    class="normal admin__field-label"
+                                    for="item_use_custom_price_<?= (int) $item->getId() ?>">
+                                    <span><?= $escaper->escapeHtml(__('Custom Price')) ?>*</span></label>
+                                <?= /* @noEscape */ $secureRenderer->renderEventListenerAsTag(
+                                    'onclick',
+                                    "order.toggleCustomPrice(this, 'item_custom_price_" . (int) $item->getId() .
+                                    "', 'item_tier_block_" . (int) $item->getId() . "');",
+                                    'input#item_use_custom_price_' . (int) $item->getId()
+                                ) ?>
                             </div>
                         <?php endif; ?>
                         <input id="item_custom_price_<?= (int) $item->getId() ?>"
                                name="item[<?= (int) $item->getId() ?>][custom_price]"
                                value="<?= /* @noEscape */ sprintf("%.2f", $block->getOriginalEditablePrice($item)) ?>"
-                            <?php if (!$_isCustomPrice) : ?>
-                                style="display:none"
+                            <?php if (!$isCustomPrice): ?>
                                 disabled="disabled"
                             <?php endif; ?>
                                class="input-text item-price admin__control-text"/>
+                        <?= /* @noEscape */ $secureRenderer->renderStyleAsTag(
+                            "display:none",
+                            'input#item_custom_price_' . (int) $item->getId()
+                        ) ?>
                     </td>
                     <td class="col-qty">
                         <input name="item[<?= (int) $item->getId() ?>][qty]"
                                class="input-text item-qty admin__control-text"
-                               value="<?= (int) $item->getQty() ?>"
+                               value="<?= (float) $item->getQty() ?>"
                                maxlength="12" />
                     </td>
                     <td class="col-subtotal col-price">
@@ -146,13 +183,13 @@
                             <input id="item_use_discount_<?= (int) $item->getId() ?>"
                                    class="admin__control-checkbox"
                                    name="item[<?= (int) $item->getId() ?>][use_discount]"
-                                   <?php if (!$item->getNoDiscount()) : ?>checked="checked"<?php endif; ?>
+                                   <?php if (!$item->getNoDiscount()): ?>checked="checked"<?php endif; ?>
                                    value="1"
                                    type="checkbox" />
                             <label
-                                    for="item_use_discount_<?= (int) $item->getId() ?>"
-                                    class="normal admin__field-label">
-                                <span><?= $block->escapeHtml(__('Apply')) ?></span></label>
+                                for="item_use_discount_<?= (int) $item->getId() ?>"
+                                class="normal admin__field-label">
+                                <span><?= $escaper->escapeHtml(__('Apply')) ?></span></label>
                         </div>
 
                     </td>
@@ -161,18 +198,22 @@
                     </td>
                     <td class="col-actions last">
                         <select class="admin__control-select" name="item[<?= (int) $item->getId() ?>][action]">
-                            <option value=""><?= $block->escapeHtml(__('Please select')) ?></option>
-                            <option value="remove"><?= $block->escapeHtml(__('Remove')) ?></option>
-                            <?php if ($block->getCustomerId() && $block->getMoveToCustomerStorage()) : ?>
-                                <option value="cart"><?= $block->escapeHtml(__('Move to Shopping Cart')) ?></option>
-                                <?php if ($block->isMoveToWishlistAllowed($item)) : ?>
+                            <option value=""><?= $escaper->escapeHtml(__('Please select')) ?></option>
+                            <option value="remove"><?= $escaper->escapeHtml(__('Remove')) ?></option>
+                            <?php if ($block->getCustomerId() && $block->getMoveToCustomerStorage()): ?>
+                                <option value="cart"><?= $escaper->escapeHtml(__('Move to Shopping Cart')) ?></option>
+                                <?php if ($block->isMoveToWishlistAllowed($item)): ?>
                                     <?php $wishlists = $block->getCustomerWishlists();?>
-                                    <?php if (count($wishlists) <= 1) : ?>
-                                        <option value="wishlist"><?= $block->escapeHtml(__('Move to Wish List')) ?></option>
-                                    <?php else : ?>
-                                        <optgroup label="<?= $block->escapeHtml(__('Move to Wish List')) ?>">
-                                            <?php foreach ($wishlists as $wishlist) :?>
-                                                <option value="wishlist_<?= (int) $wishlist->getId() ?>"><?= $block->escapeHtml($wishlist->getName()) ?></option>
+                                    <?php if (count($wishlists) <= 1): ?>
+                                        <option value="wishlist">
+                                            <?= $escaper->escapeHtml(__('Move to Wish List')) ?>
+                                        </option>
+                                    <?php else: ?>
+                                        <optgroup label="<?= $escaper->escapeHtml(__('Move to Wish List')) ?>">
+                                            <?php foreach ($wishlists as $wishlist):?>
+                                                <option value="wishlist_<?= (int) $wishlist->getId() ?>">
+                                                    <?= $escaper->escapeHtml($wishlist->getName()) ?>
+                                                </option>
                                             <?php endforeach;?>
                                         </optgroup>
                                     <?php endif; ?>
@@ -197,8 +238,9 @@
                                     continue;
                                 }
                                 ?>
-                                <div class="message <?php if ($item->getHasError()): ?>message-error<?php else: ?>message-notice<?php endif; ?>">
-                                    <?= $block->escapeHtml($message) ?>
+                                <div class="message <?php if ($item->getHasError()): ?>message-error<?php else:
+                                    ?>message-notice<?php endif; ?>">
+                                    <?= $escaper->escapeHtml($message) ?>
                                 </div>
                             <?php endforeach; ?>
                         </td>
@@ -209,7 +251,7 @@
                 </tbody>
             <?php endforeach; ?>
         </table>
-        <p><small><?= $block->escapeHtml($block->getInclExclTaxMessage()) ?></small></p>
+        <p><small><?= $escaper->escapeHtml($block->getInclExclTaxMessage()) ?></small></p>
     </div>
 
     <div class="order-discounts">
@@ -217,49 +259,54 @@
         <div id="order-coupons" class="order-coupons"><?= $block->getChildHtml() ?></div>
     </div>
 
-    <script>
+    <?php $scriptString = <<<script
         require([
             'Magento_Sales/order/create/form'
         ], function(){
             order.itemsOnchangeBind()
         });
-    </script>
+script;
+    ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
     <?php if ($block->isGiftMessagesAvailable()): ?>
-        <script>
-            require([
-                "prototype",
-                "Magento_Sales/order/giftoptions_tooltip"
-            ], function(){
+        <?php $scriptString = <<<script
+        require([
+            "prototype",
+            "Magento_Sales/order/giftoptions_tooltip"
+        ], function(){
 
-                //<![CDATA[
-                /**
-                 * Retrieve gift options tooltip content
-                 */
-                function getGiftOptionsTooltipContent(itemId) {
-                    var contentLines = [];
-                    var headerLine = null;
-                    var contentLine = null;
+        //<![CDATA[
+            /**
+             * Retrieve gift options tooltip content
+             */
+            function getGiftOptionsTooltipContent(itemId) {
+                var contentLines = [];
+                var headerLine = null;
+                var contentLine = null;
 
-                    $$('#gift_options_data_' + itemId + ' .gift-options-tooltip-content').each(function (element) {
-                        if (element.down(0)) {
-                            headerLine = element.down(0).innerHTML;
-                            contentLine = element.down(0).next().innerHTML;
-                            if (contentLine.length > 30) {
-                                contentLine = contentLine.slice(0,30) + '...';
-                            }
-                            contentLines.push(headerLine + ' ' + contentLine);
+                $$('#gift_options_data_' + itemId + ' .gift-options-tooltip-content').each(function (element) {
+                    if (element.down(0)) {
+                        headerLine = element.down(0).innerHTML;
+                        contentLine = element.down(0).next().innerHTML;
+                        if (contentLine.length > 30) {
+                            contentLine = contentLine.slice(0,30) + '...';
                         }
-                    });
-                    return contentLines.join('<br/>');
-                }
+                        contentLines.push(headerLine + ' ' + contentLine);
+                    }
+                });
+                return contentLines.join('<br/>');
+            }
 
-                giftOptionsTooltip.setTooltipContentLoaderFunction(getGiftOptionsTooltipContent);
+            giftOptionsTooltip.setTooltipContentLoaderFunction(getGiftOptionsTooltipContent);
 
-                window.getGiftOptionsTooltipContent = getGiftOptionsTooltipContent;
+            window.getGiftOptionsTooltipContent = getGiftOptionsTooltipContent;
 
-                //]]>
+        //]]>
 
-            });
-        </script>
+        });
+
+script;
+        ?>
+        <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
     <?php endif; ?>
 <?php endif; ?>

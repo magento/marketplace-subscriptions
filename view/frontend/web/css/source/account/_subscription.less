@@ -1,0 +1,174 @@
+//
+//  Paypal Subscriptions Account Page
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+    .ps-update-address,
+    .ps-update-method {
+        margin: 15px 0;
+    }
+
+    .subscriptions-customer-index {
+        .subscription {
+            padding-bottom: 40px;
+        }
+        .subscription-info {
+            .lib-vendor-prefix-display(flex);
+
+            div {
+                width: 50%;
+            }
+        }
+
+        .reschedule {
+            margin: @indent__base 0;
+
+            .reschedule-description {
+                display: block;
+                margin: @indent__s 0;
+            }
+        }
+
+        .product-container {
+            .lib-vendor-prefix-flex-basis(~'calc(100%/2)');
+            max-width: ~'calc(100%/2)';
+            margin: @indent__l 0;
+
+            .product {
+                text-align: center;
+
+                &-info {
+                    &__options {
+                        &-list {
+                            text-align: center;
+                            background-color: @color-gray-light0;
+                            padding: @indent__s 0;
+                            margin: @indent__s 0 @indent__xs;
+                        }
+
+                        &-title {
+                            font-weight: @font-weight__bold;
+                            margin-bottom: @indent__s;
+                        }
+                    }
+                }
+            }
+
+            .qty__wrapper {
+                .qty__label {
+                    display: none;
+                }
+
+                .qty__container {
+                    .lib-vendor-prefix-display(flex);
+                    .lib-vendor-box-align(center);
+                    justify-content: center;
+                    margin: 15px 0;
+
+                    .qty__button {
+                        width: 32px;
+                        height: 32px;
+                        border-radius: 0;
+                    }
+
+                    .qty__input {
+                        width: 40px;
+                        text-align: center;
+                    }
+
+                    [data-iterator-type="decrement"] {
+                        position: relative;
+
+                        &:after {
+                            content: '';
+                            width: 10px;
+                            height: 20px;
+                            display: block;
+                            position: absolute;
+                            top: 15px;
+                            left: 10px;
+                            border-top: 1px solid;
+                        }
+                    }
+
+                    [data-iterator-type="increment"] {
+                        position: relative;
+
+                        &:after {
+                            content: '+';
+                            width: 10px;
+                            height: 20px;
+                            display: block;
+                            position: absolute;
+                            top: 8px;
+                            left: 10px;
+                            font-size: 16px;
+                        }
+                    }
+                }
+            }
+
+            .paypal-subscription__frequency {
+                text-align: center;
+            }
+        }
+
+        .product-container + .container {
+            &.container--rounded {
+                .lib-vendor-prefix-display(flex);
+                .lib-vendor-prefix-flex-wrap(wrap);
+
+                .address,
+                .payment,
+                .totals {
+                    margin: @indent__base 0;
+                    width: 100%;
+                }
+            }
+        }
+
+        .cancelled-subscriptions-list {
+            margin: @indent__base 0;
+
+            .ps-cancel-subscription {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+//
+//  Tablet
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .subscriptions-customer-index {
+        .product-container {
+            .lib-vendor-prefix-flex-basis(~'calc(100%/3)');
+            max-width: ~'calc(100%/3)';
+        }
+
+        .product-container + .container {
+            &.container--rounded {
+                .address,
+                .payment,
+                .totals {
+                    width: 50%;
+                }
+            }
+        }
+    }
+}
+
+
+//
+//  Desktop
+//  _____________________________________________
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__l) {
+    .subscriptions-customer-index {
+        .product-container {
+            .lib-vendor-prefix-flex-basis(~'calc(100%/4)');
+            max-width: ~'calc(100%/4)';
+        }
+    }
+}

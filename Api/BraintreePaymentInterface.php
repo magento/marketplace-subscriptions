@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -7,6 +11,8 @@ namespace PayPal\Subscription\Api;
 interface BraintreePaymentInterface
 {
     /**
+     * Change and save new payment method data to the subscription
+     *
      * @param int $customerId
      * @param int $subscriptionId
      * @param string $nonce

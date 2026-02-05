@@ -5,7 +5,7 @@
 // @codingStandardsIgnoreFile
 
 $subscriptionId = $block->getSubscriptionId();
-$shippingRates = $block->getShipping($subscriptionId);
+$shippingRates = $block->getShipping((int) $subscriptionId);
 ?>
 <div class="admin__field-label" data-bind="visible: $data.labelVisible">
     <!-- ko if: $data.label -->

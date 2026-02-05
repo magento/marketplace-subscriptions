@@ -42,38 +42,30 @@ define([
             var that = this,
                 updatedStatus = event.target.value;
 
-            if (event.target.value == 3) {
-                if (!confirm('Are you sure you want to cancel your subscription?')) {
-                    $('#select-status option[value=1]').attr('selected','selected');
-                    return;
-                } else {
-                    $('#select-status').attr('disabled', '1');
-                }
-            }
-
             // Clear Message
             that.clearMessage();
 
             // Start loader
             $('body').trigger('processStart');
 
-            $.ajax({
-                method: "PUT",
-                url: '/rest/V1/subscription/mine/status/'+ this.subscriptionId +'/' + updatedStatus
-            })
-                .done(function(response) {
-                    $('body').trigger('processStop');
+            // Set item frequency
+            setSubscriptionStatus(this.subscriptionId, updatedStatus).error(function () {
 
-                    // Add Success Messaging
-                    that.message($t('The status successfully updated.'));
-                    that.messageClass('message success');
-                })
-                .fail(function(jqXHR, textStatus, errorThrown) {
-                    $('body').trigger('processStop');
-                    // Add error messaging
-                    that.message($t('Unable to update the status, please try again.'));
-                    that.messageClass('message error');
-                });
+                // Stop loader
+                $('body').trigger('processStop');
+
+                // Add error messaging
+                that.message($t('Unable to update the status, please try again.'));
+                that.messageClass('message error');
+            }).done(function () {
+
+                // Stop loader
+                $('body').trigger('processStop');
+
+                // Add Success Messaging
+                that.message($t('The status successfully updated.'));
+                that.messageClass('message success');
+            });
         },
 
         /**

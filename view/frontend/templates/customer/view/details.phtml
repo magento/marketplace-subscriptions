@@ -3,7 +3,10 @@
  * PayPal Subscriptions
  * @var PayPal\Subscription\Block\Customer\View $block
  * @var PayPal\Subscription\Model\Subscription $subscription
+ * @var Escaper $escaper
  */
+
+use Magento\Framework\Escaper;
 
 $subscription = $block->getSubscription();
 $subscriptionItem = $subscription->getSubscriptionItem();
@@ -16,32 +19,27 @@ $status = $subscription->getStatus();
 ?>
 
 <section class="block">
-
     <div class="block-content">
-
         <div class="box">
             <h4 class="box-title">
-                <span><?= $block->escapeHtml(__('Items')) ?></span>
+                <span><?= $escaper->escapeHtml(__('Items')) ?></span>
             </h4>
             <div class="ps-customer-product">
-
-                <img src="<?= $block->escapeUrl($block->getImageUrl($product)) ?>"
+                <img src="<?= $escaper->escapeUrl($block->getImageUrl($product)) ?>"
                      class="ps-customer-product__img"
                      alt="" />
 
                 <article class="ps-customer-product__details">
-
-                    <h2 class="ps-customer-product__title"><?= $block->escapeHtml($product->getName()) ?></h2>
-
+                    <h2 class="ps-customer-product__title"><?= $escaper->escapeHtml($product->getName()) ?></h2>
                     <?php if ($productQty = $subscriptionItem->getQty()): ?>
-                        <p><?= $block->escapeHtml(__('Qty: %1', $productQty)) ?></p>
+                        <p><?= $escaper->escapeHtml(__('Qty: %1', $productQty)) ?></p>
                     <?php endif; ?>
 
-                    <p><?= $block->escapeHtml($block->formatPrice($subscriptionItem->getPrice()), ['span']) ?></p>
+                    <p><?= $escaper->escapeHtml($block->formatPrice($subscriptionItem->getPrice()), ['span']) ?></p>
 
                     <?php if ($productUrl = $product->getProductUrl()): ?>
-                        <a href="<?= $block->escapeUrl($productUrl) ?>">
-                            <?= $block->escapeHtml(__('View Product')) ?>
+                        <a href="<?= $escaper->escapeUrl($productUrl) ?>">
+                            <?= $escaper->escapeHtml(__('View Product')) ?>
                         </a>
                     <?php endif; ?>
                 </article>
@@ -51,40 +49,42 @@ $status = $subscription->getStatus();
 
         <div class="box">
             <h4 class="box-title">
-                <span><?= $block->escapeHtml(__('Manage Subscription Status')) ?></span>
+                <span><?= $escaper->escapeHtml(__('Manage Subscription Status')) ?></span>
             </h4>
             <div class="box-content">
-                <p><?= $block->escapeHtml(__('Last updated at: %1', $subscription->getUpdatedAt())); ?></p>
+                <p><?= $escaper->escapeHtml(__('Last updated at: %1', $subscription->getUpdatedAt())); ?></p>
 
                 <?php if ($status === 4): ?>
-                    <p class="message warning"><?= $block->escapeHtml(__('This subscription is expired.')); ?></p>
+                    <p class="message warning">
+                        <?= $escaper->escapeHtml(__('This subscription is expired.')); ?>
+                    </p>
                 <?php elseif ($status === 3): ?>
-                    <p class="message warning"><?= $block->escapeHtml(__('This subscription was cancelled.')); ?></p>
+                    <p class="message warning">
+                        <?= $escaper->escapeHtml(__('This subscription was cancelled.')); ?>
+                    </p>
                 <?php else: ?>
                     <div data-bind="scope: 'updateStatus'">
                         <!-- ko template: getTemplate() --><!-- /ko -->
                     </div>
                 <?php endif; ?>
-
             </div>
         </div>
     </div>
 </section>
 
 <script type="text/x-magento-init">
-{
-    "*": {
-         "Magento_Ui/js/core/app": {
-            "components": {
-                "updateStatus": {
-                    "component": "PayPal_Subscription/js/view/customer/view/status",
-                    "subscriptionId": <?= $block->escapeJs($subscription->getId()); ?>,
-                    "options": <?= /* @noEscape */ $block->getAvailableStatus(); ?>,
-                    "status": <?= $block->escapeJs($status) ?>
+    {
+        "*": {
+             "Magento_Ui/js/core/app": {
+                "components": {
+                    "updateStatus": {
+                        "component": "PayPal_Subscription/js/view/customer/view/status",
+                        "subscriptionId": <?= $escaper->escapeJs($subscription->getId()); ?>,
+                        "options": <?= /* @noEscape */ $block->getAvailableStatus(); ?>,
+                        "status": <?= $escaper->escapeJs($status) ?>
+                    }
                 }
             }
         }
     }
-}
-
 </script>

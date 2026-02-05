@@ -1,10 +1,20 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Block\Adminhtml\Sales;
 
-class Report extends \Magento\Backend\Block\Widget\Grid\Container
+use Magento\Backend\Block\Widget\Grid\Container;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+class Report extends Container
 {
     /**
      * @var string
@@ -12,7 +22,7 @@ class Report extends \Magento\Backend\Block\Widget\Grid\Container
     protected $_template = 'Magento_Reports::report/grid/container.phtml';
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function _construct()
     {

@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Ui\Component\Listing\Column;
@@ -17,7 +16,7 @@ class FrequencyProfileActions extends Column
     /**
      * @var UrlInterface
      */
-    private $urlBuilder;
+    private UrlInterface $urlBuilder;
 
     /**
      * FrequencyProfileActions constructor.
@@ -40,6 +39,8 @@ class FrequencyProfileActions extends Column
     }
 
     /**
+     * Prepare data source
+     *
      * @param array $dataSource
      * @return array
      */
@@ -57,8 +58,8 @@ class FrequencyProfileActions extends Column
                         'href' => $this->urlBuilder->getUrl(self::DELETE, ['id' => $item['id']]),
                         'label' => __('Delete'),
                         'confirm' => [
-                            'title' => __('Delete "${ $.$data.name }"'),
-                            'message' => __('Are you sure you wan\'t to delete "${ $.$data.name }"?')
+                            'title' => __('Delete profile'),
+                            'message' => __('Are you sure you wan\'t to delete?')
                         ],
                     ];
                 }

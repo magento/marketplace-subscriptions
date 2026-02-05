@@ -1,0 +1,26 @@
+<a class="action view" href="#">
+    <span data-bind="i18n: 'Edit', click: showAddressModal"></span>
+</a>
+
+<div
+    afterRender="initModal"
+    data-edit-address-modal
+    class="ps-add-address-form__container ps-new-address-modal"
+>
+    <h2 data-bind="i18n: 'Change Address'"></h2>
+    <!-- ko foreach: { data: elems, as: 'element' } -->
+        <!-- ko template: element.getTemplate() --><!-- /ko -->
+    <!-- /ko -->
+
+    <div class="ps-add-address-form__container">
+        <div data-bind="html: newForm"></div>
+
+        <button class="action secondary" data-bind="click: showExistingAddress">
+            <span data-bind="i18n: 'Back'"></span>
+        </button>
+        <button type="submit" class="action primary" data-bind="click: saveNewAddress">
+            <span data-bind="i18n: 'Save'"></span>
+        </button>
+    </div>
+
+</div>

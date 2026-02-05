@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -15,6 +19,10 @@ use Magento\Customer\Model\ResourceModel\Address\CollectionFactory as AddressCol
 use Magento\Directory\Model\CountryFactory;
 use Magento\Framework\Serialize\SerializerInterface;
 
+/**
+ * @api
+ * @since 100.0.2
+ */
 class UpdateAddress extends Template
 {
 
@@ -45,6 +53,7 @@ class UpdateAddress extends Template
 
     /**
      * UpdateAddress constructor.
+     *
      * @param Context $context
      * @param AddressCollectionFactory $addressCollectionFactory
      * @param CurrentCustomer $currentCustomer
@@ -72,6 +81,7 @@ class UpdateAddress extends Template
 
     /**
      * Get Subscription id
+     *
      * @return mixed
      */
     public function getSubscriptionId()
@@ -81,6 +91,7 @@ class UpdateAddress extends Template
 
     /**
      * Get Customer
+     *
      * @return CustomerInterface
      */
     public function getCustomer(): CustomerInterface
@@ -95,6 +106,7 @@ class UpdateAddress extends Template
 
     /**
      * Get all possible addresses
+     *
      * @return array
      */
     public function getAllAddresses(): array
@@ -131,6 +143,7 @@ class UpdateAddress extends Template
 
     /**
      * Return JSON for knockout
+     *
      * @return string
      */
     public function getAllAddressesJson(): string
@@ -141,6 +154,7 @@ class UpdateAddress extends Template
 
     /**
      * Get one string street address from the Address DTO passed in parameters
+     *
      * @param AddressInterface $address
      * @return string
      */
@@ -155,8 +169,11 @@ class UpdateAddress extends Template
 
     /**
      * Get country name by $countryCode
+     *
      * Using \Magento\Directory\Model\Country to get country name by $countryCode
+     *
      * @param string $countryCode
+     * @return string
      */
     public function getCountryByCode(string $countryCode): string
     {

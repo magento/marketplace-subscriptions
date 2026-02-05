@@ -1,26 +1,39 @@
-<!--@subject {{trans "You Subscription was updated"}} @-->
+<!--@subject {{trans "You've Changed Your %store_name Subscription" store_name=$store.frontend_name}} @-->
 <!--@vars {
 "var customer_name":"Customer Name",
 "var update.action":"Update Action",
 "var update.description":"Update Description"
+"var subscription.getFrequency()":"Subscription Frequency (in days)",
+"var subscription.getNextReleaseDate()":"Next Release Date",
+"var formattedBillingAddress":"Billing Address",
+"var formattedShippingAddress":"Shipping Address",
+"var maskedCC":"Masked Card Number",
+"var expirationDate":"Card Expiry",
+"layout handle=\"subscription_items\" items=$items area=\"frontend\"":"Subscription Items Grid",
+"layout handle=\"subscription_payment\" payment=$payment area=\"frontend\"":"Subscription Payment",
+"var subscription":"Subscription",
+"var formatted_next_release":"Formatted Next Release Date"
 } @-->
 {{template config_path="design/email/header_template"}}
-<tr>
-    <td colspan="2" style="padding-left:15px;">
-        <p>Hello, {{var customer_name}}</p>
-        <p>You subscription was successfully updated.</p>
-        <p>Action:</p>
-        <p>{{var update.description}}</p>
-        </br>
-        <p>Best Regards,</p>
-        <p>The team at Adobe.</p><br>
-    </td>
-</tr>
-<tr>
-    <td colspan="2">
-        {{template config_path="design/email/footer_template"}}
-    </td>
-</tr>
-</table>
-</body>
-</html>
+
+<p>{{trans "Hi %customer_name" customer_name=$customer_name}},</p>
+
+<p>{{trans "Great news, your Subscription settings have been successfully changed!"}}</p>
+
+<p>{{trans "Here are your updated Subscription details:"}}</p>
+
+<p><strong>{{trans "Products:"}}</strong></p>
+{{layout handle="subscription_items" items=$items area="frontend"}}
+<br/>
+<p><strong>{{trans "Next Dispatch Date is:"}}</strong> {{var formatted_next_release}}</p>
+<p><strong>{{trans "Order Frequency:"}}</strong> {{var subscription.getFrequency()}} Days</p>
+
+<p><strong>{{trans "Shipping Address:"}}</strong></p>
+{{var formattedShippingAddress}}
+<br/>
+
+{{layout handle="subscription_payment" payment=$payment area="frontend"}}
+
+<p>{{trans "You can easily manage your subscriptions by going to My Account > Subscriptions If you have any questions, please contact us"}}.</p>
+
+{{template config_path="design/email/footer_template"}}

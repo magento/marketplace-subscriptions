@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Observer;
@@ -43,6 +42,8 @@ class AdminOrderProcessItemObserver implements ObserverInterface
     }
 
     /**
+     * Process order item from admin
+     *
      * @param Observer $observer
      * @return void
      * @throws AlreadyExistsException
@@ -68,22 +69,23 @@ class AdminOrderProcessItemObserver implements ObserverInterface
             foreach ($items as $item) {
                 /** @var Quote\Item $item */
                 $item = $item->getParentItem() ?? $item;
-
-                if ($addedItems[$item->getId()]['frequency_option'] === '') {
+                $frequencyOption = $addedItems[$item->getId()]['frequency_option'] ?? null;
+                if ($frequencyOption === '' || $frequencyOption === null) {
                     $item->removeOption(SubscriptionHelper::FREQ_OPT_INTERVAL);
                     $item->removeOption(SubscriptionHelper::IS_SUBSCRIPTION);
                     $item->saveItemOptions();
                     $item->setPrice($item->getProduct()->getPrice());
                     $item->setOriginalPrice($item->getProduct()->getPrice());
-                    $item->setCustomPrice(null);
-                    $item->setOriginalCustomPrice(null);
+                    $customPrice = $addedItems[$item->getId()]['custom_price'] ?? null;
+                    $item->setCustomPrice($customPrice);
+                    $item->setOriginalCustomPrice($customPrice);
                     $this->itemResource->save($item);
                 } else {
                     $item->addOption(
                         [
                             'product_id' => $item->getProduct()->getId(),
                             'code' => SubscriptionHelper::FREQ_OPT_INTERVAL,
-                            'value' => $addedItems[$item->getId()]['frequency_option']
+                            'value' => $frequencyOption
                         ]
                     );
                     $item->addOption(

@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 declare(strict_types=1);
 
@@ -18,7 +22,7 @@ class Grid extends AbstractGrid
     protected $_columnGroupBy = 'period';
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function _construct()
     {
@@ -27,7 +31,7 @@ class Grid extends AbstractGrid
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getResourceCollectionName()
     {
@@ -35,7 +39,7 @@ class Grid extends AbstractGrid
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function _prepareColumns()
     {

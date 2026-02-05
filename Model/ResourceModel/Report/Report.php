@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PayPal\Subscription\Model\ResourceModel\Report;
 
-use Exception;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\ResourceModel\Db\Context;
@@ -22,9 +22,9 @@ use Zend_Db_Expr;
 
 class Report extends AbstractReport
 {
-    const AGGREGATION_DAILY = 'paypal_subs_report_aggregated_daily';
-    const AGGREGATION_MONTHLY = 'paypal_subs_report_aggregated_monthly';
-    const AGGREGATION_YEARLY = 'paypal_subs_report_aggregated_yearly';
+    private const AGGREGATION_DAILY = 'paypal_subs_report_aggregated_daily';
+    private const AGGREGATION_MONTHLY = 'paypal_subs_report_aggregated_monthly';
+    private const AGGREGATION_YEARLY = 'paypal_subs_report_aggregated_yearly';
 
     /**
      * @var ResourceConnection
@@ -34,7 +34,7 @@ class Report extends AbstractReport
     /**
      * @var TimezoneInterface
      */
-    protected $timezone;
+    private $timezone;
 
     /**
      * @var SubscriptionItemCollectionFactory
@@ -106,7 +106,7 @@ class Report extends AbstractReport
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    public function aggregate($from = null, $to = null)
+    public function aggregate($from = null, $to = null): self
     {
         $mainTable = $this->getMainTable();
         $connection = $this->getConnection();
@@ -160,7 +160,12 @@ class Report extends AbstractReport
         return $this;
     }
 
-    public function truncateTable()
+    /**
+     * Truncate tables
+     *
+     * @return void
+     */
+    public function truncateTable(): void
     {
         $tables = [
             $this->resource->getTableName(self::AGGREGATION_DAILY),
@@ -175,15 +180,22 @@ class Report extends AbstractReport
     }
 
     /**
-     * @param $connection
-     * @param $type
-     * @param $column
-     * @param $mainTable
-     * @param $aggregationTable
+     * Update monthly and yearly report
+     *
+     * @param AdapterInterface $connection
+     * @param string $type
+     * @param string $column
+     * @param string $mainTable
+     * @param string $aggregationTable
      * @return $this
      */
-    public function updateReportMonthlyYearly($connection, $type, $column, $mainTable, $aggregationTable)
-    {
+    public function updateReportMonthlyYearly(
+        AdapterInterface $connection,
+        string $type,
+        string $column,
+        string $mainTable,
+        string $aggregationTable
+    ): self {
         $periodSubSelect = $connection->select();
         $ratingSubSelect = $connection->select();
         $ratingSelect = $connection->select();

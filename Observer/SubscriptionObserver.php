@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayPal\Subscription\Observer;
@@ -48,18 +47,23 @@ class SubscriptionObserver implements ObserverInterface
     }
 
     /**
+     * Send subscription email new
+     *
      * @param Observer $observer
      * @throws LocalizedException
+     * @return void
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         try {
             /** @var Subscription $subscription */
             $subscription = $observer->getEvent()->getSubscription();
             $customer = $this->customerRepository->getById($subscription->getCustomerId());
             if ($subscription->isObjectNew()) {
-                return;
-                $this->subscriptionEmail->new($subscription, $customer);
+                $this->subscriptionEmail->new(
+                    $subscription,
+                    $customer
+                );
             }
         } catch (NoSuchEntityException $e) {
             throw new LocalizedException(__('Cannot find customer with ID %1', $subscription->getCustomerId()));
